@@ -99,7 +99,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.45); /* 오버레이 */
+  background: rgba(0,0,0,0.45);
   z-index: 1;
 }
 
@@ -139,20 +139,32 @@ body {
   border: 3px solid rgba(0,0,0,0.45);
   box-shadow: 0 6px 18px rgba(0,0,0,0.6);
 }
+
+/* 상태 표시기 — 프로필에 살짝 겹치게 */
 .status-dot {
   position: absolute;
-  bottom: 4px;
-  right: 4px;
-  width: 14px;
-  height: 14px;
+  bottom: -2px;
+  right: -2px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   border: 3px solid #0b0b0b;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.45);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.45);
+  z-index: 4;
 }
 .status-online { background: #3ba55d; }
 .status-idle { background: #faa61a; }
 .status-dnd { background: #ed4245; }
 .status-offline { background: #747f8d; }
+
+/* Discord 이름 */
+#discordName {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
+  letter-spacing: -0.02em;
+}
 
 /* CD 회전 앨범 */
 .album-art {
@@ -166,9 +178,8 @@ body {
   transform: translateY(-50%) rotate(0deg);
   animation: spinCD 6s linear infinite;
   border: 3px solid rgba(255,255,255,0.14);
-  box-shadow:
-    inset 0 0 8px rgba(255,255,255,0.25),
-    0 6px 30px rgba(0,0,0,0.6);
+  box-shadow: inset 0 0 8px rgba(255,255,255,0.25),
+              0 6px 30px rgba(0,0,0,0.6);
   z-index: 3;
 }
 .album-art.hidden { display: none; }
@@ -224,7 +235,7 @@ body {
             <div class="status-dot status-offline" id="discordDot"></div>
           </div>
           <div class="discord-info">
-            <p class="discord-name" id="discordName">Loading...</p>
+            <p id="discordName">@Loading...</p>
             <div id="discordActivityWrapper">
               <span id="discordActivity">활동 없음</span>
             </div>
@@ -279,14 +290,12 @@ async function fetchDiscordPresence(){
 
     // avatar / name / status
     if (data.avatar_url) avatar.src = `${data.avatar_url}?v=${Date.now()}`;
-    name.textContent = data.username || "Unknown";
+    name.textContent = data.username ? `@${data.username}` : "@unknown";
     dot.className = "status-dot status-" + (data.status || "offline");
 
     // 배너를 카드 배경으로 설정
     if (data.banner_url) {
       card.style.backgroundImage = `url("${data.banner_url}")`;
-      card.style.backgroundSize = "cover";
-      card.style.backgroundPosition = "center";
     } else {
       card.style.backgroundImage = "none";
     }
