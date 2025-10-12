@@ -176,6 +176,8 @@ app.get("*", (req, res) => {
   res.sendFile("index.html", { root: "public" });
 });
 
+app.get('/ping', (req, res) => res.send('pong'));
+
 // === 서버 실행 ===
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
