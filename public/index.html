@@ -142,18 +142,20 @@ body {
 
 .status-dot {
   position: absolute;
-  bottom: 4px;
-  right: 4px;
+  bottom: 0px;
+  right: 2px;
   width: 12px;
-  height: 124px;
+  height: 12px;
   border-radius: 50%;
-  border: 3px solid #0b0b0b;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  border: 2.5px solid #1e1f22; /* 아바타 배경색에 어울리는 테두리 */
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+  z-index: 5;
 }
-.status-online { background: #3ba55d; }
-.status-idle { background: #faa61a; }
-.status-dnd { background: #ed4245; }
-.status-offline { background: #747f8d; }
+
+.status-online { background-color: #23a55a; }
+.status-idle { background-color: #f0b232; }
+.status-dnd { background-color: #f23f43; }
+.status-offline { background-color: #747f8d; }
 
 /* Discord 이름 */
 #discordName {
