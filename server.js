@@ -172,11 +172,10 @@ fetchYouTubeData();
 
 // === 정적 파일 제공 ===
 app.use(express.static("public"));
+app.get('/ping', (req, res) => res.send('pong'));
 app.get("*", (req, res) => {
   res.sendFile("index.html", { root: "public" });
 });
-
-app.get('/ping', (req, res) => res.send('pong'));
 
 // === 서버 실행 ===
 const PORT = process.env.PORT || 10000;
