@@ -332,21 +332,29 @@ body {
 
     <div id="socials" class="tab-content active">
       <div class="socials">
-        <!-- Discord -->
-        <div class="social-item discord" id="discordCard">
-          <div class="label discord-label">Discord</div>
-          <div class="discord-avatar">
-            <img id="discordAvatar" src="img/dc.jpg" alt="Discord" />
-            <div class="status-dot status-offline" id="discordDot"></div>
-          </div>
-          <div class="discord-info">
-            <p class="discord-name" id="discordName">Loading...</p>
-            <div class="discord-activity" id="discordActivityWrapper">
-              <span id="discordActivity">Connecting...</span>
-              <img id="albumArt" class="album-art hidden" src="" alt="Album Art" />
-            </div>
-          </div>
-        </div>
+<!-- Discord -->
+<div class="social-item discord" id="discordCard">
+  <div class="label discord-label">Discord</div>
+
+  <!-- 왼쪽: 아바타 -->
+  <div class="discord-avatar">
+    <img id="discordAvatar" src="img/dc.jpg" alt="Discord" />
+    <div class="status-dot status-offline" id="discordDot"></div>
+  </div>
+
+  <!-- 가운데: 닉네임 + 노래 정보 -->
+  <div class="discord-info">
+    <p class="discord-name" id="discordName">Loading...</p>
+    <div class="discord-activity" id="discordActivityWrapper">
+      <div class="song-title" id="songTitle">제목</div>
+      <div class="song-artists" id="songArtists">가수</div>
+    </div>
+  </div>
+
+  <!-- 오른쪽: 회전 앨범 아트 -->
+  <img id="albumArt" class="album-art hidden" src="" alt="Album Art" />
+</div>
+
 
         <!-- TikTok -->
         <div class="social-item" id="tiktokCard">
