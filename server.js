@@ -2,6 +2,8 @@ import express from "express";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 import { Client, GatewayIntentBits } from "discord.js";
 
 dotenv.config();
@@ -9,20 +11,19 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 10000;
 
+// 🔧 경로 설정 (Render 환경에서도 경로 오류 방지)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 app.use(cors());
 app.use(express.json());
 
-// ✅ 메인 페이지 라우터 추가
+// ✅ public 폴더 (혹은 index.html이 있는 폴더) 서빙
+app.use(express.static(path.join(__dirname, "public")));
+
+// ✅ 기본 라우트 → index.html 전달
 app.get("/", (req, res) => {
-  res.send(`
-    <html>
-      <head><title>Silfy Site</title></head>
-      <body style="font-family:sans-serif;text-align:center;margin-top:100px;">
-        <h1>🚀 Silfy Server is Running!</h1>
-        <p>Discord Presence Bot is connected.</p>
-      </body>
-    </html>
-  `);
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 // ✅ Discord 봇 초기화
