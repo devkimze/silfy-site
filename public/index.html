@@ -303,17 +303,23 @@ async function fetchDiscordPresence() {
 
     // 활동
     if (data.activity) {
-      const { type, name: actName, details, state } = data.activity;
-      let text = "";
-      if (type === 0) text = `🎮 Playing ${actName}`;
-      else if (type === 2) text = `🎧 Listening to ${state || actName}`;
-      else if (type === 3) text = `📺 Watching ${actName}`;
-      else if (type === 5) text = `💬 Competing in ${actName}`;
-      else text = actName;
-      activity.textContent = text || " ";
-    } else {
-      activity.textContent = " ";
-    }
+  const { type, name: actName, details, state } = data.activity;
+  let text = "";
+
+  if (actName === "Spotify") {
+    // 🎵 Spotify일 경우
+    if (details && state) text = `🎵 ${details} - ${state}`;
+    else text = "🎧 Listening on Spotify";
+  } else if (type === 0) text = `🎮 Playing ${actName}`;
+  else if (type === 2) text = `🎧 Listening to ${state || actName}`;
+  else if (type === 3) text = `📺 Watching ${actName}`;
+  else if (type === 5) text = `💬 Competing in ${actName}`;
+  else text = actName;
+
+  activity.textContent = text || " ";
+} else {
+  activity.textContent = " ";
+}
 
   } catch (err) {
     console.error("Discord status fetch failed:", err);
