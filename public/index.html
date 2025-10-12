@@ -84,17 +84,18 @@ body {
 .social-item:hover { background: #1e1e1e; transform: scale(1.02); }
 
 /* --- 소셜 뱃지 걸침 스타일 --- */
-.label {
+.label-badge {
   position: absolute;
-  top: -14px;
-  left: 0px;
-  padding: 6px 14px;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 700;
+  top: -12px; /* 카드 위로 반쯤 걸치기 */
+  left: 0; /* 왼쪽 끝에 딱 붙이기 */
+  padding: 5px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px 8px 8px 0; /* 왼쪽 하단 각은 둥글지 않게 */
   color: #fff;
-  z-index: 3;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+  z-index: 5;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4); /* 입체감 */
+  backdrop-filter: blur(3px);
 }
 
 /* 플랫폼별 색상 */
