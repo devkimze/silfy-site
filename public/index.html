@@ -100,14 +100,13 @@ body {
 .tab-content {width: 100%; display: none;}
 .tab-content.active {display: block;}
 
-/* === Social Items (통일된 스타일) === */
+/* === Social Items (공통) === */
 .socials {
   display: flex;
   flex-direction: column;
   gap: 18px;
   width: 100%;
 }
-
 .social-item {
   position: relative;
   background-color: #1a1a1a;
@@ -118,7 +117,6 @@ body {
   transition: 0.3s;
   overflow: hidden;
 }
-
 .social-item:hover {
   transform: scale(1.03);
   background-color: #232323;
@@ -126,9 +124,8 @@ body {
   filter: brightness(1.05);
 }
 
-/* 공통 프로필 이미지 — Discord/TikTok/YouTube 모두 통일 */
-.social-item img,
-.discord-avatar img {
+/* 공통 프로필 이미지 */
+.social-item img {
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -136,28 +133,19 @@ body {
   flex-shrink: 0;
   margin-right: 20px;
 }
-
-/* 공통 정보 영역 */
-.social-info,
-.discord-info {
+.social-info {
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 4px;
 }
-
-/* 닉네임 스타일 통일 */
-.social-info p strong,
-.discord-name {
+.social-info p strong {
   font-weight: 600;
   font-size: 17px;
-  color: #d6dbff; /* Discord 톤 기준으로 통일 */
+  color: #d6dbff;
   text-shadow: 0 0 6px rgba(88,101,242,0.3);
 }
-
-/* 하단 상태 텍스트 */
-.status,
-.discord-activity {
+.status {
   font-size: 14px;
   color: #cfd2ff;
   opacity: 0.85;
@@ -167,146 +155,117 @@ body {
   text-shadow: 0 0 6px rgba(255,255,255,0.15);
 }
 
-/* 앨범 아트 — Discord만 회전 */
-.album-art {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  object-fit: cover;
-  animation: spin 8s linear infinite;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
-  transition: opacity 0.3s ease;
-}
-.album-art.hidden { opacity: 0; }
-
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-/* 상태 점 (Discord 전용) */
-.status-dot {
-  position: absolute;
-  bottom: 6px;
-  right: 5px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 3px solid #1e1f22;
-  box-shadow: 0 0 6px rgba(0,0,0,0.4);
-}
-.status-online {background-color: #3ba55d;}
-.status-idle {background-color: #faa61a;}
-.status-dnd {background-color: #ed4245;}
-.status-offline {background-color: #747f8d;}
-
-/* Discord 전용 배경 처리 */
+/* === Discord (리뉴얼 컴팩트형) === */
 .social-item.discord {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background-size: cover;
   background-position: center;
-  padding: 24px 28px;
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 18px 22px;
+  height: 95px;
 }
 .social-item.discord::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.55);
   z-index: 0;
 }
 .discord-avatar {
   position: relative;
-  width: 60px;
-  height: 60px;
   flex-shrink: 0;
-  margin-right: 20px;
-  z-index: 1;
-}
-.discord-info { z-index: 1; }
-
-/* === 라벨 === */
-.label {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 13px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
-  padding: 4px 9px;
-  border-radius: 8px;
-  backdrop-filter: blur(4px);
-  user-select: none;
-  pointer-events: none;
-}
-.discord-label { background: rgba(88,101,242,0.15); }
-.tiktok-label { background: rgba(255,44,85,0.15); }
-.youtube-label { background: rgba(255,0,0,0.15); }
-
-.social-item.discord::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 0;
-}
-.discord-avatar {
-  position: relative;
-  width: 75px;
-  height: 75px;
-  flex-shrink: 0;
-  margin-right: 24px;
+  margin-right: 18px;
   z-index: 1;
 }
 .discord-avatar img {
-  width: 75px;
-  height: 75px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
-  border: 3px solid rgba(255,255,255,0.1);
+  object-fit: cover;
 }
 .status-dot {
   position: absolute;
-  bottom: 5px;
-  right: 4px;
-  width: 18px;
-  height: 18px;
+  bottom: 2px;
+  right: 3px;
+  width: 13px;
+  height: 13px;
   border-radius: 50%;
   border: 3px solid #1e1f22;
-  box-shadow: 0 0 6px rgba(0,0,0,0.4);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
 }
-.status-online {background-color: #3ba55d;}
-.status-idle {background-color: #faa61a;}
-.status-dnd {background-color: #ed4245;}
-.status-offline {background-color: #747f8d;}
+.status-online { background-color: #3ba55d; }
+.status-idle { background-color: #faa61a; }
+.status-dnd { background-color: #ed4245; }
+.status-offline { background-color: #747f8d; }
 
 .discord-info {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 3px;
   z-index: 1;
+  flex-grow: 1;
+  min-width: 0;
 }
 .discord-name {
   font-weight: 600;
-  font-size: 20px;
-  margin-bottom: 5px;
-  color: #dee1ff;
-  text-shadow: 0 0 8px rgba(88,101,242,0.3);
+  font-size: 19px;
+  color: #f8f8ff;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .discord-activity {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #cfd2ff;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
   font-size: 15px;
+  color: #bbb;
+}
+.discord-activity .song-title {
+  color: #eaeaea;
+  font-weight: 500;
+}
+.discord-activity .song-artists {
+  font-size: 14px;
+  color: #9f9f9f;
 }
 .album-art {
-  width: 30px;
-  height: 30px;
-  border-radius: 6px;
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
   object-fit: cover;
   animation: spin 8s linear infinite;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
-  transition: opacity 0.3s ease;
+  box-shadow: 0 0 6px rgba(0,0,0,0.4);
+  flex-shrink: 0;
+  margin-left: 20px;
 }
 .album-art.hidden { opacity: 0; }
-@keyframes spin {from {transform: rotate(0deg);} to {transform: rotate(360deg);}}
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-/* === Settings === */
+/* Discord 라벨 */
+.label.discord-label {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: rgba(88,101,242,0.2);
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+  padding: 2px 6px;
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* === Settings & Gears (기존 유지) === */
 .settings {
   background-color: #1a1a1a;
   border-radius: 15px;
@@ -323,8 +282,6 @@ body {
   background-color: #232323;
   box-shadow: 0 0 15px rgba(79,131,185,0.4);
 }
-
-/* === Gears === */
 .gears {display: flex; flex-direction: column; gap: 20px; width: 100%;}
 .gear-item {
   background-color: #1a1a1a;
@@ -344,12 +301,13 @@ body {
 .gear-item img {width: 70px; height: 70px; border-radius: 10px; object-fit: cover;}
 .gear-info {font-size: 17px;}
 
-/* === 반응형 === */
+/* === Responsive === */
 @media (max-width:480px){
   .tabs {flex-direction:column; gap:10px;}
   .gear-item {flex-direction:column; align-items:center; text-align:center;}
   .gear-item img {margin-bottom:10px;}
 }
+
 </style>
 </head>
 <body>
