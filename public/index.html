@@ -107,8 +107,10 @@ body {
   z-index: 0;
 }
 .social-item.discord:hover {
-  transform: scale(1.04);
-  box-shadow: 0 0 18px rgba(88,101,242,0.6);
+  transform: scale(1.03);
+  background-color: #232323;
+  box-shadow: 0 0 15px rgba(79,131,185,0.4);
+  filter: brightness(1.05);
 }
 .discord-avatar {
   position: relative;
@@ -195,8 +197,8 @@ body {
 </head>
 <body>
   <div class="header-box">
-    <div class="username">Silfy</div>
-    <div class="bio">FPS holic</div>
+    <div class="username">jihoo</div>
+    <div class="bio">C++, HTML, UE5</div>
   </div>
 
   <div class="card" id="card">
@@ -308,12 +310,12 @@ async function fetchDiscordPresence() {
 
   if (actName === "Spotify") {
     // 🎵 Spotify일 경우
-    if (details && state) text = `🎵 ${details} - ${state}`;
+    if (details && state) text = `${details} - ${state}`;
     else text = "🎧 Listening on Spotify";
-  } else if (type === 0) text = `🎮 Playing ${actName}`;
-  else if (type === 2) text = `🎧 Listening to ${state || actName}`;
-  else if (type === 3) text = `📺 Watching ${actName}`;
-  else if (type === 5) text = `💬 Competing in ${actName}`;
+  } else if (type === 0) text = `Playing ${actName}`;
+  else if (type === 2) text = `Listening to ${state || actName}`;
+  else if (type === 3) text = `Watching ${actName}`;
+  else if (type === 5) text = `Competing in ${actName}`;
   else text = actName;
 
   activity.textContent = text || " ";
