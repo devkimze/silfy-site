@@ -171,22 +171,6 @@ body {
   box-shadow: 0 0 15px rgba(79,131,185,0.4);
 }
 
-.discord-spotify {
-  margin-top: 10px;
-  text-align: center;
-}
-.discord-spotify img {
-  width: 70px;
-  height: 70px;
-  border-radius: 10px;
-  object-fit: cover;
-  margin-bottom: 5px;
-}
-.discord-spotify p {
-  font-size: 13px;
-  color: #bbb;
-}
-
 /* === Gears === */
 .gears {display: flex; flex-direction: column; gap: 20px; width: 100%;}
 .gear-item {
@@ -235,14 +219,11 @@ body {
             <img id="discordAvatar" src="img/dc.jpg" alt="Discord" />
             <div class="status-dot status-offline" id="discordDot"></div>
           </div>
-<div class="discord-info">
-  <p class="discord-name" id="discordName">Loading...</p>
-  <p id="discordActivity" class="discord-activity">Connecting...</p>
-  <div id="discordSpotify" class="discord-spotify" style="display:none;">
-    <img id="spotifyAlbum" alt="Album Art" />
-    <p id="spotifyAlbumName"></p>
-  </div>
-</div>
+          <div class="discord-info">
+            <p class="discord-name" id="discordName">Loading...</p>
+            <p id="discordActivity" class="discord-activity">Connecting...</p>
+          </div>
+        </div>
 
         <div class="social-item" id="tiktokCard">
           <div class="label tiktok-label">TikTok</div>
