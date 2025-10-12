@@ -85,98 +85,138 @@ body {
 .tab-content.active {display: block;}
 .socials {display: flex; flex-direction: column; gap: 18px; width: 100%;}
 
-/* === Discord 카드 === */
-.social-item.discord {
+/* === Social 공통 카드 === */
+.social-item {
   position: relative;
+  background-color: #1a1a1a;
   border-radius: 18px;
   padding: 22px 28px;
   display: flex;
   align-items: center;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-  background: linear-gradient(135deg, #1e1f22, #2b2d31);
   transition: 0.3s;
   overflow: hidden;
 }
-.social-item.discord:hover {
-  transform: scale(1.04);
-  box-shadow: 0 0 18px rgba(88,101,242,0.6);
+.social-item:hover {
+  transform: scale(1.03);
+  background-color: #232323;
+  box-shadow: 0 0 15px rgba(79,131,185,0.4);
+  filter: brightness(1.05);
 }
-.discord-avatar {
-  position: relative;
-  margin-right: 20px;
-  z-index: 1;
-}
-.discord-avatar img {
-  width: 70px;
-  height: 70px;
+.social-item img {
+  width: 60px; height: 60px;
   border-radius: 50%;
-  border: 3px solid #5865F2;
-}
-.discord-info { z-index: 1; display: flex; flex-direction: column; gap: 4px; }
-.discord-name {
-  font-size: 20px;
-  font-weight: 600;
-  color: #f5f6fa; /* ✨ 밝게 조정 */
-  text-shadow: 0 0 6px rgba(255,255,255,0.15);
-}
-.discord-activity {
-  color: #e0e0e0; /* 조금 더 밝은 회색 */
-  font-size: 15px;
-  font-weight: 500;
-}
-
-/* 🎵 음악 카드 확장 */
-.music-info {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-top: 8px;
-}
-.album-art {
-  width: 60px;
-  height: 60px;
-  border-radius: 10px;
+  margin-right: 20px;
   object-fit: cover;
-  box-shadow: 0 0 8px rgba(0,0,0,0.6);
 }
-.album-meta {
-  display: flex;
-  flex-direction: column;
-}
-.album-title {
-  color: #fff;
-  font-size: 15px;
-  font-weight: 500;
-}
-.album-name {
-  color: #aaa;
-  font-size: 11px;
-  margin-top: 3px;
-}
+.social-info p {margin: 3px 0;}
+.status {color: #aaa; font-size: 15px;}
 
+/* === 라벨 === */
+.label {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 3px 8px;
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+  user-select: none;
+  pointer-events: none;
+}
+.discord-label { background: rgba(88,101,242,0.15); }
+.tiktok-label { background: rgba(255,44,85,0.15); }
+.youtube-label { background: rgba(255,0,0,0.15); }
+
+/* === Discord === */
+.social-item.discord {background-size: cover; background-position: center;}
+.social-item.discord::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 0;
+}
+.discord-avatar {position: relative; margin-right: 20px; z-index: 1;}
+.discord-avatar img {width: 70px; height: 70px; border-radius: 50%;}
 .status-dot {
   position: absolute;
   bottom: 4px;
-  right: 4px;
+  right: 1px;
   width: 16px;
   height: 16px;
   border-radius: 50%;
   border: 3px solid #2b2d31;
 }
-.status-online { background-color: #3ba55d; }
-.status-idle { background-color: #faa61a; }
-.status-dnd { background-color: #ed4245; }
-.status-offline { background-color: #747f8d; }
+.status-online {background-color: #3ba55d;}
+.status-idle {background-color: #faa61a;}
+.status-dnd {background-color: #ed4245;}
+.status-offline {background-color: #747f8d;}
+
+/* === Settings === */
+.settings {
+  background-color: #1a1a1a;
+  border-radius: 15px;
+  padding: 22px 30px 18px 30px;
+  width: 100%;
+  font-size: 18px;
+  line-height: 1.8;
+}
+.settings-item {margin-bottom: 15px; display: flex; justify-content: space-between; color: #ddd;}
+.settings-item span:first-child {color: var(--accent-light); font-weight: 600;}
+.settings:hover {
+  transform: scale(1.03);
+  background-color: #232323;
+  box-shadow: 0 0 15px rgba(79,131,185,0.4);
+}
+
+.discord-spotify {
+  margin-top: 10px;
+  text-align: center;
+}
+.discord-spotify img {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 5px;
+}
+.discord-spotify p {
+  font-size: 13px;
+  color: #bbb;
+}
+
+/* === Gears === */
+.gears {display: flex; flex-direction: column; gap: 20px; width: 100%;}
+.gear-item {
+  background-color: #1a1a1a;
+  border-radius: 15px;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: 0.3s;
+}
+.gear-item:hover {
+  transform: scale(1.03);
+  background-color: #232323;
+  box-shadow: 0 0 15px rgba(79,131,185,0.4);
+}
+.gear-item img {width: 70px; height: 70px; border-radius: 10px; object-fit: cover;}
+.gear-info {font-size: 17px; color: #fff;}
 
 @media (max-width:480px){
   .tabs {flex-direction:column; gap:10px;}
+  .gear-item {flex-direction:column; align-items:center; text-align:center;}
+  .gear-item img {margin-bottom:10px;}
 }
 </style>
 </head>
 <body>
   <div class="header-box">
-    <div class="username">Silfy</div>
-    <div class="bio">FPS holic</div>
+    <div class="username">jihoo</div>
+    <div class="bio">C++, HTML, UE5</div>
   </div>
 
   <div class="card">
@@ -186,102 +226,144 @@ body {
       <div class="tab" data-tab="gears">Gears</div>
     </div>
 
+    <!-- Social -->
     <div id="socials" class="tab-content active">
       <div class="socials">
-
-        <!-- 🎯 Discord -->
         <div class="social-item discord" id="discordCard">
+          <div class="label discord-label">Discord</div>
           <div class="discord-avatar">
-            <img id="discordAvatar" src="img/discord.png" alt="Discord" />
+            <img id="discordAvatar" src="img/dc.jpg" alt="Discord" />
             <div class="status-dot status-offline" id="discordDot"></div>
           </div>
-          <div class="discord-info" id="discordInfo">
-            <p class="discord-name" id="discordName">gredfver</p>
-            <p class="discord-activity" id="discordActivity"></p>
+<div class="discord-info">
+  <p class="discord-name" id="discordName">Loading...</p>
+  <p id="discordActivity" class="discord-activity">Connecting...</p>
+  <div id="discordSpotify" class="discord-spotify" style="display:none;">
+    <img id="spotifyAlbum" alt="Album Art" />
+    <p id="spotifyAlbumName"></p>
+  </div>
+</div>
+
+        <div class="social-item" id="tiktokCard">
+          <div class="label tiktok-label">TikTok</div>
+          <img id="tiktokAvatar" src="img/tt.png" alt="TikTok" />
+          <div class="social-info">
+            <p><strong id="tiktokName">@silfyxd</strong></p>
+            <p class="status" id="tiktokStats">followers • likes</p>
           </div>
         </div>
 
+        <div class="social-item" id="youtubeCard">
+          <div class="label youtube-label">YouTube</div>
+          <img id="youtubeAvatar" src="img/yt.png" alt="YouTube" />
+          <div class="social-info">
+            <p><strong id="youtubeName">@지후7</strong></p>
+            <p class="status" id="youtubeStats">subs</p>
+          </div>
+        </div>
       </div>
     </div>
 
+    <!-- Settings -->
     <div id="settings" class="tab-content">
-      <p style="text-align:center;color:#999;">settings here</p>
+      <div class="settings">
+        <div class="settings-item"><span>Resolution</span><span>1920 × 1080</span></div>
+        <div class="settings-item"><span>Sensitivity</span><span>43~57cm / 360°</span></div>
+      </div>
     </div>
 
+    <!-- Gears -->
     <div id="gears" class="tab-content">
-      <p style="text-align:center;color:#999;">gears here</p>
+      <div class="gears">
+        <div class="gear-item">
+          <img src="img/keyboard.webp" alt="Keyboard" />
+          <div class="gear-info"><strong>Keyboard:</strong> EZ60</div>
+        </div>
+        <div class="gear-item">
+          <img src="img/mouse.webp" alt="Mouse" />
+          <div class="gear-info"><strong>Mouse:</strong> WLMOUSE Ying</div>
+        </div>
+      </div>
     </div>
   </div>
 
 <script>
-const tabs = document.querySelectorAll('.tab');
-const contents = document.querySelectorAll('.tab-content');
-tabs.forEach(tab => {
+// === 탭 ===
+document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
-    if (tab.classList.contains('active')) return;
-    tabs.forEach(t => t.classList.remove('active'));
-    contents.forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
     tab.classList.add('active');
     document.getElementById(tab.dataset.tab).classList.add('active');
   });
 });
 
+// === Discord ===
 async function fetchDiscordPresence() {
   try {
-    const res = await fetch("/api/discord-status/1256264184996565135");
+    const res = await fetch(`/api/discord-status/1256264184996565135?_=${Date.now()}`);
     const data = await res.json();
-
-    const activityEl = document.getElementById("discordActivity");
+    const avatar = document.getElementById("discordAvatar");
+    const card = document.getElementById("discordCard");
+    const name = document.getElementById("discordName");
+    const activity = document.getElementById("discordActivity");
     const dot = document.getElementById("discordDot");
-    const nameEl = document.getElementById("discordName");
-    const infoEl = document.getElementById("discordInfo");
 
-    nameEl.textContent = data.username || "Unknown";
+    card.style.backgroundImage = data.banner_url
+      ? `url(${data.banner_url})`
+      : "linear-gradient(135deg, #1e1f22, #2b2d31)";
 
+    avatar.src = `${data.avatar_url}?v=${Date.now()}`;
+    name.textContent = data.username || "Unknown";
     dot.className = "status-dot";
-    if (data.status === "online") dot.classList.add("status-online");
-    else if (data.status === "idle") dot.classList.add("status-idle");
-    else if (data.status === "dnd") dot.classList.add("status-dnd");
-    else dot.classList.add("status-offline");
-
-    // 기존 음악 카드 제거
-    const oldMusic = document.querySelector(".music-info");
-    if (oldMusic) oldMusic.remove();
-
-    // 활동 표시
-    if (data.activity && data.activity.name) {
-      if (data.activity.type === "LISTENING") {
-        const song = data.activity.song || data.activity.name;
-        const artistList = [data.activity.artist, ...(data.activity.features || [])]
-          .filter(Boolean).join(", ");
-        const album = data.activity.album || "Unknown Album";
-        const cover = data.activity.album_art || "https://i.imgur.com/5J1Zr3z.png";
-
-        activityEl.textContent = `${song} - ${artistList}`;
-
-        const musicEl = document.createElement("div");
-        musicEl.className = "music-info";
-        musicEl.innerHTML = `
-          <img src="${cover}" alt="album art" class="album-art" />
-          <div class="album-meta">
-            <div class="album-title">${song}</div>
-            <div class="album-name">${album}</div>
-          </div>
-        `;
-        infoEl.appendChild(musicEl);
-      } else if (data.activity.type === "PLAYING") {
-        activityEl.textContent = `Playing ${data.activity.name}`;
-      } else {
-        activityEl.textContent = data.activity.name;
-      }
-    } else {
-      activityEl.textContent = "";
-    }
-  } catch (e) {
-    console.error(e);
+    dot.classList.add(`status-${data.status || "offline"}`);
+    activity.textContent = data.activity ? data.activity.name : "";
+  } catch {
+    document.getElementById("discordActivity").textContent = "불러오기 실패";
   }
 }
+
+// === TikTok ===
+async function fetchTikTokData() {
+  try {
+    const res = await fetch(`/api/tiktok-status/silfyxd?_=${Date.now()}`);
+    const data = await res.json();
+    document.getElementById("tiktokAvatar").src = data.avatar_url;
+    document.getElementById("tiktokName").textContent = `@${data.username}`;
+    document.getElementById("tiktokStats").textContent =
+      `${data.followers.toLocaleString()} followers • ${data.likes.toLocaleString()} likes`;
+  } catch {
+    document.getElementById("tiktokStats").textContent = "불러오기 실패";
+  }
+}
+
+// === YouTube ===
+async function fetchYouTubeData() {
+  try {
+    const res = await fetch(`/api/youtube-status/지후7?_=${Date.now()}`);
+    const data = await res.json();
+    document.getElementById("youtubeAvatar").src = data.avatar_url;
+    document.getElementById("youtubeStats").textContent =
+      `${data.subscribers.toLocaleString()} subs`;
+  } catch {
+    document.getElementById("youtubeStats").textContent = "불러오기 실패";
+  }
+}
+
+// === Redirect ===
+document.getElementById("tiktokCard").addEventListener("click", () => {
+  window.open("https://www.tiktok.com/@silfyxd", "_blank");
+});
+document.getElementById("youtubeCard").addEventListener("click", () => {
+  window.open("https://www.youtube.com/@지후7", "_blank");
+});
+
+// === Interval ===
 fetchDiscordPresence();
+fetchTikTokData();
+fetchYouTubeData();
+setInterval(fetchDiscordPresence, 30000);
+setInterval(fetchTikTokData, 60000);
+setInterval(fetchYouTubeData, 60000);
 </script>
 </body>
 </html>
