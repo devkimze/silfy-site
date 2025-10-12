@@ -125,4 +125,4 @@ app.get("/api/youtube", (_, res) => cachedYouTube ? res.json(cachedYouTube) : re
 setInterval(fetchTikTokData, 1000 * 60 * 5);
 setInterval(fetchYouTubeData, 1000 * 60 * 5);
 fetchTikTokData();
-fetchYouTube
+fetchYouTubeData();
