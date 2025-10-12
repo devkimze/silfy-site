@@ -22,7 +22,7 @@ const client = new Client({
 });
 
 let userPresence = {
-  id: 1256264184996565135,
+  id: TARGET_USER_ID,
   username: "Unknown",
   global_name: "Unknown",
   status: "offline",
