@@ -34,35 +34,39 @@ client.on("presenceUpdate", async (oldPresence, newPresence) => {
   if (!newPresence?.userId) return;
   const user = await newPresence.user.fetch();
   const status = newPresence.status || "offline";
-  const activity = newPresence.activities?.[0] || null;
 
-  // === [MODIFIED: Spotify + album art] ===
+  // 활동 감지 (Spotify 포함)
+  const activities = newPresence.activities || [];
+  const spotify = activities.find(a => a.name === "Spotify");
+  const mainActivity = spotify || activities[0] || null;
+
   let activityData = null;
-  if (activity) {
+
+  if (mainActivity) {
     activityData = {
-      type: activity.type,
-      name: activity.name,
-      details: activity.details,
-      state: activity.state,
-      assets: activity.assets || null,
+      type: mainActivity.type,
+      name: mainActivity.name,
+      details: mainActivity.details,
+      state: mainActivity.state,
+      assets: mainActivity.assets || null,
     };
 
-    // Spotify 감지 시 포맷 변환
-    if (activity.name === "Spotify") {
-      const title = activity.details || "";
-      const artistRaw = activity.state || "";
+    // === Spotify 감지 ===
+    if (spotify) {
+      const title = spotify.details || "";
+      const artistRaw = spotify.state || "";
 
-      // 가수 이름 가공
+      // 가수 이름 포맷 처리
       let artistFormatted = artistRaw;
       if (artistRaw.includes(";")) {
         const parts = artistRaw.split(";").map(p => p.trim());
         artistFormatted = `${parts[0]}, 피처링 ${parts.slice(1).join(", ")}`;
       }
 
-      // Spotify 앨범 이미지 처리
+      // 앨범 아트 URL 처리
       let albumArt = null;
-      if (activity.assets?.largeImage) {
-        const asset = activity.assets.largeImage;
+      if (spotify.assets?.largeImage) {
+        const asset = spotify.assets.largeImage;
         if (asset.startsWith("spotify:")) {
           const id = asset.replace("spotify:", "");
           albumArt = `https://i.scdn.co/image/${id}`;
@@ -71,6 +75,9 @@ client.on("presenceUpdate", async (oldPresence, newPresence) => {
 
       activityData.formatted = `${title} - ${artistFormatted}`;
       activityData.album_art_url = albumArt;
+    } else {
+      // Spotify가 아닐 때는 단순 활동 이름 표시
+      activityData.formatted = mainActivity.name || "";
     }
   }
 
@@ -89,8 +96,8 @@ client.on("presenceUpdate", async (oldPresence, newPresence) => {
 // === Discord Presence API ===
 app.get("/api/discord-status/:userId", async (req, res) => {
   const userId = req.params.userId;
-
-  if (cachedUserData[userId]) return res.json(cachedUserData[userId]);
+  const cached = cachedUserData[userId];
+  if (cached) return res.json(cached);
 
   try {
     const user = await client.users.fetch(userId);
@@ -111,9 +118,7 @@ app.get("/api/discord-status/:userId", async (req, res) => {
 // === TikTok 데이터 ===
 async function fetchTikTokData() {
   try {
-    const res = await fetch(
-      `https://www.tiktok.com/@silfyxd?__a=1&__d=dis`
-    );
+    const res = await fetch(`https://www.tiktok.com/@silfyxd?__a=1&__d=dis`);
     const text = await res.text();
 
     const jsonMatch = text.match(/{\"props\":.*\"appContext\":.*}}<\/script>/);
