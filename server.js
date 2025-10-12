@@ -3,6 +3,17 @@ import fetch from "node-fetch";
 import cors from "cors";
 import dotenv from "dotenv";
 import { Client, GatewayIntentBits } from "discord.js";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// index.html을 기본 페이지로 서빙
+app.use(express.static(__dirname));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
 
 dotenv.config();
 const app = express();
