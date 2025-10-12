@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { Client, GatewayIntentBits } from "discord.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
@@ -10,14 +12,22 @@ app.use(cors());
 
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
 const PORT = process.env.PORT || 10000;
-const TARGET_USER_ID = "1256264184996565135"; // ✅ 감시할 유저 ID
+const TARGET_USER_ID = "1256264184996565135";
 
-// === Discord 클라이언트 설정 ===
+// ✅ 경로 유틸 (Render 환경에서 절대경로 문제 방지)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// === 정적 파일 서빙 (index.html, css, js, img 등) ===
+app.use(express.static(path.join(__dirname, "public"))); 
+// public 폴더 안에 index.html을 두면 자동으로 불러옴
+
+// === Discord 클라이언트 ===
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildPresences,
     GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildPresences,
   ],
 });
 
@@ -29,50 +39,55 @@ let userPresence = {
   activity: null,
 };
 
-// === 봇 로그인 ===
 client.once("ready", async () => {
   console.log(`✅ Logged in as ${client.user.tag}`);
 
-  // 혹시 이미 캐시된 멤버 정보 있으면 초기화
-  try {
-    for (const [guildId, guild] of client.guilds.cache) {
+  for (const [, guild] of client.guilds.cache) {
+    try {
       const member = await guild.members.fetch(TARGET_USER_ID).catch(() => null);
-      if (member && member.presence) {
-        updatePresence(member.presence);
-      }
+      if (member && member.presence) updatePresence(member.presence);
+    } catch (err) {
+      console.error("초기 Presence 불러오기 실패:", err);
     }
-  } catch (err) {
-    console.error("초기 Presence 불러오기 실패:", err);
   }
 });
 
-// === Presence 변경 감시 ===
 client.on("presenceUpdate", (oldPresence, newPresence) => {
   if (!newPresence || newPresence.userId !== TARGET_USER_ID) return;
   updatePresence(newPresence);
 });
 
-// === Presence 업데이트 함수 ===
 function updatePresence(presence) {
+  const activity = presence.activities?.[0];
+  let activityText = null;
+
+  if (activity) {
+    if (activity.type === 0) activityText = `🎮 ${activity.name}`;
+    else if (activity.type === 2) activityText = `🎧 ${activity.name}`;
+    else if (activity.type === 1) activityText = `📺 Streaming`;
+    else activityText = activity.name;
+  }
+
   userPresence = {
     id: presence.userId,
     username: presence.user?.username || "Unknown",
     global_name: presence.user?.globalName || "Unknown",
     status: presence.status || "offline",
-    activity: presence.activities?.[0]?.name || null,
+    activity: activityText,
   };
-  console.log("🟢 Presence 업데이트됨:", userPresence);
+
+  console.log("🔄 Presence 업데이트:", userPresence);
 }
 
-// === API 엔드포인트 ===
+// === API ===
 app.get("/api/discord-status", (req, res) => {
   res.json(userPresence);
 });
 
-// === 서버 실행 ===
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+// ✅ index.html을 루트 경로에서 직접 응답
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// === 봇 로그인 ===
 client.login(DISCORD_TOKEN);
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
