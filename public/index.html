@@ -216,8 +216,8 @@ body {
             <div class="status-dot status-offline" id="discordDot"></div>
           </div>
           <div class="discord-info">
-            <p class="discord-name" id="discordName">gredfver</p>
-            <p id="discordActivity" class="discord-activity">Loading...</p>
+            <p class="discord-name" id="discordName">Loading...</p>
+            <p id="discordActivity" class="discord-activity">Connecting...</p>
           </div>
         </div>
 
@@ -274,10 +274,10 @@ tabs.forEach(tab => {
   });
 });
 
-// === Discord Presence 불러오기 ===
+// === Discord Presence 실시간 새로고침 ===
 async function fetchDiscordPresence() {
   try {
-    const res = await fetch("/api/discord-status/1256264184996565135");
+    const res = await fetch(`/api/discord-status/1256264184996565135?_=${Date.now()}`);
     const data = await res.json();
 
     const avatar = document.getElementById("discordAvatar");
@@ -287,35 +287,30 @@ async function fetchDiscordPresence() {
     const dot = document.getElementById("discordDot");
 
     // 배너
-    card.style.backgroundImage = data.banner_url 
+    card.style.backgroundImage = data.banner_url
       ? `url(${data.banner_url})`
       : "linear-gradient(135deg, #1e1f22, #2b2d31)";
 
     // 아바타
-    avatar.src = data.avatar_url || "img/dc.jpg";
+    avatar.src = `${data.avatar_url}?v=${Date.now()}`;
 
     // 이름
     name.textContent = data.username || "Unknown";
 
-    // 상태 점 (online/idle/dnd/offline)
-    const status = (data.status || "offline").trim().toLowerCase();
+    // 상태 점
     dot.className = "status-dot";
-    if (status === "online") dot.classList.add("status-online");
-    else if (status === "idle") dot.classList.add("status-idle");
-    else if (status === "dnd") dot.classList.add("status-dnd");
-    else dot.classList.add("status-offline");
+    dot.classList.add(`status-${data.status || "offline"}`);
 
-    // 활동 표시
+    // 활동
     if (data.activity) {
-      if (data.activity.type === "LISTENING") {
-        activity.textContent = `🎧 ${data.activity.artist} - ${data.activity.song}`;
-      } else if (data.activity.type === "PLAYING") {
-        activity.textContent = `🎮 Playing ${data.activity.name}`;
-      } else if (data.activity.name) {
-        activity.textContent = data.activity.name;
-      } else {
-        activity.textContent = " ";
-      }
+      const { type, name: actName, details, state } = data.activity;
+      let text = "";
+      if (type === 0) text = `🎮 Playing ${actName}`;
+      else if (type === 2) text = `🎧 Listening to ${state || actName}`;
+      else if (type === 3) text = `📺 Watching ${actName}`;
+      else if (type === 5) text = `💬 Competing in ${actName}`;
+      else text = actName;
+      activity.textContent = text || " ";
     } else {
       activity.textContent = " ";
     }
@@ -326,6 +321,7 @@ async function fetchDiscordPresence() {
   }
 }
 
+// === 페이지 로드시 즉시 불러오기 + 30초마다 갱신 ===
 fetchDiscordPresence();
 setInterval(fetchDiscordPresence, 30000);
 </script>
