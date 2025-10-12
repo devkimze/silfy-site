@@ -145,15 +145,16 @@ body {
   border-radius: 50%;
   border: 3px solid #2b2d31;
   box-shadow: 0 0 12px rgba(0,0,0,0.6);
-}.status-dot {
+.status-dot {
   position: absolute;
-  bottom: 2px;          /* 아바타와 살짝 겹치도록 */
-  right: 3px;
-  width: 20px;
-  height: 20px;
+  bottom: -2px;          /* 아래로 더 내리면 겹침 효과 ↑ */
+  right: -2px;           /* 오른쪽으로 약간 밀착 */
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  border: 3px solid #1e1f22; /* 디스코드 배경색과 유사한 경계 */
-  box-shadow: 0 0 8px rgba(0,0,0,0.5), 0 0 10px rgba(255,255,255,0.15) inset;
+  border: 3px solid #1e1f22; /* 카드 배경 경계색 */
+  background-color: #f23f43; /* 예시: DND */
+  box-shadow: 0 0 10px rgba(0,0,0,0.4), 0 0 8px rgba(255,255,255,0.12) inset;
   z-index: 2;
 }
 
