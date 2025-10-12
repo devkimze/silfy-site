@@ -183,33 +183,37 @@ app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 // === Discord 로그인 ===
 client.login(process.env.DISCORD_TOKEN);
 
+<script>
 async function fetchDiscordPresence() {
   try {
     const res = await fetch(`/api/discord-status/1256264184996565135?_=${Date.now()}`);
     const data = await res.json();
 
-    const avatarImg = document.querySelector(".discord-avatar img");
-    const name = document.querySelector(".discord-name");
-    const dot = document.querySelector(".status-dot");
-    const activity = document.querySelector(".discord-activity");
-    const albumArt = document.querySelector(".album-art");
-    const card = document.querySelector(".social-item.discord");
+    // === 요소 선택 ===
+    const avatarImg = document.querySelector("#discordAvatar");
+    const name = document.querySelector("#discordName");
+    const dot = document.querySelector("#discordDot");
+    const titleEl = document.querySelector("#songTitle");
+    const artistEl = document.querySelector("#songArtists");
+    const albumArt = document.querySelector("#albumArt");
+    const card = document.querySelector("#discordCard");
 
     // === 아바타 & 상태 ===
-    avatarImg.src = `${data.avatar_url}?v=${Date.now()}`;
+    if (data.avatar_url) avatarImg.src = `${data.avatar_url}?v=${Date.now()}`;
     dot.className = "status-dot";
     dot.classList.add(`status-${data.status || "offline"}`);
     name.textContent = data.username || "Unknown";
 
     // === 활동 (Spotify만 2줄 표시) ===
     if (data.activity?.name === "Spotify") {
-      const title = data.activity.details || "";
-      const artists = (data.activity.state || "").split(";").map(a => a.trim()).join(", ");
+      const title = data.activity.details || "제목 없음";
+      const artists = (data.activity.state || "")
+        .split(";")
+        .map(a => a.trim())
+        .join(", ") || "가수 미상";
 
-      activity.innerHTML = `
-        <div class="song-title">${title}</div>
-        <div class="song-artists">${artists}</div>
-      `;
+      titleEl.textContent = title;
+      artistEl.textContent = artists;
 
       if (data.activity.album_art_url) {
         albumArt.src = data.activity.album_art_url;
@@ -217,10 +221,15 @@ async function fetchDiscordPresence() {
       } else {
         albumArt.classList.add("hidden");
       }
+    } else if (data.activity) {
+      // 기타 활동
+      titleEl.textContent = data.activity.formatted || data.activity.name || "활동 없음";
+      artistEl.textContent = "";
+      albumArt.classList.add("hidden");
     } else {
-      // 기타 활동은 한 줄만
-      const actText = data.activity?.formatted || data.activity?.name || "활동 없음";
-      activity.innerHTML = `<div class="song-title">${actText}</div>`;
+      // 완전 비활동 상태
+      titleEl.textContent = "현재 활동 없음";
+      artistEl.textContent = "";
       albumArt.classList.add("hidden");
     }
 
@@ -229,12 +238,16 @@ async function fetchDiscordPresence() {
       ? `url(${data.banner_url})`
       : "linear-gradient(135deg,#1e1f22,#2b2d31)";
   } catch (err) {
-    console.error(err);
-    document.querySelector(".discord-activity").innerHTML = `<div class="song-title">불러오기 실패</div>`;
+    console.error("Discord Presence Fetch Error:", err);
+    document.querySelector("#songTitle").textContent = "불러오기 실패";
+    document.querySelector("#songArtists").textContent = "";
   }
 }
 
+// 초기 호출 + 15초마다 갱신
 fetchDiscordPresence();
 setInterval(fetchDiscordPresence, 15000);
+</script>
+
 
 
