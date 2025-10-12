@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
 
 // ✅ 특정 사용자 Presence 조회
 app.get("/api/discord-status/:userId", async (req, res) => {
-  const userId = req.params.userId;
+  const userId = req.params.userId || "1256264184996565135";
 
   if (!DISCORD_TOKEN) {
     return res.status(500).json({ error: "DISCORD_TOKEN not found in environment" });
