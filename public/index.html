@@ -6,7 +6,6 @@
 <title>jihoo</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
 body {
   background: #0a0a0a;
   font-family: 'Poppins', sans-serif;
@@ -30,7 +29,7 @@ body {
 .username { font-size: 56px; font-weight: 700; letter-spacing: -0.02em; }
 .bio { font-size: 20px; color: #bbb; margin-top: 10px; }
 
-/* main card */
+/* card */
 .card {
   background: #0b0b0b;
   border-radius: 25px;
@@ -73,80 +72,73 @@ body {
   gap: 18px;
 }
 
-/* social card base */
+/* 소셜 카드 기본 */
 .social-item {
-  background: rgba(20,20,20,0.85);
+  position: relative;
   border-radius: 18px;
   padding: 18px 22px;
   display: flex;
   align-items: center;
   gap: 15px;
-  position: relative;
   overflow: hidden;
   transition: 0.18s ease;
+  background: rgba(20,20,20,0.85);
 }
-.social-item:hover { background: #1e1e1e; transform: translateY(-3px); }
+.social-item:hover { transform: translateY(-3px); }
 
-/* badge */
+/* 카드 배경용 프로필 배너 */
+.discord {
+  background: rgba(20,20,20,0.85);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  box-shadow: 0 0 30px rgba(0,0,0,0.6);
+}
+.discord::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45); /* 오버레이 */
+  z-index: 1;
+}
+
+/* 배지 */
 .label-badge {
   position: absolute;
   top: -14px;
-  left: 0;
+  left: 0px;
   padding: 6px 14px;
   font-size: 13px;
   font-weight: 600;
   border-radius: 10px;
   color: #fff;
-  z-index: 5;
+  z-index: 6;
   box-shadow: 0 6px 16px rgba(0,0,0,0.45);
 }
 .discord-badge { background: linear-gradient(180deg,#6f79ff,#5865f2); }
 .tiktok-badge { background: linear-gradient(180deg,#ff3a77,#ff0050); }
 .youtube-badge { background: linear-gradient(180deg,#ff4b4b,#ff0000); }
 
-/* 배너 (카드 전체 배경으로 채우기) */
-.discord-banner {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
-  border-radius: 18px;
-  z-index: 0;
-  opacity: 1;
-  filter: brightness(0.7);
-  clip-path: none !important;
-  border: none !important;
-  transition: opacity 0.4s ease;
-}
-.discord-banner.hidden { opacity: 0; }
-
-/* content inside discord card */
-.discord-content {
-  position: relative;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-/* avatar */
+/* 아바타 */
 .discord-avatar {
   position: relative;
   width: 70px;
   height: 70px;
   border-radius: 50%;
   flex-shrink: 0;
+  overflow: visible;
+  z-index: 3;
 }
 .discord-avatar img {
   width: 70px;
   height: 70px;
   border-radius: 50%;
   object-fit: cover;
+  display: block;
   border: 3px solid rgba(0,0,0,0.45);
   box-shadow: 0 6px 18px rgba(0,0,0,0.6);
 }
-
-/* status */
 .status-dot {
   position: absolute;
   bottom: 4px;
@@ -155,13 +147,14 @@ body {
   height: 14px;
   border-radius: 50%;
   border: 3px solid #0b0b0b;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.45);
 }
 .status-online { background: #3ba55d; }
 .status-idle { background: #faa61a; }
 .status-dnd { background: #ed4245; }
 .status-offline { background: #747f8d; }
 
-/* album art */
+/* CD 회전 앨범 */
 .album-art {
   position: absolute;
   right: 22px;
@@ -176,6 +169,7 @@ body {
   box-shadow:
     inset 0 0 8px rgba(255,255,255,0.25),
     0 6px 30px rgba(0,0,0,0.6);
+  z-index: 3;
 }
 .album-art.hidden { display: none; }
 @keyframes spinCD {
@@ -183,8 +177,13 @@ body {
   to { transform: translateY(-50%) rotate(360deg); }
 }
 
-/* other socials */
-.social-item img {
+/* 정보 */
+.discord-info { position: relative; z-index: 3; }
+.social-info { display: flex; flex-direction: column; justify-content: center; }
+.social-info strong { color: #fff; }
+.social-info .status { color: #bdbdbd; font-size: 14px; }
+
+.social-item img:not(.album-art) {
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -192,18 +191,10 @@ body {
   flex-shrink: 0;
   border: 2px solid rgba(0,0,0,0.45);
 }
-.social-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.social-info p { margin: 0; color: #e7e7e7; }
-.social-info strong { color: #fff; }
-.social-info .status { color: #bdbdbd; font-size: 14px; }
 
-/* responsive */
+/* 반응형 */
 @media (max-width:760px){
-  .header-box, .card { width: 92%; }
+  .header-box, .card { width: 92%; padding-left: 20px; padding-right: 20px; }
   .username { font-size: 40px; }
   .album-art { width: 54px; height: 54px; right: 12px; }
   .discord-avatar, .discord-avatar img { width: 56px; height: 56px; }
@@ -228,20 +219,17 @@ body {
         <!-- Discord -->
         <div class="social-item discord" id="discordCard">
           <div class="label-badge discord-badge">Discord</div>
-          <img id="discordBanner" class="discord-banner hidden" src="" alt="Banner" />
-          <div class="discord-content">
-            <div class="discord-avatar">
-              <img id="discordAvatar" src="img/dc.jpg" alt="Discord" />
-              <div class="status-dot status-offline" id="discordDot"></div>
-            </div>
-            <div class="discord-info">
-              <p class="discord-name" id="discordName">Loading...</p>
-              <div class="discord-activity" id="discordActivityWrapper">
-                <span id="discordActivity">활동 없음</span>
-              </div>
-            </div>
-            <img id="albumArt" class="album-art hidden" src="" alt="Album Art" />
+          <div class="discord-avatar">
+            <img id="discordAvatar" src="img/dc.jpg" alt="Discord" />
+            <div class="status-dot status-offline" id="discordDot"></div>
           </div>
+          <div class="discord-info">
+            <p class="discord-name" id="discordName">Loading...</p>
+            <div id="discordActivityWrapper">
+              <span id="discordActivity">활동 없음</span>
+            </div>
+          </div>
+          <img id="albumArt" class="album-art hidden" src="" alt="Album Art" />
         </div>
 
         <!-- TikTok -->
@@ -287,24 +275,27 @@ async function fetchDiscordPresence(){
     const activityEl = document.getElementById("discordActivity");
     const dot = document.getElementById("discordDot");
     const albumArt = document.getElementById("albumArt");
-    const banner = document.getElementById("discordBanner");
+    const card = document.getElementById("discordCard");
 
+    // avatar / name / status
     if (data.avatar_url) avatar.src = `${data.avatar_url}?v=${Date.now()}`;
     name.textContent = data.username || "Unknown";
     dot.className = "status-dot status-" + (data.status || "offline");
 
+    // 배너를 카드 배경으로 설정
     if (data.banner_url) {
-      banner.src = data.banner_url;
-      banner.classList.remove("hidden");
+      card.style.backgroundImage = `url("${data.banner_url}")`;
+      card.style.backgroundSize = "cover";
+      card.style.backgroundPosition = "center";
     } else {
-      banner.classList.add("hidden");
+      card.style.backgroundImage = "none";
     }
 
+    // 활동(Spotify)
     if (data.activity?.name === "Spotify") {
       const title = data.activity.details || "Unknown Track";
-      const artistsRaw = data.activity.state || "";
-      const artists = artistsRaw.split(";").map(s=>s.trim()).filter(Boolean).join(", ");
-      activityEl.innerHTML = `<span class="song-title">${title}</span> - <span class="song-artists">${artists}</span>`;
+      const artists = (data.activity.state || "").split(";").map(s=>s.trim()).join(", ");
+      activityEl.innerHTML = `<span class="song-title">${title}</span><br><span class="song-artists">${artists}</span>`;
 
       if (data.activity.album_art_url) {
         albumArt.src = data.activity.album_art_url;
@@ -333,7 +324,6 @@ async function fetchTikTokData(){
     document.getElementById("tiktokStats").textContent = "불러오기 실패";
   }
 }
-
 async function fetchYouTubeData(){
   try{
     const res = await fetch(`/api/youtube?_=${Date.now()}`);
