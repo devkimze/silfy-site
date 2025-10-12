@@ -1,61 +1,60 @@
-// === server.js ===
-const express = require("express");
-const fetch = require("node-fetch");
-const cors = require("cors");
-const path = require("path");
+// ✅ server.js (Render 완전호환 버전)
+import express from "express";
+import dotenv from "dotenv";
+import { Client, GatewayIntentBits } from "discord.js";
+
+dotenv.config(); // .env 파일이 있을 경우 로드, Render에서는 환경변수 그대로 사용됨
 
 const app = express();
-app.use(cors());
-app.use(express.static(path.join(__dirname, "public"))); // public 폴더 내 HTML, CSS, JS 서빙
+const port = process.env.PORT || 10000;
 
-// === Discord Presence 캐시 ===
-let presenceCache = new Map();
-
-// === Presence 가져오기 함수 ===
-async function getDiscordPresence(userId) {
-  // 캐시에 있으면 바로 반환 (1분 캐시)
-  const cached = presenceCache.get(userId);
-  if (cached && Date.now() - cached.timestamp < 60000) {
-    return cached.data;
-  }
-
-  try {
-    const response = await fetch(`https://discord.com/api/v10/users/${userId}`, {
-      headers: { Authorization: `Bot ${process.env.DISCORD_TOKEN}` },
-    });
-    const data = await response.json();
-
-    if (!data.id) {
-      return { status: "unknown", activity: "데이터 없음" };
-    }
-
-    const presenceData = {
-      status: "dnd",
-      activity: data.username || "활동 없음",
-    };
-
-    // 캐시에 저장
-    presenceCache.set(userId, { data: presenceData, timestamp: Date.now() });
-
-    return presenceData;
-  } catch (err) {
-    console.error("Presence fetch error:", err);
-    return { status: "offline", activity: "불러오기 실패" };
-  }
+// ✅ 환경변수 로드 확인
+if (!process.env.DISCORD_TOKEN) {
+  console.error("❌ DISCORD_TOKEN이 설정되지 않았습니다. Render Environment 탭 확인하세요.");
+} else {
+  console.log("✅ DISCORD_TOKEN 로드 완료");
 }
 
-// === API 라우트 ===
+// ✅ Discord 클라이언트 생성
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.GuildMembers,
+  ],
+});
+
+// ✅ 봇 로그인 완료 시
+client.once("ready", () => {
+  console.log(`🤖 Discord 봇 로그인 성공: ${client.user.tag}`);
+});
+
+// ✅ 로그인 시도
+client.login(process.env.DISCORD_TOKEN).catch((err) => {
+  console.error("❌ Discord 로그인 실패:", err.message);
+});
+
+// ✅ API 라우트: 특정 유저 상태 조회
 app.get("/api/discord-status/:id", async (req, res) => {
   const userId = req.params.id;
-  const presence = await getDiscordPresence(userId);
-  res.json(presence);
+  try {
+    const user = await client.users.fetch(userId, { force: true }).catch(() => null);
+
+    if (!user || !user.presence) {
+      return res.json({ status: "unknown", activity: "데이터 없음" });
+    }
+
+    const status = user.presence?.status || "unknown";
+    const activity = user.presence?.activities?.[0]?.name || "없음";
+
+    res.json({ status, activity });
+  } catch (error) {
+    console.error("❌ 상태 조회 오류:", error);
+    res.json({ status: "unknown", activity: "오류" });
+  }
 });
 
-// === 기본 페이지 (index.html) ===
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+// ✅ 서버 시작
+app.listen(port, () => {
+  console.log(`🚀 서버 실행 중: 포트 ${port}`);
 });
-
-// === 서버 실행 ===
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
