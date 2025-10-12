@@ -118,29 +118,36 @@ body {
 /* === 아바타 + 상태표시기 === */
 .discord-avatar {
   position: relative;
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   flex-shrink: 0;
-  z-index: 2;
-}
-.discord-avatar img {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%; /* 원형 */
-  border: 2px solid rgba(255,255,255,0.3);
-  object-fit: cover;
-  box-shadow: 0 0 8px rgba(0,0,0,0.6);
-}
-.status-dot {
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  border: 2px solid #141414;
+  border-radius: 50%; /* 완전한 원형 */
+  overflow: visible;
   z-index: 3;
 }
+
+.discord-avatar img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%; /* 완전한 원형 */
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+/* === 상태표시기 === */
+.status-dot {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 3px solid #141414; /* 카드 배경색 기준 */
+  z-index: 4;
+  box-shadow: 0 0 6px rgba(0,0,0,0.6);
+}
+
 .status-online { background: #3ba55d; }
 .status-idle { background: #faa61a; }
 .status-dnd { background: #ed4245; }
