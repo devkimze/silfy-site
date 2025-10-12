@@ -6,7 +6,9 @@
   <title>Silfyxd</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-
+    * {
+      box-sizing: border-box;
+    }
     body {
       background-color: #0e0f11;
       font-family: 'Inter', sans-serif;
@@ -54,14 +56,6 @@
       background-color: #1f2124;
     }
 
-    .social-item img {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      margin-right: 18px;
-      object-fit: cover;
-    }
-
     .social-info {
       display: flex;
       flex-direction: column;
@@ -85,21 +79,23 @@
       padding: 22px 26px;
       position: relative;
       min-height: 110px;
+      display: flex;
+      align-items: center;
     }
 
     .discord-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      margin-right: 18px;
+      object-fit: cover;
       position: relative;
-      width: 70px;
-      height: 70px;
-      flex-shrink: 0;
-      margin-right: 22px;
-      z-index: 1;
     }
 
     .status-dot {
       position: absolute;
-      bottom: 5px;
-      right: 5px;
+      bottom: 4px;
+      right: 4px;
       width: 14px;
       height: 14px;
       border-radius: 50%;
@@ -115,16 +111,14 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 5px;
       z-index: 1;
     }
 
     .discord-name {
       font-weight: 600;
-      font-size: 19px;
+      font-size: 18px;
       color: #dee1ff;
       text-shadow: 0 0 8px rgba(88,101,242,0.3);
-      margin-bottom: 3px;
     }
 
     .discord-song {
@@ -132,10 +126,11 @@
       color: #ffffff;
       font-weight: 500;
       line-height: 1.2;
+      margin-top: 2px;
     }
 
     .discord-artist {
-      font-size: 14px;
+      font-size: 13px;
       color: #b8baff;
       opacity: 0.9;
     }
@@ -155,7 +150,7 @@
 
     .album-art {
       position: absolute;
-      top: 58px; /* Discord 뱃지 아래 */
+      top: 58px;
       right: 18px;
       width: 46px;
       height: 46px;
@@ -164,8 +159,8 @@
       animation: spin 8s linear infinite;
       box-shadow: 0 0 8px rgba(0,0,0,0.5);
       transition: opacity 0.3s ease;
-      z-index: 3;
     }
+
     .album-art.hidden { opacity: 0; }
 
     @keyframes spin {
@@ -181,13 +176,17 @@
     <div class="tab">Gears</div>
   </div>
 
-  <!-- Discord Card -->
+  <!-- Discord -->
   <div class="social-item discord" id="discordCard">
-    <img id="discordAvatar" class="discord-avatar" src="" alt="avatar">
-    <div class="status-dot" id="discordDot"></div>
+    <div style="position: relative;">
+      <img id="discordAvatar" class="discord-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="avatar">
+      <div class="status-dot status-offline" id="discordDot"></div>
+    </div>
     <div class="discord-info">
       <div class="discord-name" id="discordName">Loading...</div>
-      <div id="discordActivity"></div>
+      <div id="discordActivity">
+        <div class="discord-song">Fetching activity...</div>
+      </div>
     </div>
     <div class="discord-badge">Discord</div>
     <img id="albumArt" class="album-art hidden" src="" alt="album art">
@@ -195,7 +194,7 @@
 
   <!-- TikTok -->
   <div class="social-item">
-    <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="TikTok">
+    <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="TikTok" style="width:44px;height:44px;object-fit:contain;margin-right:16px;">
     <div class="social-info">
       <div class="username">@undefined</div>
       <div class="desc">불러오기 실패</div>
@@ -205,7 +204,7 @@
 
   <!-- YouTube -->
   <div class="social-item">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube" style="width:44px;height:44px;object-fit:contain;margin-right:16px;">
     <div class="social-info">
       <div class="username">@지후7</div>
       <div class="desc">30,500 subs</div>
@@ -219,10 +218,10 @@
         const res = await fetch(`/api/discord-status/1256264184996565135?_=${Date.now()}`);
         const data = await res.json();
         const avatar = document.getElementById("discordAvatar");
-        const card = document.getElementById("discordCard");
         const name = document.getElementById("discordName");
-        const activityText = document.getElementById("discordActivity");
         const dot = document.getElementById("discordDot");
+        const activityText = document.getElementById("discordActivity");
+        const card = document.getElementById("discordCard");
         const albumArt = document.getElementById("albumArt");
 
         avatar.src = `${data.avatar_url}?v=${Date.now()}`;
@@ -232,34 +231,30 @@
 
         if (data.activity?.name === "Spotify") {
           const title = data.activity.details || "";
-          const artistsRaw = data.activity.state || "";
-          const artists = artistsRaw.split(";").map(a => a.trim()).join(", ");
+          const artists = (data.activity.state || "").split(";").map(a => a.trim()).join(", ");
           activityText.innerHTML = `
             <div class="discord-song">${title}</div>
             <div class="discord-artist">${artists}</div>
           `;
-
           if (data.activity.album_art_url) {
             albumArt.src = data.activity.album_art_url;
             albumArt.classList.remove("hidden");
           } else {
             albumArt.classList.add("hidden");
           }
-
-          card.style.backgroundImage = data.banner_url
-            ? \`url(\${data.banner_url})\`
-            : "linear-gradient(135deg,#1e1f22,#2b2d31)";
         } else {
           activityText.innerHTML = `
             <div class="discord-song">${data.activity?.formatted || data.activity?.name || ""}</div>
           `;
           albumArt.classList.add("hidden");
-          card.style.backgroundImage = data.banner_url
-            ? \`url(\${data.banner_url})\`
-            : "linear-gradient(135deg,#1e1f22,#2b2d31)";
         }
-      } catch (e) {
-        document.getElementById("discordActivity").textContent = "불러오기 실패";
+
+        card.style.backgroundImage = data.banner_url
+          ? \`url(\${data.banner_url})\`
+          : "linear-gradient(135deg,#1e1f22,#2b2d31)";
+      } catch (err) {
+        console.error(err);
+        document.getElementById("discordActivity").innerHTML = `<div class="discord-song">불러오기 실패</div>`;
       }
     }
 
