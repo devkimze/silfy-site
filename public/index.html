@@ -153,48 +153,11 @@ body {
 .status-idle {background-color: #faa61a;}
 .status-dnd {background-color: #ed4245;}
 .status-offline {background-color: #747f8d;}
-.discord-info {position: relative; z-index: 1; color: #eee;} /* 글씨 밝게 */
-
-/* === Settings === */
-.settings {
-  background-color: #1a1a1a;
-  border-radius: 15px;
-  padding: 22px 30px 18px 30px;
-  width: 100%;
-  font-size: 18px;
-  line-height: 1.8;
-}
-.settings-item {margin-bottom: 15px; display: flex; justify-content: space-between; color: #ddd;}
-.settings-item span:first-child {color: var(--accent-light); font-weight: 600;}
-.settings:hover {
-  transform: scale(1.03);
-  background-color: #232323;
-  box-shadow: 0 0 15px rgba(79,131,185,0.4);
-}
-
-/* === Gears === */
-.gears {display: flex; flex-direction: column; gap: 20px; width: 100%;}
-.gear-item {
-  background-color: #1a1a1a;
-  border-radius: 15px;
-  padding: 15px 20px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  transition: 0.3s;
-}
-.gear-item:hover {
-  transform: scale(1.03);
-  background-color: #232323;
-  box-shadow: 0 0 15px rgba(79,131,185,0.4);
-}
-.gear-item img {width: 70px; height: 70px; border-radius: 10px; object-fit: cover;}
-.gear-info {font-size: 17px; color: #fff;}
+.discord-info {position: relative; z-index: 1; color: #eee;}
+#spotifyArt {border-radius: 10px; margin-top: 10px; width: 100%; display: none;}
 
 @media (max-width:480px){
   .tabs {flex-direction:column; gap:10px;}
-  .gear-item {flex-direction:column; align-items:center; text-align:center;}
-  .gear-item img {margin-bottom:10px;}
 }
 </style>
 </head>
@@ -223,6 +186,7 @@ body {
           <div class="discord-info">
             <p class="discord-name" id="discordName">Loading...</p>
             <p id="discordActivity" class="discord-activity">Connecting...</p>
+            <img id="spotifyArt" />
           </div>
         </div>
 
@@ -257,20 +221,13 @@ body {
     <!-- Gears -->
     <div id="gears" class="tab-content">
       <div class="gears">
-        <div class="gear-item">
-          <img src="img/keyboard.webp" alt="Keyboard" />
-          <div class="gear-info"><strong>Keyboard:</strong> EZ60</div>
-        </div>
-        <div class="gear-item">
-          <img src="img/mouse.webp" alt="Mouse" />
-          <div class="gear-info"><strong>Mouse:</strong> WLMOUSE Ying</div>
-        </div>
+        <div class="gear-item"><img src="img/keyboard.webp" alt="Keyboard" /><div class="gear-info"><strong>Keyboard:</strong> EZ60</div></div>
+        <div class="gear-item"><img src="img/mouse.webp" alt="Mouse" /><div class="gear-info"><strong>Mouse:</strong> WLMOUSE Ying</div></div>
       </div>
     </div>
   </div>
 
 <script>
-// === 탭 ===
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
@@ -279,7 +236,6 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
-// === Discord ===
 async function fetchDiscordPresence() {
   try {
     const res = await fetch(`/api/discord-status/1256264184996565135?_=${Date.now()}`);
@@ -290,71 +246,61 @@ async function fetchDiscordPresence() {
     const name = document.getElementById("discordName");
     const activity = document.getElementById("discordActivity");
     const dot = document.getElementById("discordDot");
+    const art = document.getElementById("spotifyArt");
 
-    card.style.backgroundImage = data.banner_url
-      ? `url(${data.banner_url})`
-      : "linear-gradient(135deg, #1e1f22, #2b2d31)";
-    avatar.src = `${data.avatar_url}?v=${Date.now()}`;
-    name.textContent = data.username || "Unknown";
+    card.style.backgroundImage = data.banner_url ? `url(${data.banner_url})` : "linear-gradient(135deg,#1e1f22,#2b2d31)";
+    avatar.src = data.avatar_url;
+    name.textContent = data.username;
+    dot.className = "status-dot status-" + (data.status || "offline");
 
-    dot.className = "status-dot";
-    dot.classList.add(`status-${data.status || "offline"}`);
-
-    // Spotify 상태
-    if (data.spotify && data.spotify.song && data.spotify.artist) {
-      activity.textContent = `🎵 ${data.spotify.song} – ${data.spotify.artist}`;
-    } else if (data.activity && data.activity.name) {
-      activity.textContent = data.activity.name;
+    // Spotify 처리
+    const act = data.activity;
+    if (act && act.name === "Spotify" && act.details && act.state) {
+      activity.textContent = `🎵 ${act.details} – ${act.state}`;
+      const imgId = act.assets?.largeImage?.replace("spotify:", "");
+      if (imgId) {
+        art.src = `https://i.scdn.co/image/${imgId}`;
+        art.style.display = "block";
+      } else art.style.display = "none";
     } else {
-      activity.textContent = "현재 활동 없음";
+      activity.textContent = act?.formatted || "현재 활동 없음";
+      art.style.display = "none";
     }
   } catch {
     document.getElementById("discordActivity").textContent = "불러오기 실패";
   }
 }
 
-// === TikTok ===
 async function fetchTikTokData() {
   try {
-    const res = await fetch(`/api/tiktok-status/silfyxd?_=${Date.now()}`);
-    const data = await res.json();
-    document.getElementById("tiktokAvatar").src = data.avatar_url;
-    document.getElementById("tiktokName").textContent = `@${data.username}`;
-    document.getElementById("tiktokStats").textContent =
-      `${data.followers.toLocaleString()} followers • ${data.likes.toLocaleString()} likes`;
+    const res = await fetch("/api/tiktok");
+    const d = await res.json();
+    document.getElementById("tiktokAvatar").src = d.avatar;
+    document.getElementById("tiktokName").textContent = `@${d.username}`;
+    document.getElementById("tiktokStats").textContent = `${d.followers.toLocaleString()} followers • ${d.likes.toLocaleString()} likes`;
   } catch {
     document.getElementById("tiktokStats").textContent = "불러오기 실패";
   }
 }
 
-// === YouTube ===
 async function fetchYouTubeData() {
   try {
-    const res = await fetch(`/api/youtube-status/지후7?_=${Date.now()}`);
-    const data = await res.json();
-    document.getElementById("youtubeAvatar").src = data.avatar_url;
-    document.getElementById("youtubeStats").textContent =
-      `${data.subscribers.toLocaleString()} subs`;
+    const res = await fetch("/api/youtube");
+    const d = await res.json();
+    document.getElementById("youtubeAvatar").src = d.thumbnail;
+    document.getElementById("youtubeStats").textContent = `${parseInt(d.subscribers).toLocaleString()} subs`;
   } catch {
     document.getElementById("youtubeStats").textContent = "불러오기 실패";
   }
 }
 
-// === Redirect ===
-document.getElementById("tiktokCard").addEventListener("click", () => {
-  window.open("https://www.tiktok.com/@silfyxd", "_blank");
-});
-document.getElementById("youtubeCard").addEventListener("click", () => {
-  window.open("https://www.youtube.com/@지후7", "_blank");
-});
+document.getElementById("tiktokCard").addEventListener("click",()=>window.open("https://www.tiktok.com/@silfyxd","_blank"));
+document.getElementById("youtubeCard").addEventListener("click",()=>window.open("https://www.youtube.com/@지후7","_blank"));
 
-// === Interval ===
-fetchDiscordPresence();
-fetchTikTokData();
-fetchYouTubeData();
-setInterval(fetchDiscordPresence, 30000);
-setInterval(fetchTikTokData, 60000);
-setInterval(fetchYouTubeData, 60000);
+fetchDiscordPresence(); fetchTikTokData(); fetchYouTubeData();
+setInterval(fetchDiscordPresence,30000);
+setInterval(fetchTikTokData,60000);
+setInterval(fetchYouTubeData,60000);
 </script>
 </body>
 </html>
