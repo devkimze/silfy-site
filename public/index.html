@@ -154,6 +154,24 @@ body {
 .status-dnd {background-color: #ed4245;}
 .status-offline {background-color: #747f8d;}
 
+/* === Spotify 작은 앨범 아트 === */
+.spotify-mini-art {
+  position: absolute;
+  right: 60px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+.spotify-mini-art.hidden {
+  opacity: 0;
+}
+
 /* === Settings === */
 .settings {
   background-color: #1a1a1a;
@@ -223,6 +241,7 @@ body {
             <p class="discord-name" id="discordName">Loading...</p>
             <p id="discordActivity" class="discord-activity">Connecting...</p>
           </div>
+          <img id="spotifyMiniArt" class="spotify-mini-art hidden" src="" alt="Album Art" />
         </div>
 
         <div class="social-item" id="tiktokCard">
@@ -289,6 +308,7 @@ async function fetchDiscordPresence() {
     const name = document.getElementById("discordName");
     const activity = document.getElementById("discordActivity");
     const dot = document.getElementById("discordDot");
+    const miniArt = document.getElementById("spotifyMiniArt");
 
     // === 아바타, 이름, 상태 ===
     avatar.src = `${data.avatar_url}?v=${Date.now()}`;
@@ -296,22 +316,28 @@ async function fetchDiscordPresence() {
     dot.className = "status-dot";
     dot.classList.add(`status-${data.status || "offline"}`);
 
-    // === Spotify 앨범 아트 또는 배너 ===
-    if (data.activity?.album_art_url) {
-      card.style.backgroundImage = `url(${data.activity.album_art_url})`;
-    } else {
+    // === Spotify 감지 ===
+    if (data.activity?.name === "Spotify") {
       card.style.backgroundImage = data.banner_url
         ? `url(${data.banner_url})`
         : "linear-gradient(135deg, #1e1f22, #2b2d31)";
-    }
 
-    // === 활동 표시 ===
-    if (data.activity?.formatted) {
-      activity.textContent = data.activity.formatted;
-    } else if (data.activity?.name) {
-      activity.textContent = data.activity.name;
+      if (data.activity.album_art_url) {
+        miniArt.src = data.activity.album_art_url;
+        miniArt.classList.remove("hidden");
+      } else {
+        miniArt.classList.add("hidden");
+      }
+
+      const artistRaw = data.activity.state || "";
+      const artists = artistRaw.split(";").map(a => a.trim()).join(", ");
+      activity.textContent = `${data.activity.details} - ${artists}`;
     } else {
-      activity.textContent = "";
+      miniArt.classList.add("hidden");
+      card.style.backgroundImage = data.banner_url
+        ? `url(${data.banner_url})`
+        : "linear-gradient(135deg, #1e1f22, #2b2d31)";
+      activity.textContent = data.activity?.name || "";
     }
 
   } catch (err) {
