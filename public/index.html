@@ -85,7 +85,7 @@ body {
 .tab-content.active {display: block;}
 .socials {display: flex; flex-direction: column; gap: 18px; width: 100%;}
 
-/* === 공통 카드 스타일 === */
+/* === Social 공통 카드 === */
 .social-item {
   position: relative;
   background-color: #1a1a1a;
@@ -111,41 +111,7 @@ body {
 .social-info p {margin: 3px 0;}
 .status {color: #aaa; font-size: 15px;}
 
-.setting-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
-}
-
-.setting-label {
-  color: #7ab3ff;
-  font-weight: 600;
-}
-
-.setting-value {
-  color: #ddd;
-  font-weight: 500;
-}
-
-.gear-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.gear-icon {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  border-radius: 6px;
-}
-
-.gear-text {
-  color: #e4e4e4;
-  font-size: 15px;
-}
-
-/* === 라벨 (Discord / TikTok / YouTube) === */
+/* === 라벨 === */
 .label {
   position: absolute;
   top: 10px;
@@ -163,12 +129,8 @@ body {
 .tiktok-label { background: rgba(255,44,85,0.15); }
 .youtube-label { background: rgba(255,0,0,0.15); }
 
-/* === Discord 배너 === */
-.social-item.discord {
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
+/* === Discord === */
+.social-item.discord {background-size: cover; background-position: center;}
 .social-item.discord::before {
   content: "";
   position: absolute;
@@ -176,12 +138,8 @@ body {
   background: rgba(0, 0, 0, 0.6);
   z-index: 0;
 }
-.discord-avatar {
-  position: relative;
-  margin-right: 20px;
-  z-index: 1;
-}
-.discord-avatar img { width: 70px; height: 70px; border-radius: 50%; border: none; }
+.discord-avatar {position: relative; margin-right: 20px; z-index: 1;}
+.discord-avatar img {width: 70px; height: 70px; border-radius: 50%;}
 .status-dot {
   position: absolute;
   bottom: 4px;
@@ -191,13 +149,51 @@ body {
   border-radius: 50%;
   border: 3px solid #2b2d31;
 }
-.status-online { background-color: #3ba55d; }
-.status-idle { background-color: #faa61a; }
-.status-dnd { background-color: #ed4245; }
-.status-offline { background-color: #747f8d; }
+.status-online {background-color: #3ba55d;}
+.status-idle {background-color: #faa61a;}
+.status-dnd {background-color: #ed4245;}
+.status-offline {background-color: #747f8d;}
+
+/* === Settings === */
+.settings {
+  background-color: #1a1a1a;
+  border-radius: 15px;
+  padding: 22px 30px 18px 30px;
+  width: 100%;
+  font-size: 18px;
+  line-height: 1.8;
+}
+.settings-item {margin-bottom: 15px; display: flex; justify-content: space-between; color: #ddd;}
+.settings-item span:first-child {color: var(--accent-light); font-weight: 600;}
+.settings:hover {
+  transform: scale(1.03);
+  background-color: #232323;
+  box-shadow: 0 0 15px rgba(79,131,185,0.4);
+}
+
+/* === Gears === */
+.gears {display: flex; flex-direction: column; gap: 20px; width: 100%;}
+.gear-item {
+  background-color: #1a1a1a;
+  border-radius: 15px;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: 0.3s;
+}
+.gear-item:hover {
+  transform: scale(1.03);
+  background-color: #232323;
+  box-shadow: 0 0 15px rgba(79,131,185,0.4);
+}
+.gear-item img {width: 70px; height: 70px; border-radius: 10px; object-fit: cover;}
+.gear-info {font-size: 17px; color: #fff;}
 
 @media (max-width:480px){
   .tabs {flex-direction:column; gap:10px;}
+  .gear-item {flex-direction:column; align-items:center; text-align:center;}
+  .gear-item img {margin-bottom:10px;}
 }
 </style>
 </head>
@@ -214,10 +210,9 @@ body {
       <div class="tab" data-tab="gears">Gears</div>
     </div>
 
+    <!-- Social -->
     <div id="socials" class="tab-content active">
       <div class="socials">
-
-        <!-- 🎯 Discord 카드 -->
         <div class="social-item discord" id="discordCard">
           <div class="label discord-label">Discord</div>
           <div class="discord-avatar">
@@ -230,7 +225,6 @@ body {
           </div>
         </div>
 
-        <!-- 🎵 TikTok 카드 -->
         <div class="social-item" id="tiktokCard">
           <div class="label tiktok-label">TikTok</div>
           <img id="tiktokAvatar" src="img/tt.png" alt="TikTok" />
@@ -240,7 +234,6 @@ body {
           </div>
         </div>
 
-        <!-- ▶ YouTube 카드 -->
         <div class="social-item" id="youtubeCard">
           <div class="label youtube-label">YouTube</div>
           <img id="youtubeAvatar" src="img/yt.png" alt="YouTube" />
@@ -252,30 +245,28 @@ body {
       </div>
     </div>
 
-<div class="tab-content" id="settings" style="display: none;">
-  <div class="card">
-    <div class="setting-row">
-      <span class="setting-label">Resolution</span>
-      <span class="setting-value">1920 × 1080</span>
+    <!-- Settings -->
+    <div id="settings" class="tab-content">
+      <div class="settings">
+        <div class="settings-item"><span>Resolution</span><span>1920 × 1080</span></div>
+        <div class="settings-item"><span>Sensitivity</span><span>43~57cm / 360°</span></div>
+      </div>
     </div>
-    <div class="setting-row">
-      <span class="setting-label">Sensitivity</span>
-      <span class="setting-value">43~57cm / 360°</span>
-    </div>
-  </div>
-</div>
 
-<!-- Gears Section -->
-<div class="tab-content" id="gears" style="display: none;">
-  <div class="card gear-card">
-    <img src="keyboard.png" alt="Keyboard" class="gear-icon" />
-    <span class="gear-text"><b>Keyboard:</b> EZ60</span>
+    <!-- Gears -->
+    <div id="gears" class="tab-content">
+      <div class="gears">
+        <div class="gear-item">
+          <img src="img/keyboard.webp" alt="Keyboard" />
+          <div class="gear-info"><strong>Keyboard:</strong> EZ60</div>
+        </div>
+        <div class="gear-item">
+          <img src="img/mouse.webp" alt="Mouse" />
+          <div class="gear-info"><strong>Mouse:</strong> WLMOUSE Ying</div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="card gear-card">
-    <img src="mouse.png" alt="Mouse" class="gear-icon" />
-    <span class="gear-text"><b>Mouse:</b> WLMOUSE Ying</span>
-  </div>
-</div>
 
 <script>
 // === 탭 ===
@@ -287,12 +278,11 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
-// === Discord Presence ===
+// === Discord ===
 async function fetchDiscordPresence() {
   try {
     const res = await fetch(`/api/discord-status/1256264184996565135?_=${Date.now()}`);
     const data = await res.json();
-
     const avatar = document.getElementById("discordAvatar");
     const card = document.getElementById("discordCard");
     const name = document.getElementById("discordName");
@@ -305,28 +295,15 @@ async function fetchDiscordPresence() {
 
     avatar.src = `${data.avatar_url}?v=${Date.now()}`;
     name.textContent = data.username || "Unknown";
-
     dot.className = "status-dot";
     dot.classList.add(`status-${data.status || "offline"}`);
-
-    if (data.activity) {
-      const { type, name: actName, details, state } = data.activity;
-      let text = "";
-      if (actName === "Spotify") {
-        text = details && state ? `${details} - ${state}` : "🎧 Listening on Spotify";
-      } else if (type === 0) text = `Playing ${actName}`;
-      else if (type === 2) text = `Listening to ${state || actName}`;
-      else if (type === 3) text = `Watching ${actName}`;
-      else if (type === 5) text = `Competing in ${actName}`;
-      else text = actName;
-      activity.textContent = text || " ";
-    } else activity.textContent = " ";
-  } catch (err) {
-    console.error("Discord status fetch failed:", err);
+    activity.textContent = data.activity ? data.activity.name : "";
+  } catch {
+    document.getElementById("discordActivity").textContent = "불러오기 실패";
   }
 }
 
-// === TikTok 데이터 ===
+// === TikTok ===
 async function fetchTikTokData() {
   try {
     const res = await fetch(`/api/tiktok-status/silfyxd?_=${Date.now()}`);
@@ -340,7 +317,7 @@ async function fetchTikTokData() {
   }
 }
 
-// === YouTube 데이터 ===
+// === YouTube ===
 async function fetchYouTubeData() {
   try {
     const res = await fetch(`/api/youtube-status/지후7?_=${Date.now()}`);
@@ -353,7 +330,7 @@ async function fetchYouTubeData() {
   }
 }
 
-// === 리다이렉트 ===
+// === Redirect ===
 document.getElementById("tiktokCard").addEventListener("click", () => {
   window.open("https://www.tiktok.com/@silfyxd", "_blank");
 });
@@ -361,7 +338,7 @@ document.getElementById("youtubeCard").addEventListener("click", () => {
   window.open("https://www.youtube.com/@지후7", "_blank");
 });
 
-// === 반복 호출 ===
+// === Interval ===
 fetchDiscordPresence();
 fetchTikTokData();
 fetchYouTubeData();
