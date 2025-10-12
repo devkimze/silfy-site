@@ -79,25 +79,32 @@ app.get("/api/discord-status/:userId", async (req, res) => {
 // === TikTok ===
 async function fetchTikTokData() {
   try {
-    const res = await fetch("https://www.tiktok.com/@silfyxd?__a=1&__d=dis");
+    const res = await fetch(`https://www.tiktok.com/@silfyxd`);
     const text = await res.text();
-    const jsonMatch = text.match(/{\"props\":.*\"appContext\":.*}}<\/script>/);
-    if (!jsonMatch) throw new Error("TikTok API response changed");
-    const data = JSON.parse(jsonMatch[0].replace(/<\/script>$/, ""));
-    const user = data?.props?.pageProps?.userInfo?.user;
-    const stats = data?.props?.pageProps?.userInfo?.stats;
+
+    // TikTok 구조 변경으로 JSON 파싱 실패 가능성 대비
+    const match = text.match(/<script id="SIGI_STATE" type="application\/json">(.*?)<\/script>/);
+    if (!match) throw new Error("TikTok structure changed");
+
+    const json = JSON.parse(match[1]);
+    const user = json?.UserModule?.users?.silfyxd;
+    const stats = json?.StatsModule?.stats?.[user?.id_str];
+
+    if (!user || !stats) throw new Error("TikTok data missing");
+
     cachedTikTok = {
-      username: user?.uniqueId || "silfyxd",
-      nickname: user?.nickname || "Unknown",
-      avatar: user?.avatarThumb || "",
-      followers: stats?.followerCount || 0,
-      likes: stats?.heartCount || 0,
+      username: user.uniqueId,
+      nickname: user.nickname,
+      avatar_url: user.avatarThumb,
+      followers: stats.followerCount,
+      likes: stats.heartCount,
     };
     console.log(`✅ TikTok data updated for @${cachedTikTok.username}`);
   } catch (err) {
-    console.error("⚠️ TikTok fetch failed:", err);
+    console.error("⚠️ TikTok fetch failed:", err.message);
   }
 }
+
 
 // === YouTube ===
 async function fetchYouTubeData() {
