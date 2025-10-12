@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
@@ -84,6 +84,51 @@ body {
 .tab-content {width: 100%; display: none;}
 .tab-content.active {display: block;}
 .socials {display: flex; flex-direction: column; gap: 18px; width: 100%;}
+
+/* === Discord Card === */
+.social-item.discord {
+  position: relative;
+  background: linear-gradient(135deg, #1e1f22, #2b2d31);
+  border-radius: 18px;
+  padding: 22px 28px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  transition: 0.3s;
+}
+.social-item.discord:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 18px rgba(88,101,242,0.6);
+}
+.discord-avatar {
+  position: relative;
+  margin-right: 20px;
+}
+.discord-avatar img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 3px solid #5865F2;
+}
+.status-dot {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 3px solid #2b2d31;
+}
+.status-online { background-color: #3ba55d; }
+.status-idle { background-color: #faa61a; }
+.status-dnd { background-color: #ed4245; }
+.status-offline { background-color: #747f8d; }
+
+.discord-info p {margin: 3px 0;}
+.discord-name {font-size: 20px; font-weight: 600; color: #fff;}
+.discord-activity {color: #b9bbbe; font-size: 15px;}
+
+/* === 나머지 기존 소셜 === */
 .social-item {
   background-color: #1a1a1a;
   border-radius: 15px;
@@ -157,11 +202,16 @@ body {
 
     <div id="socials" class="tab-content active">
       <div class="socials">
-        <div class="social-item">
-          <img src="img/dc.jpg" alt="Discord" />
-          <div class="social-info">
-            <p><strong>gredfver</strong></p>
-            <p id="discordStatus" class="status">Loading...</p>
+
+        <!-- 🎯 Discord 스타일 카드 -->
+        <div class="social-item discord" id="discordCard">
+          <div class="discord-avatar">
+            <img src="img/dc.jpg" alt="Discord" />
+            <div class="status-dot status-offline" id="discordDot"></div>
+          </div>
+          <div class="discord-info">
+            <p class="discord-name">gredfver</p>
+            <p id="discordStatus" class="discord-activity">Loading...</p>
           </div>
         </div>
 
@@ -221,10 +271,18 @@ tabs.forEach(tab => {
 // === Discord Presence 불러오기 ===
 async function fetchDiscordPresence() {
   try {
-    const res = await fetch("/api/discord-status/1256264184996565135"); // 여기에 본인 Discord ID
+    const res = await fetch("/api/discord-status/1256264184996565135"); // 본인 Discord ID
     const data = await res.json();
     const el = document.getElementById("discordStatus");
-    el.textContent = `${data.status.toUpperCase()} — ${data.activity}`;
+    const dot = document.getElementById("discordDot");
+
+    el.textContent = data.activity ? `${data.status.toUpperCase()} — ${data.activity}` : data.status.toUpperCase();
+
+    dot.className = "status-dot";
+    if (data.status === "online") dot.classList.add("status-online");
+    else if (data.status === "idle") dot.classList.add("status-idle");
+    else if (data.status === "dnd") dot.classList.add("status-dnd");
+    else dot.classList.add("status-offline");
   } catch (e) {
     document.getElementById("discordStatus").textContent = "불러오기 실패";
   }
