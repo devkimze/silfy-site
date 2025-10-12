@@ -50,11 +50,9 @@ client.on("presenceUpdate", async (oldPresence, newPresence) => {
     if (activity.name === "Spotify") {
       const title = activity.details || "";
       const artistRaw = activity.state || "";
-
-      // 여러 아티스트를 콤마로 분리
       let artistFormatted = artistRaw.split(";").map(a => a.trim()).join(", ");
 
-      // 앨범 커버 처리
+      // 앨범 커버
       let albumArt = null;
       if (activity.assets?.largeImage) {
         const asset = activity.assets.largeImage;
@@ -84,7 +82,6 @@ client.on("presenceUpdate", async (oldPresence, newPresence) => {
 // === Discord Presence API ===
 app.get("/api/discord-status/:userId", async (req, res) => {
   const userId = req.params.userId;
-
   if (cachedUserData[userId]) return res.json(cachedUserData[userId]);
 
   try {
@@ -164,6 +161,9 @@ app.get("/api/youtube", (req, res) => {
   res.status(404).json({ error: "YouTube data not ready" });
 });
 
+// === 상태 확인용 핑 ===
+app.get("/ping", (req, res) => res.send("pong"));
+
 // === 주기적 갱신 ===
 setInterval(fetchTikTokData, 1000 * 60 * 5);
 setInterval(fetchYouTubeData, 1000 * 60 * 5);
@@ -172,7 +172,6 @@ fetchYouTubeData();
 
 // === 정적 파일 제공 ===
 app.use(express.static("public"));
-app.get('/ping', (req, res) => res.send('pong'));
 app.get("*", (req, res) => {
   res.sendFile("index.html", { root: "public" });
 });
@@ -183,6 +182,3 @@ app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 
 // === Discord 로그인 ===
 client.login(process.env.DISCORD_TOKEN);
-
-
-
