@@ -68,6 +68,25 @@ function updatePresence(presence) {
     else activityText = activity.name;
   }
 
+  function updatePresence(presence) {
+  const activity = presence.activities?.[0];
+  let activityText = null;
+  let activityData = null;
+
+  if (activity) {
+    if (activity.name === "Spotify") {
+      activityText = "🎵 Listening to Spotify";
+      activityData = {
+        type: "LISTENING",
+        artist: activity.state, // 보통 가수
+        song: activity.details, // 곡 제목
+      };
+    } else {
+      activityText = activity.name;
+      activityData = { type: activity.type, name: activity.name };
+    }
+  }
+
   userPresence = {
     id: presence.userId,
     username: presence.user?.username || "Unknown",
