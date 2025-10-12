@@ -34,48 +34,30 @@ client.on("presenceUpdate", async (oldPresence, newPresence) => {
   if (!newPresence?.userId) return;
   const user = await newPresence.user.fetch();
   const status = newPresence.status || "offline";
-
-  // 활동 감지 (Spotify 포함)
-  const activities = newPresence.activities || [];
-  const spotify = activities.find(a => a.name === "Spotify");
-  const mainActivity = spotify || activities[0] || null;
+  const activity = newPresence.activities?.[0] || null;
 
   let activityData = null;
-
-  if (mainActivity) {
+  if (activity) {
     activityData = {
-      type: mainActivity.type,
-      name: mainActivity.name,
-      details: mainActivity.details,
-      state: mainActivity.state,
-      assets: mainActivity.assets || null,
+      type: activity.type,
+      name: activity.name,
+      details: activity.details,
+      state: activity.state,
+      assets: activity.assets || null,
     };
 
-    const miniArt = document.getElementById("spotifyMiniArt");
+    // === Spotify 처리 ===
+    if (activity.name === "Spotify") {
+      const title = activity.details || "";
+      const artistRaw = activity.state || "";
 
-// Spotify 감지
-if (data.activity?.name === "Spotify" && data.activity.details) {
-  // 작은 앨범 커버 표시
-  if (data.activity.album_art_url) {
-    miniArt.src = data.activity.album_art_url;
-    miniArt.classList.remove("hidden");
-  } else {
-    miniArt.classList.add("hidden");
-  }
+      // 여러 아티스트를 콤마로 분리
+      let artistFormatted = artistRaw.split(";").map(a => a.trim()).join(", ");
 
-  // 노래 제목 및 가수 표시
-  const artistRaw = data.activity.state || "";
-  const artists = artistRaw.split(";").map(a => a.trim()).join(", ");
-  activity.textContent = `${data.activity.details} - ${artists}`;
-} else {
-  miniArt.classList.add("hidden");
-}
-
-
-      // 앨범 아트 URL 처리
+      // 앨범 커버 처리
       let albumArt = null;
-      if (spotify.assets?.largeImage) {
-        const asset = spotify.assets.largeImage;
+      if (activity.assets?.largeImage) {
+        const asset = activity.assets.largeImage;
         if (asset.startsWith("spotify:")) {
           const id = asset.replace("spotify:", "");
           albumArt = `https://i.scdn.co/image/${id}`;
@@ -84,9 +66,6 @@ if (data.activity?.name === "Spotify" && data.activity.details) {
 
       activityData.formatted = `${title} - ${artistFormatted}`;
       activityData.album_art_url = albumArt;
-    } else {
-      // Spotify가 아닐 때는 단순 활동 이름 표시
-      activityData.formatted = mainActivity.name || "";
     }
   }
 
@@ -105,8 +84,8 @@ if (data.activity?.name === "Spotify" && data.activity.details) {
 // === Discord Presence API ===
 app.get("/api/discord-status/:userId", async (req, res) => {
   const userId = req.params.userId;
-  const cached = cachedUserData[userId];
-  if (cached) return res.json(cached);
+
+  if (cachedUserData[userId]) return res.json(cachedUserData[userId]);
 
   try {
     const user = await client.users.fetch(userId);
@@ -185,7 +164,7 @@ app.get("/api/youtube", (req, res) => {
   res.status(404).json({ error: "YouTube data not ready" });
 });
 
-// === 주기적 갱신 (5분마다) ===
+// === 주기적 갱신 ===
 setInterval(fetchTikTokData, 1000 * 60 * 5);
 setInterval(fetchYouTubeData, 1000 * 60 * 5);
 fetchTikTokData();
