@@ -12,7 +12,7 @@ async function fetchDiscordPresence() {
 
     // === 아바타 & 상태 ===
     if (data.avatar_url) avatarImg.src = `${data.avatar_url}?v=${Date.now()}`;
-    name.textContent = data.username || "Unknown";
+    name.textContent = data.username ? `@${data.username}` : "@unknown";
 
     dot.className = "status-dot"; // reset
     dot.classList.add(`status-${data.status || "offline"}`);
