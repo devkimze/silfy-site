@@ -140,15 +140,16 @@ body {
   box-shadow: 0 6px 18px rgba(0,0,0,0.6);
 }
 
+/* 🔹 상태 점 - 디스코드처럼 겹치게 수정됨 */
 .status-dot {
   position: absolute;
-  bottom: 2px;   /* 아바타 안쪽으로 살짝 들어오게 */
-  right: 2px;    /* 오른쪽 아래 모서리에 겹치게 */
-  width: 10px;   /* 작고 깔끔하게 */
-  height: 10px;
+  bottom: -2px;  /* 아래로 살짝 나와 겹침 */
+  right: -2px;   /* 오른쪽 살짝 겹치게 */
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  border: 2px solid #1e1e1e; /* 카드 배경색과 일치하도록 */
-  z-index: 3;
+  border: 3px solid #0b0b0b; /* 카드 배경색과 맞춤 */
+  z-index: 4;
 }
 .status-online { background-color: #23a55a; }
 .status-idle { background-color: #f0b232; }
