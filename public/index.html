@@ -179,7 +179,7 @@ async function fetchYouTube() {
     document.getElementById("youtubeAvatar").src = data.thumbnail;
     document.getElementById("youtubeName").textContent = data.title;
     document.getElementById("youtubeStats").textContent =
-      `${Number(data.subscribers).toLocaleString()}명 구독자 • ${Number(data.views).toLocaleString()}회 조회수`;
+      `${Number(data.subscribers).toLocaleString()}명 구독자`;
   } catch {
     document.getElementById("youtubeStats").textContent = "불러오기 실패";
   }
