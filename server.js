@@ -182,3 +182,23 @@ app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 
 // === Discord 로그인 ===
 client.login(process.env.DISCORD_TOKEN);
+
+async function updateDiscordStatus() {
+  const res = await fetch("/api/discord-status/1256264184996565135?_=" + Date.now());
+  const data = await res.json();
+
+  const name = document.querySelector(".discord-name");
+  const activity = document.querySelector(".discord-activity");
+
+  name.textContent = data.username;
+
+  if (data.activity?.formatted) {
+    activity.innerHTML = `
+      <span class="track-text">${data.activity.formatted}</span>
+      ${data.activity.album_art_url ? `<img class="album-art" src="${data.activity.album_art_url}" alt="Album Art" />` : ""}
+    `;
+  } else {
+    activity.innerHTML = "";
+  }
+}
+
