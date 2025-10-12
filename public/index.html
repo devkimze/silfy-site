@@ -142,16 +142,18 @@ body {
 
 .status-dot {
   position: absolute;
-  bottom: 0px;
-  right: 2px;
-  width: 12px;
-  height: 12px;
+  /* 프로필 원의 바깥쪽으로 약간 튀어나와 겹쳐보이게 */
+  bottom: -3px;    /* 음수로 내려서 살짝 밖으로 */
+  right: -3px;     /* 음수로 밀어서 살짝 밖으로 */
+  width: 10px;     /* 작게 */
+  height: 10px;
   border-radius: 50%;
-  border: 2.5px solid #1e1f22; /* 아바타 배경색에 어울리는 테두리 */
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
-  z-index: 5;
+  /* 프로필의 바깥 테두리(어두운 카드)와 자연스럽게 이어지도록 */
+  border: 3px solid #0b0b0b;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.03) inset;
+  z-index: 6;
+  transform: translate(0, 0); /* 필요하면 미세조정 */
 }
-
 .status-online { background-color: #23a55a; }
 .status-idle { background-color: #f0b232; }
 .status-dnd { background-color: #f23f43; }
