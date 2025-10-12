@@ -51,17 +51,26 @@ client.on("presenceUpdate", async (oldPresence, newPresence) => {
       assets: mainActivity.assets || null,
     };
 
-    // === Spotify 감지 ===
-    if (spotify) {
-      const title = spotify.details || "";
-      const artistRaw = spotify.state || "";
+    const miniArt = document.getElementById("spotifyMiniArt");
 
-      // 가수 이름 포맷 처리
-      let artistFormatted = artistRaw;
-      if (artistRaw.includes(";")) {
-        const parts = artistRaw.split(";").map(p => p.trim());
-        artistFormatted = `${parts[0]}, 피처링 ${parts.slice(1).join(", ")}`;
-      }
+// Spotify 감지
+if (data.activity?.name === "Spotify" && data.activity.details) {
+  // 작은 앨범 커버 표시
+  if (data.activity.album_art_url) {
+    miniArt.src = data.activity.album_art_url;
+    miniArt.classList.remove("hidden");
+  } else {
+    miniArt.classList.add("hidden");
+  }
+
+  // 노래 제목 및 가수 표시
+  const artistRaw = data.activity.state || "";
+  const artists = artistRaw.split(";").map(a => a.trim()).join(", ");
+  activity.textContent = `${data.activity.details} - ${artists}`;
+} else {
+  miniArt.classList.add("hidden");
+}
+
 
       // 앨범 아트 URL 처리
       let albumArt = null;
