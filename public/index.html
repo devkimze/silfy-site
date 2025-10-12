@@ -1,0 +1,236 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Silfyxd</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+:root {
+  --accent: #4f83b9;
+  --accent-light: #6ea8d9;
+  --accent-dark: #355f8a;
+}
+* {box-sizing: border-box; margin: 0; padding: 0;}
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #0a0a0a, #141414);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  color: #fff;
+  padding: 20px;
+}
+.header-box {
+  position: fixed;
+  top: 10vh;
+  left: 50%;
+  transform: translateX(-50%);
+  backdrop-filter: blur(20px) saturate(150%);
+  background-color: rgba(30, 30, 30, 0.7);
+  border-radius: 25px;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  text-align: center;
+  padding: 40px 60px;
+  width: clamp(350px, 80%, 700px);
+  z-index: 10;
+}
+.username {font-size: clamp(42px,5vw,60px); font-weight: 700;}
+.bio {font-size: clamp(18px,2vw,22px); margin-top: 12px; color: #ccc;}
+.card {
+  margin-top: calc(10vh + 220px);
+  background-color: #0b0b0b;
+  border-radius: 25px;
+  padding: 40px 35px;
+  width: clamp(350px, 80%, 700px);
+  box-shadow: 0 6px 25px rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 25px;
+  gap: 15px;
+}
+.tab {
+  flex: 1;
+  background-color: #1c1c1c;
+  padding: 14px 0;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+  color: #ccc;
+  transition: all 0.3s ease;
+}
+.tab:not(.active):hover {
+  color: #fff;
+  background-color: #232323;
+  box-shadow: 0 0 15px rgba(79,131,185,0.5), inset 0 0 6px rgba(79,131,185,0.3);
+  transform: scale(1.03);
+}
+.tab.active {
+  background: linear-gradient(135deg, var(--accent-dark), var(--accent-light));
+  color: #fff;
+  transform: scale(1.03);
+  box-shadow: 0 0 25px rgba(79,131,185,0.7);
+}
+.tab-content {width: 100%; display: none;}
+.tab-content.active {display: block;}
+.socials {display: flex; flex-direction: column; gap: 18px; width: 100%;}
+.social-item {
+  background-color: #1a1a1a;
+  border-radius: 15px;
+  padding: 20px 25px;
+  display: flex;
+  align-items: center;
+  transition: 0.3s;
+}
+.social-item:hover {
+  transform: scale(1.03);
+  background-color: #232323;
+  box-shadow: 0 0 15px rgba(79,131,185,0.4);
+}
+.social-item img {
+  width: 60px; height: 60px; border-radius: 14px;
+  margin-right: 20px; object-fit: cover;
+}
+.social-info p {margin: 3px 0; font-size: 18px;}
+.status {color: #aaa; font-size: 15px;}
+.settings {
+  background-color: #1a1a1a;
+  border-radius: 15px;
+  padding: 22px 30px 18px 30px;
+  width: 100%;
+  font-size: 18px;
+  line-height: 1.8;
+}
+.settings-item {margin-bottom: 15px; display: flex; justify-content: space-between; color: #ddd;}
+.settings:hover {
+  transform: scale(1.03);
+  background-color: #232323;
+  box-shadow: 0 0 15px rgba(79,131,185,0.4);
+}
+.settings-item span:first-child {color: var(--accent-light); font-weight: 600;}
+.gears {display: flex; flex-direction: column; gap: 20px; width: 100%;}
+.gear-item {
+  background-color: #1a1a1a;
+  border-radius: 15px;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: 0.3s;
+}
+.gear-item:hover {
+  transform: scale(1.03);
+  background-color: #232323;
+  box-shadow: 0 0 15px rgba(79,131,185,0.4);
+}
+.gear-item img {width: 70px; height: 70px; border-radius: 10px; object-fit: cover;}
+.gear-info {font-size: 17px; color: #fff;}
+@media (max-width:480px){
+  .tabs {flex-direction:column; gap:10px;}
+  .gear-item {flex-direction:column; align-items:center; text-align:center;}
+  .gear-item img {margin-bottom:10px;}
+}
+</style>
+</head>
+<body>
+  <div class="header-box">
+    <div class="username">Silfy</div>
+    <div class="bio">FPS holic</div>
+  </div>
+
+  <div class="card" id="card">
+    <div class="tabs">
+      <div class="tab active" data-tab="socials">Social</div>
+      <div class="tab" data-tab="settings">Settings</div>
+      <div class="tab" data-tab="gears">Gears</div>
+    </div>
+
+    <div id="socials" class="tab-content active">
+      <div class="socials">
+        <div class="social-item">
+          <img src="img/dc.jpg" alt="Discord" />
+          <div class="social-info">
+            <p><strong>gredfver</strong></p>
+            <p id="discordStatus" class="status">Loading...</p>
+          </div>
+        </div>
+
+        <div class="social-item">
+          <img src="img/tt.png" alt="TikTok" />
+          <div class="social-info">
+            <p><strong>@Silfyxd</strong></p>
+            <p class="status">followers</p>
+          </div>
+        </div>
+
+        <div class="social-item">
+          <img src="img/yt.png" alt="YouTube" />
+          <div class="social-info">
+            <p><strong>@XXXXXXXXXXX</strong></p>
+            <p class="status">subs</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="settings" class="tab-content">
+      <div class="settings">
+        <div class="settings-item"><span>Resolution</span><span>1920 × 1080</span></div>
+        <div class="settings-item"><span>Sensitivity</span><span>43~57cm / 360°</span></div>
+      </div>
+    </div>
+
+    <div id="gears" class="tab-content">
+      <div class="gears">
+        <div class="gear-item">
+          <img src="img/keyboard.webp" alt="Keyboard" />
+          <div class="gear-info"><strong>Keyboard:</strong> EZ60</div>
+        </div>
+        <div class="gear-item">
+          <img src="img/mouse.webp" alt="Mouse" />
+          <div class="gear-info"><strong>Mouse:</strong> WLMOUSE Ying</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+// === 탭 전환 ===
+const tabs = document.querySelectorAll('.tab');
+const contents = document.querySelectorAll('.tab-content');
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    if (tab.classList.contains('active')) return;
+    tabs.forEach(t => t.classList.remove('active'));
+    contents.forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
+  });
+});
+
+// === Discord Presence 불러오기 ===
+async function fetchDiscordPresence() {
+  try {
+    const res = await fetch("/api/discord-status/1256264184996565135"); // 여기에 본인 Discord ID
+    const data = await res.json();
+    const el = document.getElementById("discordStatus");
+    el.textContent = `${data.status.toUpperCase()} — ${data.activity}`;
+  } catch (e) {
+    document.getElementById("discordStatus").textContent = "불러오기 실패";
+  }
+}
+fetchDiscordPresence();
+setInterval(fetchDiscordPresence, 30000);
+</script>
+</body>
+</html>
