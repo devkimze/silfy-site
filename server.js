@@ -2,19 +2,12 @@ import express from "express";
 import fetch from "node-fetch";
 import cors from "cors";
 import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
 import { Client, GatewayIntentBits } from "discord.js";
 
-// === 기본 세팅 ===
 dotenv.config();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public"))); // ✅ public 폴더 정적 경로 지정
 
 // === Discord 클라이언트 ===
 const client = new Client({
@@ -47,11 +40,10 @@ client.on("presenceUpdate", async (_, newPresence) => {
       assets: activity.assets || null,
     };
 
-    // 🎵 Spotify일 경우 형식 통일
     if (activity.name === "Spotify") {
       const title = activity.details || "";
-      const artist = activity.state?.replace(/, /g, ", 피처링 ") || "";
-      activityData.formatted = `${title} - ${artist}`;
+      const artist = activity.state || "";
+      activityData.formatted = `${title} – ${artist}`;
     }
   }
 
@@ -87,37 +79,30 @@ app.get("/api/discord-status/:userId", async (req, res) => {
 // === TikTok ===
 async function fetchTikTokData() {
   try {
-    const res = await fetch(`https://www.tiktok.com/@silfyxd`);
+    const res = await fetch("https://www.tiktok.com/@silfyxd?__a=1&__d=dis");
     const text = await res.text();
-
-    const match = text.match(/<script id="SIGI_STATE" type="application\/json">(.*?)<\/script>/);
-    if (!match) throw new Error("TikTok structure changed");
-
-    const json = JSON.parse(match[1]);
-    const user = json?.UserModule?.users?.silfyxd;
-    const stats = json?.StatsModule?.stats?.[user?.id_str];
-
-    if (!user || !stats) throw new Error("TikTok data missing");
-
+    const jsonMatch = text.match(/{\"props\":.*\"appContext\":.*}}<\/script>/);
+    if (!jsonMatch) throw new Error("TikTok API response changed");
+    const data = JSON.parse(jsonMatch[0].replace(/<\/script>$/, ""));
+    const user = data?.props?.pageProps?.userInfo?.user;
+    const stats = data?.props?.pageProps?.userInfo?.stats;
     cachedTikTok = {
-      username: user.uniqueId,
-      nickname: user.nickname,
-      avatar_url: user.avatarThumb,
-      followers: stats.followerCount,
-      likes: stats.heartCount,
+      username: user?.uniqueId || "silfyxd",
+      nickname: user?.nickname || "Unknown",
+      avatar: user?.avatarThumb || "",
+      followers: stats?.followerCount || 0,
+      likes: stats?.heartCount || 0,
     };
     console.log(`✅ TikTok data updated for @${cachedTikTok.username}`);
   } catch (err) {
-    console.error("⚠️ TikTok fetch failed:", err.message);
+    console.error("⚠️ TikTok fetch failed:", err);
   }
 }
 
 // === YouTube ===
 async function fetchYouTubeData() {
   try {
-    const res = await fetch(
-      `https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet&forHandle=@지후7&key=${process.env.YOUTUBE_API_KEY}`
-    );
+    const res = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet&forHandle=@지후7&key=${process.env.YOUTUBE_API_KEY}`);
     const json = await res.json();
     const ch = json.items?.[0];
     if (!ch) throw new Error("Channel not found");
@@ -130,30 +115,14 @@ async function fetchYouTubeData() {
     };
     console.log(`✅ YouTube data updated for ${cachedYouTube.handle}`);
   } catch (err) {
-    console.error("⚠️ YouTube fetch failed:", err.message);
+    console.error("⚠️ YouTube fetch failed:", err);
   }
 }
 
-app.get("/api/tiktok", (_, res) =>
-  cachedTikTok ? res.json(cachedTikTok) : res.status(404).json({ error: "not ready" })
-);
-app.get("/api/youtube", (_, res) =>
-  cachedYouTube ? res.json(cachedYouTube) : res.status(404).json({ error: "not ready" })
-);
-
-// ✅ 루트(/) 요청 시 index.html 서빙
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
+app.get("/api/tiktok", (_, res) => cachedTikTok ? res.json(cachedTikTok) : res.status(404).json({ error: "not ready" }));
+app.get("/api/youtube", (_, res) => cachedYouTube ? res.json(cachedYouTube) : res.status(404).json({ error: "not ready" }));
 
 setInterval(fetchTikTokData, 1000 * 60 * 5);
 setInterval(fetchYouTubeData, 1000 * 60 * 5);
 fetchTikTokData();
-fetchYouTubeData();
-
-// ✅ 서버 시작
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-
-// ✅ Discord 로그인
-client.login(process.env.DISCORD_TOKEN);
+fetchYouTube
