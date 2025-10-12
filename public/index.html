@@ -154,22 +154,26 @@ body {
 .status-dnd {background-color: #ed4245;}
 .status-offline {background-color: #747f8d;}
 
-/* === Spotify 작은 앨범 아트 === */
-.spotify-mini-art {
-  position: absolute;
-  right: 60px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 60px;
-  height: 60px;
-  border-radius: 10px;
-  object-fit: cover;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
-  transition: opacity 0.3s ease;
-  z-index: 2;
+/* === Spotify 앨범 아트 (제목 옆) === */
+.discord-activity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.spotify-mini-art.hidden {
-  opacity: 0;
+.album-art {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  object-fit: cover;
+  animation: spin 8s linear infinite;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+  transition: opacity 0.3s ease;
+}
+.album-art.hidden { opacity: 0; }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* === Settings === */
@@ -239,9 +243,11 @@ body {
           </div>
           <div class="discord-info">
             <p class="discord-name" id="discordName">Loading...</p>
-            <p id="discordActivity" class="discord-activity">Connecting...</p>
+            <div class="discord-activity" id="discordActivityWrapper">
+              <span id="discordActivity">Connecting...</span>
+              <img id="albumArt" class="album-art hidden" src="" alt="Album Art" />
+            </div>
           </div>
-          <img id="spotifyMiniArt" class="spotify-mini-art hidden" src="" alt="Album Art" />
         </div>
 
         <div class="social-item" id="tiktokCard">
@@ -306,38 +312,37 @@ async function fetchDiscordPresence() {
     const avatar = document.getElementById("discordAvatar");
     const card = document.getElementById("discordCard");
     const name = document.getElementById("discordName");
-    const activity = document.getElementById("discordActivity");
+    const activityText = document.getElementById("discordActivity");
     const dot = document.getElementById("discordDot");
-    const miniArt = document.getElementById("spotifyMiniArt");
+    const albumArt = document.getElementById("albumArt");
 
-    // === 아바타, 이름, 상태 ===
     avatar.src = `${data.avatar_url}?v=${Date.now()}`;
     name.textContent = data.username || "Unknown";
     dot.className = "status-dot";
     dot.classList.add(`status-${data.status || "offline"}`);
 
-    // === Spotify 감지 ===
+    // Spotify 활동 시
     if (data.activity?.name === "Spotify") {
-      card.style.backgroundImage = data.banner_url
-        ? `url(${data.banner_url})`
-        : "linear-gradient(135deg, #1e1f22, #2b2d31)";
-
-      if (data.activity.album_art_url) {
-        miniArt.src = data.activity.album_art_url;
-        miniArt.classList.remove("hidden");
-      } else {
-        miniArt.classList.add("hidden");
-      }
-
       const artistRaw = data.activity.state || "";
       const artists = artistRaw.split(";").map(a => a.trim()).join(", ");
-      activity.textContent = `${data.activity.details} - ${artists}`;
-    } else {
-      miniArt.classList.add("hidden");
+      activityText.textContent = `${data.activity.details} - ${artists}`;
+
+      if (data.activity.album_art_url) {
+        albumArt.src = data.activity.album_art_url;
+        albumArt.classList.remove("hidden");
+      } else {
+        albumArt.classList.add("hidden");
+      }
+
       card.style.backgroundImage = data.banner_url
         ? `url(${data.banner_url})`
         : "linear-gradient(135deg, #1e1f22, #2b2d31)";
-      activity.textContent = data.activity?.name || "";
+    } else {
+      activityText.textContent = data.activity?.formatted || data.activity?.name || "";
+      albumArt.classList.add("hidden");
+      card.style.backgroundImage = data.banner_url
+        ? `url(${data.banner_url})`
+        : "linear-gradient(135deg, #1e1f22, #2b2d31)";
     }
 
   } catch (err) {
