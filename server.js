@@ -36,20 +36,40 @@ client.on("presenceUpdate", async (oldPresence, newPresence) => {
   const status = newPresence.status || "offline";
   const activity = newPresence.activities?.[0] || null;
 
+  // === [MODIFIED: Spotify formatting] ===
+  let activityData = null;
+  if (activity) {
+    activityData = {
+      type: activity.type,
+      name: activity.name,
+      details: activity.details,
+      state: activity.state,
+      assets: activity.assets || null,
+    };
+
+    // Spotify 감지
+    if (activity.name === "Spotify") {
+      const title = activity.details || "";
+      const artistRaw = activity.state || "";
+
+      // 가수 이름 가공: 세미콜론 구분 시 피처링 처리
+      let artistFormatted = artistRaw;
+      if (artistRaw.includes(";")) {
+        const parts = artistRaw.split(";").map(p => p.trim());
+        artistFormatted = `${parts[0]}, 피처링 ${parts.slice(1).join(", ")}`;
+      }
+
+      activityData.formatted = `${title} - ${artistFormatted}`;
+    }
+  }
+
   cachedUserData[newPresence.userId] = {
     id: newPresence.userId,
     username: user.username,
     status,
     avatar_url: user.displayAvatarURL({ format: "webp", size: 256 }),
     banner_url: user.bannerURL({ size: 1024 }),
-    activity: activity
-      ? {
-          type: activity.type,
-          name: activity.name,
-          details: activity.details,
-          state: activity.state,
-        }
-      : null,
+    activity: activityData,
   };
 
   console.log(`[PRESENCE] Updated for ${user.username}: ${status}`);
@@ -78,7 +98,6 @@ app.get("/api/discord-status/:userId", async (req, res) => {
 });
 
 // === TikTok 데이터 ===
-// (공식 API가 없어서 비공식 public API 사용)
 async function fetchTikTokData() {
   try {
     const res = await fetch(
@@ -86,7 +105,6 @@ async function fetchTikTokData() {
     );
     const text = await res.text();
 
-    // TikTok은 종종 HTML 포맷으로 리턴됨, JSON 부분만 추출
     const jsonMatch = text.match(/{\"props\":.*\"appContext\":.*}}<\/script>/);
     if (!jsonMatch) throw new Error("TikTok API response changed");
 
@@ -109,7 +127,6 @@ async function fetchTikTokData() {
 }
 
 // === YouTube 데이터 ===
-// (공식 Data API 사용 — 반드시 .env에 YOUTUBE_API_KEY 필요)
 async function fetchYouTubeData() {
   try {
     const res = await fetch(
