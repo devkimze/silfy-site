@@ -1,11 +1,15 @@
 import express from "express";
 import fetch from "node-fetch";
-import cors from "cors";
 import dotenv from "dotenv";
-import { Client, GatewayIntentBits } from "discord.js";
+import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 
+dotenv.config();
+const app = express();
+app.use(cors());
+
+// ✅ 여기서부터 추가
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -14,6 +18,7 @@ app.use(express.static(__dirname));
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
+
 
 dotenv.config();
 const app = express();
