@@ -28,7 +28,7 @@ body {
 .username { font-size: 56px; font-weight: 700; }
 .bio { font-size: 20px; color: #bbb; margin-top: 10px; }
 
-/* card container */
+/* card */
 .card {
   background: #0b0b0b;
   border-radius: 25px;
@@ -64,7 +64,7 @@ body {
 .tab-content { display: none; }
 .tab-content.active { display: block; }
 
-/* social item */
+/* socials */
 .socials {
   display: flex;
   flex-direction: column;
@@ -80,10 +80,8 @@ body {
   position: relative;
   transition: 0.3s;
 }
-.social-item:hover {
-  background: #1e1e1e;
-  transform: scale(1.02);
-}
+.social-item:hover { background: #1e1e1e; transform: scale(1.02); }
+
 .label {
   position: absolute;
   right: 15px;
@@ -98,6 +96,7 @@ body {
 .tiktok-label { background: #ff0050; opacity: 0.2; }
 .youtube-label { background: #ff0000; opacity: 0.2; }
 
+/* Discord avatar */
 .discord-avatar {
   position: relative;
   width: 52px;
@@ -107,7 +106,7 @@ body {
 .discord-avatar img {
   width: 52px;
   height: 52px;
-  border-radius: 50%;
+  border-radius: 50%; /* 원형 */
   object-fit: cover;
 }
 .status-dot {
@@ -122,6 +121,7 @@ body {
 .status-online { background: #3ba55d; }
 .status-offline { background: #747f8d; }
 
+/* Discord info */
 .discord-info {
   display: flex;
   flex-direction: column;
@@ -139,19 +139,19 @@ body {
 .song-title { font-weight: 600; color: #fff; }
 .song-artists { font-size: 13px; color: #aaa; }
 
-/* 원형 회전 앨범아트 */
+/* 앨범커버 원형 회전 */
 .album-art {
   position: absolute;
-  right: 20px;
+  right: 25px;
   top: 50%;
   width: 46px;
   height: 46px;
   border-radius: 50%;
   object-fit: cover;
   transform: translateY(-50%);
-  animation: spin 6s linear infinite;
-  box-shadow: 0 0 8px rgba(0,0,0,0.4);
-  border: 2px solid rgba(255,255,255,0.4);
+  animation: spin 8s linear infinite;
+  border: 2px solid rgba(255,255,255,0.3);
+  box-shadow: 0 0 8px rgba(0,0,0,0.5);
 }
 .album-art.hidden { display: none; }
 @keyframes spin { 
@@ -174,6 +174,20 @@ body {
 .social-info p { margin: 0; line-height: 1.3; }
 .social-info strong { color: #fff; }
 .social-info .status { color: #aaa; font-size: 14px; }
+
+/* Discord 배너 */
+.discord-banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0.1;
+}
+.discord-banner.hidden { display: none; }
 </style>
 </head>
 <body>
@@ -193,6 +207,7 @@ body {
       <div class="socials">
         <!-- Discord -->
         <div class="social-item discord" id="discordCard">
+          <img id="discordBanner" class="discord-banner hidden" src="" alt="Banner" />
           <div class="label discord-label">Discord</div>
           <div class="discord-avatar">
             <img id="discordAvatar" src="img/dc.jpg" alt="Discord" />
@@ -248,11 +263,21 @@ async function fetchDiscordPresence(){
     const activity=document.getElementById("discordActivity");
     const dot=document.getElementById("discordDot");
     const albumArt=document.getElementById("albumArt");
+    const banner=document.getElementById("discordBanner");
 
     avatar.src=`${data.avatar_url}?v=${Date.now()}`;
     name.textContent=data.username||"Unknown";
     dot.className="status-dot status-" + (data.status||"offline");
 
+    // Discord 배너 표시
+    if(data.banner_url){
+      banner.src=data.banner_url;
+      banner.classList.remove("hidden");
+    } else {
+      banner.classList.add("hidden");
+    }
+
+    // Spotify 상태
     if(data.activity?.name==="Spotify"){
       activity.innerHTML = `
         <span class="song-title">${data.activity.details||"Unknown Track"}</span>
