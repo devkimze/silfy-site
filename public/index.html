@@ -271,7 +271,7 @@ tabs.forEach(tab => {
 // === Discord Presence 불러오기 ===
 async function fetchDiscordPresence() {
   try {
-    const res = await fetch("/api/discord-status/1256264184996565135"); // 본인 Discord ID
+    const res = await fetch("/api/discord-status");
     const data = await res.json();
     const el = document.getElementById("discordStatus");
     const dot = document.getElementById("discordDot");
@@ -283,7 +283,7 @@ async function fetchDiscordPresence() {
     else if (data.status === "idle") dot.classList.add("status-idle");
     else if (data.status === "dnd") dot.classList.add("status-dnd");
     else dot.classList.add("status-offline");
-  } catch (e) {
+  } catch {
     document.getElementById("discordStatus").textContent = "불러오기 실패";
   }
 }
