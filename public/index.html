@@ -100,7 +100,7 @@ body {
 .tab-content {width: 100%; display: none;}
 .tab-content.active {display: block;}
 
-/* === Social Items (정밀 정렬 버전) === */
+/* === Social Items === */
 .socials {
   display: flex;
   flex-direction: column;
@@ -126,7 +126,7 @@ body {
   filter: brightness(1.05);
 }
 
-/* === Discord 카드 (최신 완성형) === */
+/* === Discord 카드 (수정된 완성형) === */
 .social-item.discord {
   position: relative;
   display: flex;
@@ -217,26 +217,38 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.discord-activity.single-line {
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-  color: #cfd2ff;
-}
 .album-art {
   position: absolute;
   right: 16px;
-  bottom: 16px;
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
+  top: 50%;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
   object-fit: cover;
+  transform: translateY(-50%);
   animation: spin 6s linear infinite;
   box-shadow: 0 0 10px rgba(0,0,0,0.4);
   transition: opacity 0.3s ease;
+  border: 2px solid rgba(255,255,255,0.5);
 }
 .album-art.hidden { opacity: 0; }
-@keyframes spin { from {transform: rotate(0deg);} to {transform: rotate(360deg);} }
+@keyframes spin { from {transform: translateY(-50%) rotate(0deg);} to {transform: translateY(-50%) rotate(360deg);} }
+
+/* === TikTok / YouTube 복원 정렬 === */
+.social-item img {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.social-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.social-info p {margin: 0; line-height: 1.3;}
+.social-info strong {font-weight: 600; color: #fff;}
+.social-info .status {color: #ccc; font-size: 14px;}
 
 /* === Settings / Gears === */
 .settings {
