@@ -141,6 +141,22 @@ body {
 .status-dnd { background-color: #ed4245; }
 .status-offline { background-color: #747f8d; }
 
+.discord-label {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(88, 101, 242, 0.15);
+  padding: 3px 8px;
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+  user-select: none;
+  pointer-events: none;
+}
+
 /* === 나머지 소셜 === */
 .social-item {
   background-color: #1a1a1a;
@@ -213,6 +229,7 @@ body {
 
         <!-- 🎯 Discord 배너 카드 -->
         <div class="social-item discord" id="discordCard">
+          <div class="discord-label">Discord</div>
           <div class="discord-avatar">
             <img id="discordAvatar" src="img/dc.jpg" alt="Discord" />
             <div class="status-dot status-offline" id="discordDot"></div>
