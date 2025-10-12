@@ -135,7 +135,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.55);
   z-index: 0;
 }
 .discord-avatar {position: relative; margin-right: 20px; z-index: 1;}
@@ -153,6 +153,7 @@ body {
 .status-idle {background-color: #faa61a;}
 .status-dnd {background-color: #ed4245;}
 .status-offline {background-color: #747f8d;}
+.discord-info {position: relative; z-index: 1; color: #eee;} /* 글씨 밝게 */
 
 /* === Settings === */
 .settings {
@@ -283,6 +284,7 @@ async function fetchDiscordPresence() {
   try {
     const res = await fetch(`/api/discord-status/1256264184996565135?_=${Date.now()}`);
     const data = await res.json();
+
     const avatar = document.getElementById("discordAvatar");
     const card = document.getElementById("discordCard");
     const name = document.getElementById("discordName");
@@ -292,12 +294,20 @@ async function fetchDiscordPresence() {
     card.style.backgroundImage = data.banner_url
       ? `url(${data.banner_url})`
       : "linear-gradient(135deg, #1e1f22, #2b2d31)";
-
     avatar.src = `${data.avatar_url}?v=${Date.now()}`;
     name.textContent = data.username || "Unknown";
+
     dot.className = "status-dot";
     dot.classList.add(`status-${data.status || "offline"}`);
-    activity.textContent = data.activity ? data.activity.name : "";
+
+    // Spotify 상태
+    if (data.spotify && data.spotify.song && data.spotify.artist) {
+      activity.textContent = `🎵 ${data.spotify.song} – ${data.spotify.artist}`;
+    } else if (data.activity && data.activity.name) {
+      activity.textContent = data.activity.name;
+    } else {
+      activity.textContent = "현재 활동 없음";
+    }
   } catch {
     document.getElementById("discordActivity").textContent = "불러오기 실패";
   }
