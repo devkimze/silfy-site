@@ -278,27 +278,44 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
-// === Discord ===
+// === Discord Presence ===
 async function fetchDiscordPresence() {
   try {
     const res = await fetch(`/api/discord-status/1256264184996565135?_=${Date.now()}`);
     const data = await res.json();
+
     const avatar = document.getElementById("discordAvatar");
     const card = document.getElementById("discordCard");
     const name = document.getElementById("discordName");
     const activity = document.getElementById("discordActivity");
     const dot = document.getElementById("discordDot");
 
-    card.style.backgroundImage = data.banner_url
-      ? `url(${data.banner_url})`
-      : "linear-gradient(135deg, #1e1f22, #2b2d31)";
-
+    // === 아바타, 이름, 상태 ===
     avatar.src = `${data.avatar_url}?v=${Date.now()}`;
     name.textContent = data.username || "Unknown";
     dot.className = "status-dot";
     dot.classList.add(`status-${data.status || "offline"}`);
-    activity.textContent = data.activity ? data.activity.name : "";
-  } catch {
+
+    // === Spotify 앨범 아트 또는 배너 ===
+    if (data.activity?.album_art_url) {
+      card.style.backgroundImage = `url(${data.activity.album_art_url})`;
+    } else {
+      card.style.backgroundImage = data.banner_url
+        ? `url(${data.banner_url})`
+        : "linear-gradient(135deg, #1e1f22, #2b2d31)";
+    }
+
+    // === 활동 표시 ===
+    if (data.activity?.formatted) {
+      activity.textContent = data.activity.formatted;
+    } else if (data.activity?.name) {
+      activity.textContent = data.activity.name;
+    } else {
+      activity.textContent = "";
+    }
+
+  } catch (err) {
+    console.error(err);
     document.getElementById("discordActivity").textContent = "불러오기 실패";
   }
 }
@@ -306,9 +323,9 @@ async function fetchDiscordPresence() {
 // === TikTok ===
 async function fetchTikTokData() {
   try {
-    const res = await fetch(`/api/tiktok-status/silfyxd?_=${Date.now()}`);
+    const res = await fetch(`/api/tiktok?_=${Date.now()}`);
     const data = await res.json();
-    document.getElementById("tiktokAvatar").src = data.avatar_url;
+    document.getElementById("tiktokAvatar").src = data.avatar;
     document.getElementById("tiktokName").textContent = `@${data.username}`;
     document.getElementById("tiktokStats").textContent =
       `${data.followers.toLocaleString()} followers • ${data.likes.toLocaleString()} likes`;
@@ -320,11 +337,11 @@ async function fetchTikTokData() {
 // === YouTube ===
 async function fetchYouTubeData() {
   try {
-    const res = await fetch(`/api/youtube-status/지후7?_=${Date.now()}`);
+    const res = await fetch(`/api/youtube?_=${Date.now()}`);
     const data = await res.json();
-    document.getElementById("youtubeAvatar").src = data.avatar_url;
+    document.getElementById("youtubeAvatar").src = data.thumbnail;
     document.getElementById("youtubeStats").textContent =
-      `${data.subscribers.toLocaleString()} subs`;
+      `${Number(data.subscribers).toLocaleString()} subs`;
   } catch {
     document.getElementById("youtubeStats").textContent = "불러오기 실패";
   }
