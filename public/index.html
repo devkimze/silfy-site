@@ -139,20 +139,41 @@ body {
   z-index: 0;
 }
 .discord-avatar {position: relative; margin-right: 20px; z-index: 1;}
-.discord-avatar img {width: 70px; height: 70px; border-radius: 50%;}
-.status-dot {
-  position: absolute;
-  bottom: 4px;
-  right: 1px;
-  width: 16px;
-  height: 16px;
+.discord-avatar img {
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   border: 3px solid #2b2d31;
+  box-shadow: 0 0 12px rgba(0,0,0,0.6);
+}.status-dot {
+  position: absolute;
+  bottom: 2px;          /* 아바타와 살짝 겹치도록 */
+  right: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 3px solid #1e1f22; /* 디스코드 배경색과 유사한 경계 */
+  box-shadow: 0 0 8px rgba(0,0,0,0.5), 0 0 10px rgba(255,255,255,0.15) inset;
+  z-index: 2;
 }
-.status-online {background-color: #3ba55d;}
-.status-idle {background-color: #faa61a;}
-.status-dnd {background-color: #ed4245;}
-.status-offline {background-color: #747f8d;}
+
+/* 상태별 색감 */
+.status-online {
+  background-color: #23a55a;
+  box-shadow: 0 0 8px #23a55a;
+}
+.status-idle {
+  background-color: #f0b232;
+  box-shadow: 0 0 8px #f0b232;
+}
+.status-dnd {
+  background-color: #f23f43;
+  box-shadow: 0 0 8px #f23f43;
+}
+.status-offline {
+  background-color: #80848e;
+  box-shadow: 0 0 8px #80848e;
+}
 
 /* === Settings === */
 .settings {
