@@ -83,28 +83,24 @@ body {
 }
 .social-item:hover { background: #1e1e1e; transform: scale(1.02); }
 
-/* 뱃지 스타일 (모두 동일한 “걸침” 효과) */
-.label {
+/* --- 공통 걸치는 뱃지 스타일 --- */
+.label-badge {
   position: absolute;
-  top: -10px;
-  left: -10px;
-  padding: 5px 12px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #fff;
+  top: -14px;
+  left: 18px;
+  padding: 6px 14px;
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  transform: rotate(-6deg);
-  transition: transform 0.2s ease, opacity 0.3s ease;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
   z-index: 3;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
 }
-.label:hover {
-  transform: rotate(0deg) scale(1.05);
-  opacity: 0.9;
-}
-.discord-label { background: #5865f2; }
-.tiktok-label { background: #ff0050; }
-.youtube-label { background: #ff0000; }
+
+/* 플랫폼별 색상 */
+.discord-badge { background: #5865f2; }
+.tiktok-badge { background: #ff0050; }
+.youtube-badge { background: #ff0000; }
 
 /* Discord 배너 전체 배경 */
 .discord-banner {
@@ -118,14 +114,11 @@ body {
   opacity: 1;
   transition: opacity 0.4s ease;
 }
-.discord-banner.hidden {
-  opacity: 0;
-}
+.discord-banner.hidden { opacity: 0; }
 
 /* Discord 콘텐츠 위로 올리기 */
 .discord-avatar,
 .discord-info,
-.label,
 .album-art {
   position: relative;
   z-index: 2;
@@ -244,8 +237,8 @@ body {
       <div class="socials">
         <!-- Discord -->
         <div class="social-item discord" id="discordCard">
+          <div class="label-badge discord-badge">Discord</div>
           <img id="discordBanner" class="discord-banner hidden" src="" alt="Banner" />
-          <div class="label discord-label">Discord</div>
           <div class="discord-avatar">
             <img id="discordAvatar" src="img/dc.jpg" alt="Discord" />
             <div class="status-dot status-offline" id="discordDot"></div>
@@ -261,7 +254,7 @@ body {
 
         <!-- TikTok -->
         <div class="social-item" id="tiktokCard">
-          <div class="label tiktok-label">TikTok</div>
+          <div class="label-badge tiktok-badge">TikTok</div>
           <img id="tiktokAvatar" src="img/tt.png" alt="TikTok" />
           <div class="social-info">
             <p><strong id="tiktokName">@undefined</strong></p>
@@ -271,7 +264,7 @@ body {
 
         <!-- YouTube -->
         <div class="social-item" id="youtubeCard">
-          <div class="label youtube-label">YouTube</div>
+          <div class="label-badge youtube-badge">YouTube</div>
           <img id="youtubeAvatar" src="img/yt.png" alt="YouTube" />
           <div class="social-info">
             <p><strong id="youtubeName">@지후7</strong></p>
@@ -309,9 +302,7 @@ async function fetchDiscordPresence(){
     if(data.banner_url){
       banner.src=data.banner_url;
       banner.classList.remove("hidden");
-    } else {
-      banner.classList.add("hidden");
-    }
+    } else banner.classList.add("hidden");
 
     if(data.activity?.name==="Spotify"){
       activity.innerHTML = `
@@ -329,7 +320,6 @@ async function fetchDiscordPresence(){
     document.getElementById("discordActivity").textContent="불러오기 실패";
   }
 }
-
 fetchDiscordPresence();
 setInterval(fetchDiscordPresence, 30000);
 </script>
