@@ -1,57 +1,50 @@
 import express from "express";
 import fetch from "node-fetch";
-import path from "path";
-import { fileURLToPath } from "url";
+import cors from "cors";
+import dotenv from "dotenv";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+dotenv.config();
 
 const app = express();
+app.use(cors());
+
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
 const PORT = process.env.PORT || 10000;
 
-// ✅ HTML, CSS, JS 등 정적 파일 서빙
-app.use(express.static(path.join(__dirname, "public")));
+// ✅ 단일 사용자 Presence 조회
+app.get("/api/discord-status/:userId", async (req, res) => {
+  const userId = req.params.userId;
 
-// ✅ 루트 URL은 index.html 반환
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
-// ✅ Discord 상태 API (Lanyard 이용)
-app.get("/api/discord-status/:id", async (req, res) => {
-  const userId = req.params.id;
+  if (!DISCORD_TOKEN) {
+    return res.status(500).json({ error: "DISCORD_TOKEN not found in environment" });
+  }
 
   try {
-    const response = await fetch(`https://api.lanyard.rest/v1/users/${userId}`);
+    const response = await fetch(`https://discord.com/api/v10/users/${userId}/profile`, {
+      headers: { Authorization: `Bot ${DISCORD_TOKEN}` },
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      console.error("Discord API Error:", text);
+      return res.status(response.status).json({ error: "Discord API failed", details: text });
+    }
+
     const data = await response.json();
 
-    if (!data.success) {
-      return res.status(500).json({ status: "offline" });
-    }
-
-    const discord = data.data;
-
-    // 상태
-    const status = discord.discord_status || "offline";
-
-    // 활동 (게임 / Spotify / Custom 등)
-    let activity = null;
-    if (discord.activities && discord.activities.length > 0) {
-      const act = discord.activities.find(a => a.type === 0); // Playing
-      if (act) activity = act.name;
-    }
-
     res.json({
-      status,
-      activity: activity || null
+      id: data.user.id,
+      username: data.user.username,
+      global_name: data.user.global_name,
+      status: "online", // Discord API v10에서는 Presence 정보는 Gateway 전용이므로 단순 표시
+      activity: data.activities?.[0]?.name || "데이터 없음",
     });
   } catch (err) {
-    console.error("❌ Discord API Error:", err);
-    res.status(500).json({ status: "offline" });
+    console.error("Fetch error:", err);
+    res.status(500).json({ error: "Failed to fetch Discord user data" });
   }
 });
 
-// ✅ 서버 실행
 app.listen(PORT, () => {
-  console.log(`🚀 Silfy site running on port ${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });
