@@ -121,9 +121,7 @@ body {
   border-radius: 50%;
   border: 3px solid #5865F2;
 }
-.discord-info {
-  z-index: 1;
-}
+.discord-info {z-index: 1;}
 .discord-info p {margin: 3px 0;}
 .discord-name {font-size: 20px; font-weight: 600; color: #fff;}
 .discord-activity {color: #b9bbbe; font-size: 15px;}
@@ -141,7 +139,7 @@ body {
 .status-dnd { background-color: #ed4245; }
 .status-offline { background-color: #747f8d; }
 
-/* === 나머지 기존 소셜 === */
+/* === 나머지 소셜 === */
 .social-item {
   background-color: #1a1a1a;
   border-radius: 15px;
@@ -170,11 +168,6 @@ body {
   line-height: 1.8;
 }
 .settings-item {margin-bottom: 15px; display: flex; justify-content: space-between; color: #ddd;}
-.settings:hover {
-  transform: scale(1.03);
-  background-color: #232323;
-  box-shadow: 0 0 15px rgba(79,131,185,0.4);
-}
 .settings-item span:first-child {color: var(--accent-light); font-weight: 600;}
 .gears {display: flex; flex-direction: column; gap: 20px; width: 100%;}
 .gear-item {
@@ -224,7 +217,7 @@ body {
           </div>
           <div class="discord-info">
             <p class="discord-name" id="discordName">gredfver</p>
-            <p id="discordStatus" class="discord-activity">Loading...</p>
+            <p id="discordActivity" class="discord-activity">Loading...</p>
           </div>
         </div>
 
@@ -287,43 +280,52 @@ async function fetchDiscordPresence() {
     const res = await fetch("/api/discord-status/1256264184996565135");
     const data = await res.json();
 
-    const el = document.getElementById("discordStatus");
-    const dot = document.getElementById("discordDot");
     const avatar = document.getElementById("discordAvatar");
     const card = document.getElementById("discordCard");
     const name = document.getElementById("discordName");
+    const activity = document.getElementById("discordActivity");
+    const dot = document.getElementById("discordDot");
 
-    // 배너 이미지 설정
-    if (data.banner_url) {
-      card.style.backgroundImage = `url(${data.banner_url})`;
-    } else {
-      card.style.backgroundImage = "linear-gradient(135deg, #1e1f22, #2b2d31)";
-    }
+    // 배너
+    card.style.backgroundImage = data.banner_url 
+      ? `url(${data.banner_url})`
+      : "linear-gradient(135deg, #1e1f22, #2b2d31)";
 
-    // 프로필 아바타
-    if (data.avatar_url) avatar.src = data.avatar_url;
+    // 아바타
+    avatar.src = data.avatar_url || "img/dc.jpg";
+
+    // 이름
     name.textContent = data.username || "Unknown";
 
-    // 음악 or 활동 표시
-    if (data.activity && data.activity.type === "LISTENING") {
-      el.textContent = `${data.activity.artist} - ${data.activity.song}`;
-    } else if (data.activity && data.activity.name) {
-      el.textContent = data.activity.name;
-    } else {
-      el.textContent = "오프라인";
-    }
-
-    // 상태 색상
+    // 상태 점 (online/idle/dnd/offline)
+    const status = (data.status || "offline").trim().toLowerCase();
     dot.className = "status-dot";
-    if (data.status === "online") dot.classList.add("status-online");
-    else if (data.status === "idle") dot.classList.add("status-idle");
-    else if (data.status === "dnd") dot.classList.add("status-dnd");
+    if (status === "online") dot.classList.add("status-online");
+    else if (status === "idle") dot.classList.add("status-idle");
+    else if (status === "dnd") dot.classList.add("status-dnd");
     else dot.classList.add("status-offline");
 
-  } catch {
-    document.getElementById("discordStatus").textContent = "불러오기 실패";
+    // 활동 표시
+    if (data.activity) {
+      if (data.activity.type === "LISTENING") {
+        activity.textContent = `🎧 ${data.activity.artist} - ${data.activity.song}`;
+      } else if (data.activity.type === "PLAYING") {
+        activity.textContent = `🎮 Playing ${data.activity.name}`;
+      } else if (data.activity.name) {
+        activity.textContent = data.activity.name;
+      } else {
+        activity.textContent = " ";
+      }
+    } else {
+      activity.textContent = " ";
+    }
+
+  } catch (err) {
+    console.error("Discord status fetch failed:", err);
+    document.getElementById("discordActivity").textContent = "불러오기 실패";
   }
 }
+
 fetchDiscordPresence();
 setInterval(fetchDiscordPresence, 30000);
 </script>
