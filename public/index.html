@@ -130,7 +130,7 @@ body {
   box-shadow: 0 6px 18px rgba(0,0,0,0.6);
 }
 
-/* 상태점 — 이름 오른쪽 고정 */
+/* 상태점 */
 .status-dot {
   display: inline-block;
   width: 12px;
@@ -163,7 +163,7 @@ body {
   letter-spacing: -0.02em;
 }
 #discordActivityWrapper {
-  margin-top: 5px;
+  margin-top: 3px; /* ✅ 간격 줄임 */
   font-size: 14px;
   color: #bdbdbd;
   line-height: 1.3em;
@@ -205,9 +205,23 @@ body {
 }
 .social-item:hover { transform: translateY(-3px); }
 
-.social-info { display: flex; flex-direction: column; justify-content: center; }
-.social-info strong { color: #fff; }
-.social-info .status { color: #bdbdbd; font-size: 14px; }
+/* ✅ 닉네임-상세정보 간격 줄이기 */
+.social-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.social-info strong {
+  color: #fff;
+  font-size: 16px;
+  margin-bottom: 3px; /* 간격 조정 */
+}
+.social-info .status {
+  color: #bdbdbd;
+  font-size: 14px;
+  line-height: 1.3em;
+  margin-top: 0;
+}
 
 .social-item img:not(.album-art) {
   width: 44px;
@@ -265,7 +279,7 @@ body {
           <div class="label-badge tiktok-badge">TikTok</div>
           <img id="tiktokAvatar" src="img/tt.png" alt="TikTok" />
           <div class="social-info">
-            <p><strong id="tiktokName">@undefined</strong></p>
+            <strong id="tiktokName">@undefined</strong>
             <p class="status" id="tiktokStats">불러오기 실패</p>
           </div>
         </div>
@@ -275,7 +289,7 @@ body {
           <div class="label-badge youtube-badge">YouTube</div>
           <img id="youtubeAvatar" src="img/yt.png" alt="YouTube" />
           <div class="social-info">
-            <p><strong id="youtubeName">@지후7</strong></p>
+            <strong id="youtubeName">@지후7</strong>
             <p class="status" id="youtubeStats">30,500 subs</p>
           </div>
         </div>
