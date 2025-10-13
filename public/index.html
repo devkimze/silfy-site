@@ -72,27 +72,19 @@ body {
   gap: 18px;
 }
 
-/* 소셜 카드 기본 */
-.social-item {
+/* Discord 카드 */
+.social-item.discord {
   position: relative;
-  border-radius: 18px;
-  padding: 18px 22px;
   display: flex;
   align-items: center;
-  gap: 15px;
-  overflow: visible;
-  transition: 0.18s ease;
-  background: rgba(20,20,20,0.85);
-}
-.social-item:hover { transform: translateY(-3px); }
-
-/* 카드 배경용 프로필 배너 */
-.discord {
+  gap: 16px;
+  padding: 18px 22px;
+  border-radius: 18px;
+  overflow: hidden;
   background: rgba(20,20,20,0.85);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  position: relative;
   box-shadow: 0 0 30px rgba(0,0,0,0.6);
 }
 .discord::before {
@@ -102,6 +94,7 @@ body {
   background: rgba(0,0,0,0.45);
   z-index: 1;
 }
+.discord * { position: relative; z-index: 2; }
 
 /* 배지 */
 .label-badge {
@@ -127,44 +120,53 @@ body {
   height: 70px;
   border-radius: 50%;
   flex-shrink: 0;
-  overflow: visible;
-  z-index: 3;
 }
 .discord-avatar img {
-  width: 70px;
-  height: 70px;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  display: block;
   border: 3px solid rgba(0,0,0,0.45);
   box-shadow: 0 6px 18px rgba(0,0,0,0.6);
 }
 
-/* 🔹 이름 오른쪽 상태점 */
-.discord-info {
-  position: relative;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
+/* 상태점 — 이름 오른쪽 고정 */
 .status-dot {
+  display: inline-block;
   width: 12px;
   height: 12px;
   border-radius: 50%;
   border: 2px solid #0b0b0b;
+  margin-left: 6px;
+  transform: translateY(1px);
 }
 .status-online { background-color: #23a55a; }
 .status-idle { background-color: #f0b232; }
 .status-dnd { background-color: #f23f43; }
 .status-offline { background-color: #747f8d; }
 
-/* Discord 이름 */
+/* Discord 정보 */
+.discord-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.discord-name-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 #discordName {
   font-size: 18px;
   font-weight: 600;
   color: #fff;
   letter-spacing: -0.02em;
+}
+#discordActivityWrapper {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #bdbdbd;
+  line-height: 1.3em;
 }
 
 /* CD 회전 앨범 */
@@ -189,7 +191,20 @@ body {
   to { transform: translateY(-50%) rotate(360deg); }
 }
 
-/* 정보 */
+/* TikTok / YouTube 공통 */
+.social-item {
+  position: relative;
+  border-radius: 18px;
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  overflow: visible;
+  transition: 0.18s ease;
+  background: rgba(20,20,20,0.85);
+}
+.social-item:hover { transform: translateY(-3px); }
+
 .social-info { display: flex; flex-direction: column; justify-content: center; }
 .social-info strong { color: #fff; }
 .social-info .status { color: #bdbdbd; font-size: 14px; }
@@ -234,11 +249,13 @@ body {
             <img id="discordAvatar" src="img/dc.jpg" alt="Discord" />
           </div>
           <div class="discord-info">
-            <p id="discordName">@Loading...</p>
-            <div class="status-dot status-offline" id="discordDot"></div>
-          </div>
-          <div id="discordActivityWrapper">
-            <span id="discordActivity">활동 없음</span>
+            <div class="discord-name-row">
+              <p id="discordName">@Loading...</p>
+              <div class="status-dot status-offline" id="discordDot"></div>
+            </div>
+            <div id="discordActivityWrapper">
+              <span id="discordActivity">활동 없음</span>
+            </div>
           </div>
           <img id="albumArt" class="album-art hidden" src="" alt="Album Art" />
         </div>
