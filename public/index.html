@@ -143,14 +143,19 @@ body {
 /* 🔹 상태 점 - 디스코드처럼 겹치게 수정됨 */
 .status-dot {
   position: absolute;
-  bottom: -2px;  /* 아래로 살짝 나와 겹침 */
-  right: -2px;   /* 오른쪽 살짝 겹치게 */
-  width: 12px;
-  height: 12px;
+  bottom: 0;
+  right: 0;
+  transform: translate(35%, 35%); /* 프로필에 살짝 겹치게 */
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  border: 3px solid #0b0b0b; /* 카드 배경색과 맞춤 */
-  z-index: 4;
+  border: 3px solid #0b0b0b; /* 배경색과 동일 */
+  z-index: 5;
 }
+.status-online { background-color: #23a55a; }
+.status-idle { background-color: #f0b232; }
+.status-dnd { background-color: #f23f43; }
+.status-offline { background-color: #747f8d; }
 .status-online { background-color: #23a55a; }
 .status-idle { background-color: #f0b232; }
 .status-dnd { background-color: #f23f43; }
