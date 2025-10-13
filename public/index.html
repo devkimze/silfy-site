@@ -140,22 +140,20 @@ body {
   box-shadow: 0 6px 18px rgba(0,0,0,0.6);
 }
 
-/* 🔹 상태 점 - 디스코드처럼 겹치게 수정됨 */
-.status-dot {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  transform: translate(35%, 35%); /* 프로필에 살짝 겹치게 */
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 3px solid #0b0b0b; /* 배경색과 동일 */
-  z-index: 5;
+/* 🔹 이름 오른쪽 상태점 */
+.discord-info {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-.status-online { background-color: #23a55a; }
-.status-idle { background-color: #f0b232; }
-.status-dnd { background-color: #f23f43; }
-.status-offline { background-color: #747f8d; }
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #0b0b0b;
+}
 .status-online { background-color: #23a55a; }
 .status-idle { background-color: #f0b232; }
 .status-dnd { background-color: #f23f43; }
@@ -166,7 +164,6 @@ body {
   font-size: 18px;
   font-weight: 600;
   color: #fff;
-  margin-bottom: 4px;
   letter-spacing: -0.02em;
 }
 
@@ -193,7 +190,6 @@ body {
 }
 
 /* 정보 */
-.discord-info { position: relative; z-index: 3; }
 .social-info { display: flex; flex-direction: column; justify-content: center; }
 .social-info strong { color: #fff; }
 .social-info .status { color: #bdbdbd; font-size: 14px; }
@@ -236,13 +232,13 @@ body {
           <div class="label-badge discord-badge">Discord</div>
           <div class="discord-avatar">
             <img id="discordAvatar" src="img/dc.jpg" alt="Discord" />
-            <div class="status-dot status-offline" id="discordDot"></div>
           </div>
           <div class="discord-info">
             <p id="discordName">@Loading...</p>
-            <div id="discordActivityWrapper">
-              <span id="discordActivity">활동 없음</span>
-            </div>
+            <div class="status-dot status-offline" id="discordDot"></div>
+          </div>
+          <div id="discordActivityWrapper">
+            <span id="discordActivity">활동 없음</span>
           </div>
           <img id="albumArt" class="album-art hidden" src="" alt="Album Art" />
         </div>
@@ -292,19 +288,16 @@ async function fetchDiscordPresence(){
     const albumArt = document.getElementById("albumArt");
     const card = document.getElementById("discordCard");
 
-    // avatar / name / status
     if (data.avatar_url) avatar.src = `${data.avatar_url}?v=${Date.now()}`;
     name.textContent = data.username ? `@${data.username}` : "@unknown";
     dot.className = "status-dot status-" + (data.status || "offline");
 
-    // 배너를 카드 배경으로 설정
     if (data.banner_url) {
       card.style.backgroundImage = `url("${data.banner_url}")`;
     } else {
       card.style.backgroundImage = "none";
     }
 
-    // 활동(Spotify)
     if (data.activity?.name === "Spotify") {
       const title = data.activity.details || "Unknown Track";
       const artists = (data.activity.state || "").split(";").map(s=>s.trim()).join(", ");
