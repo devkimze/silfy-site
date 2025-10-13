@@ -72,21 +72,21 @@ body {
   gap: 18px;
 }
 
-/* ✅ 새 Discord 카드 */
+/* ✅ Discord 카드 통일 버전 */
 .social-item.discord {
   position: relative;
   display: flex;
-  align-items: center; /* 세로 중앙 정렬 */
+  align-items: center;
   gap: 16px;
-  padding: 20px 22px;
+  padding: 18px 22px;
   border-radius: 18px;
-  overflow: hidden;
   background: rgba(20,20,20,0.85);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   box-shadow: 0 0 30px rgba(0,0,0,0.6);
-  height: 96px; /* 다른 카드랑 통일 */
+  overflow: hidden;
+  height: auto;
 }
 .discord::before {
   content: "";
@@ -116,9 +116,8 @@ body {
 
 /* 아바타 */
 .discord-avatar {
-  position: relative;
-  width: 70px;
-  height: 70px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -127,19 +126,18 @@ body {
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid rgba(0,0,0,0.45);
+  border: 2px solid rgba(0,0,0,0.45);
   box-shadow: 0 6px 18px rgba(0,0,0,0.6);
 }
 
 /* 상태점 */
 .status-dot {
   display: inline-block;
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   border: 2px solid #0b0b0b;
-  margin-left: 6px;
-  transform: translateY(1px);
+  margin-left: 5px;
 }
 .status-online { background-color: #23a55a; }
 .status-idle { background-color: #f0b232; }
@@ -151,7 +149,6 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-top: -2px;
 }
 .discord-name-row {
   display: flex;
@@ -159,15 +156,14 @@ body {
   gap: 4px;
 }
 #discordName {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 600;
   color: #fff;
-  letter-spacing: -0.02em;
 }
 #discordActivityWrapper {
-  margin-top: 2px;
   font-size: 14px;
   color: #bdbdbd;
+  margin-top: 2px;
   line-height: 1.3em;
 }
 
@@ -176,8 +172,8 @@ body {
   position: absolute;
   right: 22px;
   top: 50%;
-  width: 70px;
-  height: 70px;
+  width: 54px;
+  height: 54px;
   border-radius: 50%;
   object-fit: cover;
   transform: translateY(-50%) rotate(0deg);
@@ -202,9 +198,8 @@ body {
   display: flex;
   align-items: center;
   gap: 15px;
-  overflow: visible;
-  transition: 0.18s ease;
   background: rgba(20,20,20,0.85);
+  transition: 0.18s ease;
 }
 .social-item:hover { transform: translateY(-3px); }
 
@@ -222,8 +217,8 @@ body {
   color: #bdbdbd;
   font-size: 14px;
   line-height: 1.3em;
-  margin-top: 0;
 }
+
 .social-item img:not(.album-art) {
   width: 44px;
   height: 44px;
@@ -237,8 +232,7 @@ body {
 @media (max-width:760px){
   .header-box, .card { width: 92%; padding-left: 20px; padding-right: 20px; }
   .username { font-size: 40px; }
-  .album-art { width: 54px; height: 54px; right: 12px; }
-  .discord-avatar, .discord-avatar img { width: 56px; height: 56px; }
+  .album-art { width: 44px; height: 44px; right: 12px; }
 }
 </style>
 </head>
