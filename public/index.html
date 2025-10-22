@@ -72,7 +72,7 @@ body {
   gap: 18px;
 }
 
-/* ✅ Discord 카드 통일 버전 */
+/* Discord 카드 */
 .social-item.discord {
   position: relative;
   display: flex;
@@ -80,13 +80,12 @@ body {
   gap: 16px;
   padding: 18px 22px;
   border-radius: 18px;
+  overflow: show;
   background: rgba(20,20,20,0.85);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   box-shadow: 0 0 30px rgba(0,0,0,0.6);
-  overflow: show;
-  height: auto;
 }
 .discord::before {
   content: "";
@@ -116,8 +115,9 @@ body {
 
 /* 아바타 */
 .discord-avatar {
-  width: 44px;
-  height: 44px;
+  position: relative;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -126,18 +126,19 @@ body {
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(0,0,0,0.45);
+  border: 3px solid rgba(0,0,0,0.45);
   box-shadow: 0 6px 18px rgba(0,0,0,0.6);
 }
 
-/* 상태점 */
+/* 상태점 — 이름 오른쪽 고정 */
 .status-dot {
   display: inline-block;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   border: 2px solid #0b0b0b;
-  margin-left: 5px;
+  margin-left: 6px;
+  transform: translateY(1px);
 }
 .status-online { background-color: #23a55a; }
 .status-idle { background-color: #f0b232; }
@@ -156,14 +157,15 @@ body {
   gap: 4px;
 }
 #discordName {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   color: #fff;
-
+  letter-spacing: -0.02em;
+}
 #discordActivityWrapper {
+  margin-top: 5px;
   font-size: 14px;
   color: #bdbdbd;
-  margin-top: 2px;
   line-height: 1.3em;
 }
 
@@ -172,8 +174,8 @@ body {
   position: absolute;
   right: 22px;
   top: 50%;
-  width: 54px;
-  height: 54px;
+  width: 74px;
+  height: 74px;
   border-radius: 50%;
   object-fit: cover;
   transform: translateY(-50%) rotate(0deg);
@@ -184,7 +186,6 @@ body {
   z-index: 3;
 }
 .album-art.hidden { display: none; }
-
 @keyframes spinCD {
   from { transform: translateY(-50%) rotate(0deg); }
   to { transform: translateY(-50%) rotate(360deg); }
@@ -198,26 +199,15 @@ body {
   display: flex;
   align-items: center;
   gap: 15px;
-  background: rgba(20,20,20,0.85);
+  overflow: visible;
   transition: 0.18s ease;
+  background: rgba(20,20,20,0.85);
 }
 .social-item:hover { transform: translateY(-3px); }
 
-.social-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.social-info strong {
-  color: #fff;
-  font-size: 16px;
-  margin-bottom: 3px;
-}
-.social-info .status {
-  color: #bdbdbd;
-  font-size: 14px;
-  line-height: 1.3em;
-}
+.social-info { display: flex; flex-direction: column; justify-content: center; }
+.social-info strong { color: #fff; }
+.social-info .status { color: #bdbdbd; font-size: 14px; }
 
 .social-item img:not(.album-art) {
   width: 44px;
@@ -232,7 +222,8 @@ body {
 @media (max-width:760px){
   .header-box, .card { width: 92%; padding-left: 20px; padding-right: 20px; }
   .username { font-size: 40px; }
-  .album-art { width: 44px; height: 44px; right: 12px; }
+  .album-art { width: 54px; height: 54px; right: 12px; }
+  .discord-avatar, .discord-avatar img { width: 56px; height: 56px; }
 }
 </style>
 </head>
@@ -263,7 +254,7 @@ body {
               <div class="status-dot status-offline" id="discordDot"></div>
             </div>
             <div id="discordActivityWrapper">
-              <span id="discordActivity">Chilling</span>
+              <span id="discordActivity">Currently doing nothing...</span>
             </div>
           </div>
           <img id="albumArt" class="album-art hidden" src="" alt="Album Art" />
@@ -274,7 +265,7 @@ body {
           <div class="label-badge tiktok-badge">TikTok</div>
           <img id="tiktokAvatar" src="img/tt.png" alt="TikTok" />
           <div class="social-info">
-            <strong id="tiktokName">@undefined</strong>
+            <p><strong id="tiktokName">@undefined</strong></p>
             <p class="status" id="tiktokStats">불러오기 실패</p>
           </div>
         </div>
@@ -284,7 +275,7 @@ body {
           <div class="label-badge youtube-badge">YouTube</div>
           <img id="youtubeAvatar" src="img/yt.png" alt="YouTube" />
           <div class="social-info">
-            <strong id="youtubeName">@지후7</strong>
+            <p><strong id="youtubeName">@지후7</strong></p>
             <p class="status" id="youtubeStats">30,500 subs</p>
           </div>
         </div>
