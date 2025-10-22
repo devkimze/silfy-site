@@ -66,7 +66,7 @@ body {
 .tab-content.active { display: block; }
 
 /* socials */
-.socials {
+.socials, .gears { 
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -130,7 +130,7 @@ body {
   box-shadow: 0 6px 18px rgba(0,0,0,0.6);
 }
 
-/* 상태점 — 이름 오른쪽 고정 */
+/* 상태점 */
 .status-dot {
   display: inline-block;
   width: 12px;
@@ -191,7 +191,7 @@ body {
   to { transform: translateY(-50%) rotate(360deg); }
 }
 
-/* TikTok / YouTube 공통 */
+/* 공통 카드 */
 .social-item {
   position: relative;
   border-radius: 18px;
@@ -218,7 +218,27 @@ body {
   border: 2px solid rgba(0,0,0,0.45);
 }
 
-/* 반응형 */
+/* Gears 카드용 */
+.gear-item {
+  position: relative;
+  border-radius: 18px;
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  overflow: hidden;
+  background: rgba(20,20,20,0.85);
+  box-shadow: 0 0 30px rgba(0,0,0,0.6);
+}
+.gear-item img {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+.gear-info strong { font-size: 17px; color: #fff; }
+.gear-info .desc { color: #bdbdbd; font-size: 14px; margin-top: 3px; }
+
 @media (max-width:760px){
   .header-box, .card { width: 92%; padding-left: 20px; padding-right: 20px; }
   .username { font-size: 40px; }
@@ -240,9 +260,9 @@ body {
       <div class="tab" data-tab="gears">Gears</div>
     </div>
 
+    <!-- Social -->
     <div id="socials" class="tab-content active">
       <div class="socials">
-        <!-- Discord -->
         <div class="social-item discord" id="discordCard">
           <div class="label-badge discord-badge">Discord</div>
           <div class="discord-avatar">
@@ -260,7 +280,6 @@ body {
           <img id="albumArt" class="album-art hidden" src="" alt="Album Art" />
         </div>
 
-        <!-- TikTok -->
         <div class="social-item" id="tiktokCard">
           <div class="label-badge tiktok-badge">TikTok</div>
           <img id="tiktokAvatar" src="img/tt.png" alt="TikTok" />
@@ -270,13 +289,47 @@ body {
           </div>
         </div>
 
-        <!-- YouTube -->
         <div class="social-item" id="youtubeCard">
           <div class="label-badge youtube-badge">YouTube</div>
           <img id="youtubeAvatar" src="img/yt.png" alt="YouTube" />
           <div class="social-info">
             <p><strong id="youtubeName">@지후7</strong></p>
             <p class="status" id="youtubeStats">30,500 subs</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div id="settings" class="tab-content">
+      <div style="display:flex;flex-direction:column;gap:10px;text-align:center;">
+        <p style="font-size:18px;font-weight:600;">Resolution: <span style="color:#bdbdbd;">1920×1080</span></p>
+        <p style="font-size:18px;font-weight:600;">Sensitivity: <span style="color:#bdbdbd;">About 65cm</span></p>
+      </div>
+    </div>
+
+    <!-- Gears -->
+    <div id="gears" class="tab-content">
+      <div class="gears">
+        <div class="gear-item">
+          <img src="img/mouse.jpg" alt="Mouse" />
+          <div class="gear-info">
+            <strong>Mouse — Wlmouse Ying</strong>
+            <p class="desc">Forged Carbon Fiber 37±2 Grams</p>
+          </div>
+        </div>
+        <div class="gear-item">
+          <img src="img/keyboard.jpg" alt="Keyboard" />
+          <div class="gear-info">
+            <strong>Keyboard — Ez60</strong>
+            <p class="desc">Rapid trigger, jade pro</p>
+          </div>
+        </div>
+        <div class="gear-item">
+          <img src="img/headset.jpg" alt="Headset" />
+          <div class="gear-info">
+            <strong>Earphones — Sennheiser IE300</strong>
+            <p class="desc">Neutral IEM for accurate sound</p>
           </div>
         </div>
       </div>
