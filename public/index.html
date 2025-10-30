@@ -80,7 +80,6 @@ body {
   gap: 16px;
   padding: 18px 22px;
   border-radius: 18px;
-  overflow: show;
   background: rgba(20,20,20,0.85);
   background-size: cover;
   background-position: center;
@@ -224,20 +223,30 @@ body {
   border-radius: 18px;
   padding: 18px 22px;
   display: flex;
-  align-items: center;
-  gap: 15px;
-  overflow: hidden;
+  flex-direction: column;
+  justify-content: center;
   background: rgba(20,20,20,0.85);
   box-shadow: 0 0 30px rgba(0,0,0,0.6);
 }
-.gear-item img {
-  width: 64px;
-  height: 64px;
-  border-radius: 12px;
-  object-fit: cover;
-}
 .gear-info strong { font-size: 17px; color: #fff; }
 .gear-info .desc { color: #bdbdbd; font-size: 14px; margin-top: 3px; }
+
+/* Settings */
+#settings {
+  text-align: center;
+}
+.settings-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.settings-inner p {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 2px 0;
+}
+.settings-inner span { color: #bdbdbd; }
 
 @media (max-width:760px){
   .header-box, .card { width: 92%; padding-left: 20px; padding-right: 20px; }
@@ -302,9 +311,9 @@ body {
 
     <!-- Settings -->
     <div id="settings" class="tab-content">
-      <div style="display:flex;flex-direction:column;gap:10px;text-align:center;">
-        <p style="font-size:18px;font-weight:600;">Resolution: <span style="color:#bdbdbd;">1920×1080</span></p>
-        <p style="font-size:18px;font-weight:600;">Sensitivity: <span style="color:#bdbdbd;">About 65cm</span></p>
+      <div class="settings-inner">
+        <p>Resolution: <span>1920×1080</span></p>
+        <p>Sensitivity: <span>About 52cm</span></p>
       </div>
     </div>
 
@@ -312,21 +321,18 @@ body {
     <div id="gears" class="tab-content">
       <div class="gears">
         <div class="gear-item">
-          <img src="img/mouse.jpg" alt="Mouse" />
           <div class="gear-info">
             <strong>Mouse — Wlmouse Ying</strong>
             <p class="desc">Forged Carbon Fiber 37±2 Grams</p>
           </div>
         </div>
         <div class="gear-item">
-          <img src="img/keyboard.jpg" alt="Keyboard" />
           <div class="gear-info">
             <strong>Keyboard — Ez60</strong>
             <p class="desc">Rapid trigger, jade pro</p>
           </div>
         </div>
         <div class="gear-item">
-          <img src="img/headset.jpg" alt="Headset" />
           <div class="gear-info">
             <strong>Earphones — Sennheiser IE300</strong>
             <p class="desc">Neutral IEM for accurate sound</p>
