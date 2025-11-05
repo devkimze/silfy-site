@@ -171,12 +171,8 @@ body {
   line-height: 1.3em;
 }
 
-/* CD 회전 앨범 */
+/* albumArt 공통 스타일 */
 .album-art {
-  position: absolute;
-  right: 22px;
-  top: 50%;
-  transform: translateY(-50%) rotate(0deg);
   width: 74px;
   height: 74px;
   border-radius: 50%;
@@ -185,11 +181,15 @@ body {
   border: 3px solid rgba(255,255,255,0.14);
   box-shadow: inset 0 0 8px rgba(255,255,255,0.25),
               0 6px 30px rgba(0,0,0,0.6);
-  z-index: 3;
-  flex-shrink: 0;
-  pointer-events: none; /* 클릭 영향 제거 */
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
-.album-art.hidden { display: none; }
+
+/* 앨범 이미지 없을 때도 자리 유지 */
+.album-art.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
 @keyframes spinCD {
   from { transform: translateY(-50%) rotate(0deg); }
   to { transform: translateY(-50%) rotate(360deg); }
