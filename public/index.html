@@ -66,7 +66,7 @@ body {
 .tab-content.active { display: block; }
 
 /* socials */
-.socials, .gears { 
+.socials { 
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -217,42 +217,32 @@ body {
   border: 2px solid rgba(0,0,0,0.45);
 }
 
-/* Gears 카드용 */
-.gear-item {
-  position: relative;
-  border-radius: 18px;
-  padding: 18px 22px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background: rgba(20,20,20,0.85);
-  box-shadow: 0 0 30px rgba(0,0,0,0.6);
-}
-.gear-info strong { font-size: 17px; color: #fff; }
-.gear-info .desc { color: #bdbdbd; font-size: 14px; margin-top: 3px; }
-
 /* Settings */
 #settings {
-  text-align: center;
+  text-align: left;
 }
-.settings-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
+.settings-table {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 40px;
+  max-width: 600px;
+  margin: 0 auto;
 }
-.settings-inner p {
-  font-size: 18px;
+.settings-table p {
+  font-size: 17px;
   font-weight: 600;
-  margin: 2px 0;
+  margin: 0;
 }
-.settings-inner span { color: #bdbdbd; }
+.settings-table span {
+  color: #bdbdbd;
+}
 
 @media (max-width:760px){
   .header-box, .card { width: 92%; padding-left: 20px; padding-right: 20px; }
   .username { font-size: 40px; }
   .album-art { width: 54px; height: 54px; right: 12px; }
   .discord-avatar, .discord-avatar img { width: 56px; height: 56px; }
+  .settings-table { grid-template-columns: 1fr; gap: 8px; }
 }
 </style>
 </head>
@@ -266,7 +256,6 @@ body {
     <div class="tabs">
       <div class="tab active" data-tab="socials">Social</div>
       <div class="tab" data-tab="settings">Settings</div>
-      <div class="tab" data-tab="gears">Gears</div>
     </div>
 
     <!-- Social -->
@@ -311,33 +300,12 @@ body {
 
     <!-- Settings -->
     <div id="settings" class="tab-content">
-      <div class="settings-inner">
-        <p>Resolution: <span>1920×1080</span></p>
-        <p>Sensitivity: <span>About 52cm</span></p>
-      </div>
-    </div>
-
-    <!-- Gears -->
-    <div id="gears" class="tab-content">
-      <div class="gears">
-        <div class="gear-item">
-          <div class="gear-info">
-            <strong>Mouse — Wlmouse Ying</strong>
-            <p class="desc">Forged Carbon Fiber 37±2 Grams</p>
-          </div>
-        </div>
-        <div class="gear-item">
-          <div class="gear-info">
-            <strong>Keyboard — Ez60</strong>
-            <p class="desc">Rapid trigger, jade pro</p>
-          </div>
-        </div>
-        <div class="gear-item">
-          <div class="gear-info">
-            <strong>Earphones — Sennheiser IE300</strong>
-            <p class="desc">Neutral IEM for accurate sound</p>
-          </div>
-        </div>
+      <div class="settings-table">
+        <p>Mouse:</p> <span>Wlmouse Ying</span>
+        <p>Mouse Pad:</p> <span>Artisan Zero Soft XL</span>
+        <p>Keyboard:</p> <span>Ez60 (Jade Pro)</span>
+        <p>Sensitivity:</p> <span>About 52cm</span>
+        <p>Resolution:</p> <span>1920×1080</span>
       </div>
     </div>
   </div>
