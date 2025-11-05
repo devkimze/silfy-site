@@ -267,7 +267,160 @@ body {
 </style>
 </head>
 <body>
-  <!-- 본문 동일 -->
-  <!-- (이하 기존 코드 그대로 유지) -->
+  <div class="header-box">
+    <div class="username">jihoo</div>
+    <div class="bio">C++, HTML, UE5</div>
+  </div>
+
+  <div class="card">
+    <div class="tabs">
+      <div class="tab active" data-tab="socials">Social</div>
+      <div class="tab" data-tab="settings">Settings</div>
+    </div>
+
+    <!-- Social -->
+    <div id="socials" class="tab-content active">
+      <div class="socials">
+        <div class="social-item discord" id="discordCard">
+          <div class="label-badge discord-badge">Discord</div>
+          <div class="discord-avatar">
+            <img id="discordAvatar" src="img/dc.jpg" alt="Discord" />
+          </div>
+          <div class="discord-info">
+            <div class="discord-name-row">
+              <p id="discordName">@Loading...</p>
+              <div class="status-dot status-offline" id="discordDot"></div>
+            </div>
+            <div id="discordActivityWrapper">
+              <span id="discordActivity">Currently doing nothing...</span>
+            </div>
+          </div>
+          <img id="albumArt" class="album-art hidden" src="" alt="Album Art" />
+        </div>
+
+        <div class="social-item" id="tiktokCard">
+          <div class="label-badge tiktok-badge">TikTok</div>
+          <img id="tiktokAvatar" src="img/tt.png" alt="TikTok" />
+          <div class="social-info">
+            <p><strong id="tiktokName">@undefined</strong></p>
+            <p class="status" id="tiktokStats">불러오기 실패</p>
+          </div>
+        </div>
+
+        <div class="social-item" id="youtubeCard">
+          <div class="label-badge youtube-badge">YouTube</div>
+          <img id="youtubeAvatar" src="img/yt.png" alt="YouTube" />
+          <div class="social-info">
+            <p><strong id="youtubeName">@지후7</strong></p>
+            <p class="status" id="youtubeStats">30,500 subs</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- Settings -->
+<div id="settings" class="tab-content">
+  <div class="settings-table">
+    <div class="setting-row">
+      <p>Mouse</p><span>OP1 8k v2 / Wlmouse Ying</span>
+    </div>
+    <div class="setting-row">
+      <p>Mouse Pad</p><span>Artisan fx Zero MID / Artisan fx Raiden MID </span>
+    </div>
+    <div class="setting-row">
+      <p>Keyboard</p><span>EZ60</span>
+    </div>
+    <div class="setting-row">
+      <p>Sensitivity</p><span>49~60cm</span>
+    </div>
+    <div class="setting-row">
+      <p>Resolution</p><span>1920×1080</span>
+    </div>
+  </div>
+</div>
+
+
+<script>
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.tab, .tab-content').forEach(el=>el.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
+  });
+});
+
+async function fetchDiscordPresence(){
+  try{
+    const res = await fetch(`/api/discord-status/1256264184996565135?_=${Date.now()}`);
+    if(!res.ok) throw new Error('API error');
+    const data = await res.json();
+
+    const avatar = document.getElementById("discordAvatar");
+    const name = document.getElementById("discordName");
+    const activityEl = document.getElementById("discordActivity");
+    const dot = document.getElementById("discordDot");
+    const albumArt = document.getElementById("albumArt");
+    const card = document.getElementById("discordCard");
+
+    if (data.avatar_url) avatar.src = `${data.avatar_url}?v=${Date.now()}`;
+    name.textContent = data.username ? `@${data.username}` : "@unknown";
+    dot.className = "status-dot status-" + (data.status || "offline");
+
+    if (data.banner_url) {
+      card.style.backgroundImage = `url("${data.banner_url}")`;
+    } else {
+      card.style.backgroundImage = "none";
+    }
+
+    if (data.activity?.name === "Spotify") {
+      const title = data.activity.details || "Unknown Track";
+      const artists = (data.activity.state || "").split(";").map(s=>s.trim()).join(", ");
+      activityEl.innerHTML = `<span class="song-title">${title}</span><br><span class="song-artists">${artists}</span>`;
+
+      if (data.activity.album_art_url) {
+        albumArt.src = data.activity.album_art_url;
+        albumArt.classList.remove("hidden");
+      } else {
+        albumArt.classList.add("hidden");
+      }
+    } else {
+      activityEl.textContent = data.activity?.formatted || data.activity?.name || "활동 없음";
+      albumArt.classList.add("hidden");
+    }
+  } catch (err) {
+    console.error(err);
+    document.getElementById("discordActivity").textContent = "불러오기 실패";
+  }
+}
+
+async function fetchTikTokData(){
+  try{
+    const res = await fetch(`/api/tiktok?_=${Date.now()}`);
+    const data = await res.json();
+    if(data.avatar) document.getElementById("tiktokAvatar").src = data.avatar;
+    document.getElementById("tiktokName").textContent = `@${data.username||'undefined'}`;
+    document.getElementById("tiktokStats").textContent = data.followers ? `${data.followers.toLocaleString()} followers • ${data.likes.toLocaleString()} likes` : "불러오기 실패";
+  }catch(e){
+    document.getElementById("tiktokStats").textContent = "불러오기 실패";
+  }
+}
+async function fetchYouTubeData(){
+  try{
+    const res = await fetch(`/api/youtube?_=${Date.now()}`);
+    const data = await res.json();
+    if(data.thumbnail) document.getElementById("youtubeAvatar").src = data.thumbnail;
+    document.getElementById("youtubeStats").textContent = data.subscribers ? `${Number(data.subscribers).toLocaleString()} subs` : "불러오기 실패";
+  }catch(e){
+    document.getElementById("youtubeStats").textContent = "불러오기 실패";
+  }
+}
+
+fetchDiscordPresence();
+fetchTikTokData();
+fetchYouTubeData();
+setInterval(fetchDiscordPresence, 30000);
+setInterval(fetchTikTokData, 60000);
+setInterval(fetchYouTubeData, 60000);
+</script>
 </body>
 </html>
