@@ -12,55 +12,56 @@ body {
   background: #0a0a0a;
   font-family: 'Poppins', sans-serif;
   color: #fff;
-  padding: 60px 20px;
+  padding: 40px 20px;
 }
 
 /* ===== Layout ===== */
 .layout {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto;
-  gap: 60px 80px;
+  gap: 48px 64px;
 }
 
-/* ===== Profile ===== */
+/* ===== Profile (작게) ===== */
 .header-box {
   background: #141414;
-  border-radius: 26px;
-  padding: 48px 64px;
-  box-shadow: 0 0 40px rgba(0,0,0,0.55);
+  border-radius: 22px;
+  padding: 36px 48px; /* ↓ */
+  box-shadow: 0 0 30px rgba(0,0,0,0.45);
 }
-.username { font-size: 56px; font-weight: 700; }
-.bio { font-size: 20px; color: #bbb; margin-top: 10px; }
+.username { font-size: 44px; font-weight: 700; } /* ↓ */
+.bio { font-size: 18px; color: #bbb; margin-top: 8px; }
 
-/* ===== Settings ===== */
+/* ===== Settings (작게) ===== */
 .settings-card {
   background: #0b0b0b;
-  border-radius: 26px;
-  padding: 36px 40px;
+  border-radius: 22px;
+  padding: 28px 32px; /* ↓ */
+}
+.settings-card h2 {
+  margin-bottom: 18px;
+  font-size: 22px;
 }
 .setting-row {
   display: flex;
   justify-content: space-between;
-  padding: 10px 0;
+  padding: 8px 0;
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 .setting-row span { color: #bdbdbd; }
 
 /* ===== Discord Card ===== */
-.card {
-  background: transparent;
-  box-shadow: none;
-}
+.card { background: transparent; }
 
 .social-item.discord {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 18px;
-  padding: 22px 26px;
+  gap: 14px;
+  padding: 18px 22px;
+  height: 96px;
   border-radius: 18px;
   background-color: #141414;
   background-size: cover;
@@ -75,42 +76,40 @@ body {
   background: rgba(0,0,0,0.45);
   z-index: 1;
 }
-
 .social-item.discord > * {
   position: relative;
   z-index: 2;
 }
 
+/* Discord 뱃지 */
 .label-badge {
   position: absolute;
-  top: -14px;
-  left: 0;
-  padding: 6px 14px;
-  font-size: 13px;
-  font-weight: 600;
-  border-radius: 10px;
+  top: 10px;
+  left: 10px;
+  padding: 5px 12px;
+  font-size: 12px;
+  border-radius: 9px;
   background: linear-gradient(180deg,#6f79ff,#5865f2);
 }
 
-/* Avatar + Status */
+/* Avatar + Status (걸치게) */
 .discord-avatar {
   position: relative;
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
 }
 .discord-avatar img {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  border: 3px solid rgba(0,0,0,0.45);
 }
 
 .status-dot {
   position: absolute;
-  bottom: 2px;
-  right: 2px;
-  width: 14px;
-  height: 14px;
+  bottom: -2px;   /* 걸침 */
+  right: -2px;    /* 걸침 */
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   border: 3px solid #141414;
 }
@@ -119,16 +118,29 @@ body {
 .status-dnd { background: #f23f43; }
 .status-offline { background: #747f8d; }
 
-.discord-info { display: flex; flex-direction: column; }
-#discordName { font-size: 18px; font-weight: 600; }
-#discordActivity { font-size: 14px; color: #bdbdbd; margin-top: 4px; }
+/* Discord Info */
+.discord-info {
+  display: flex;
+  flex-direction: column;
+  margin-top: -6px; /* ← 위로 살짝 끌어올림 */
+}
+#discordName {
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: -2px; /* ← 왼쪽으로 살짝 걸침 */
+}
+#discordActivity {
+  font-size: 13px;
+  color: #bdbdbd;
+  margin-top: 2px;
+}
 
 /* Spotify CD */
 .album-art {
   position: absolute;
-  right: 20px;
-  width: 74px;
-  height: 74px;
+  right: 16px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   animation: spin 6s linear infinite;
 }
@@ -185,40 +197,28 @@ body {
 
 <script>
 async function fetchDiscordPresence(){
-  try{
-    const res = await fetch(`/api/discord-status/1256264184996565135?_=${Date.now()}`);
-    const data = await res.json();
+  const res = await fetch(`/api/discord-status/1256264184996565135?_=${Date.now()}`);
+  const data = await res.json();
 
-    discordAvatar.src = data.avatar_url || discordAvatar.src;
-    discordName.textContent = data.username ? `@${data.username}` : "@unknown";
-    discordDot.className = `status-dot status-${data.status || "offline"}`;
+  discordAvatar.src = data.avatar_url || discordAvatar.src;
+  discordName.textContent = data.username ? `@${data.username}` : "@unknown";
+  discordDot.className = `status-dot status-${data.status || "offline"}`;
 
-    if (data.banner_url) {
-      discordCard.style.backgroundImage = `url("${data.banner_url}")`;
-    } else {
-      discordCard.style.backgroundImage = "none";
+  if (data.banner_url) {
+    discordCard.style.backgroundImage = `url("${data.banner_url}")`;
+  }
+
+  if (data.activity?.name === "Spotify") {
+    discordActivity.innerHTML = `${data.activity.details}<br>${data.activity.state}`;
+    if (data.activity.album_art_url) {
+      albumArt.src = data.activity.album_art_url;
+      albumArt.classList.remove("hidden");
     }
-
-    if (data.activity) {
-      if (data.activity.name === "Spotify") {
-        discordActivity.innerHTML = `${data.activity.details}<br>${data.activity.state}`;
-        if (data.activity.album_art_url) {
-          albumArt.src = data.activity.album_art_url;
-          albumArt.classList.remove("hidden");
-        }
-      } else {
-        discordActivity.textContent = data.activity.name;
-        albumArt.classList.add("hidden");
-      }
-    } else {
-      discordActivity.textContent = "활동 없음";
-      albumArt.classList.add("hidden");
-    }
-  } catch {
-    discordActivity.textContent = "불러오기 실패";
+  } else {
+    discordActivity.textContent = data.activity?.name || "활동 없음";
+    albumArt.classList.add("hidden");
   }
 }
-
 fetchDiscordPresence();
 setInterval(fetchDiscordPresence, 30000);
 </script>
