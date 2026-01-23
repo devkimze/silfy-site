@@ -59,11 +59,8 @@ body {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 16px;
-
-  height: 110px;                /* 카드 높이 고정 */
-  padding: 18px 22px;
-
+  gap: 18px;
+  padding: 22px 26px;
   border-radius: 18px;
   background-color: #141414;
   background-size: cover;
@@ -71,16 +68,11 @@ body {
   overflow: hidden;
 }
 
-/* 배너 어둠 레이어 */
 .social-item.discord::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(0,0,0,0.65),
-    rgba(0,0,0,0.35)
-  );
+  background: rgba(0,0,0,0.45);
   z-index: 1;
 }
 
@@ -89,24 +81,22 @@ body {
   z-index: 2;
 }
 
-/* Discord 뱃지 */
 .label-badge {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: -14px;
+  left: 0;
   padding: 6px 14px;
   font-size: 13px;
   font-weight: 600;
   border-radius: 10px;
   background: linear-gradient(180deg,#6f79ff,#5865f2);
-  z-index: 3;
 }
 
 /* Avatar + Status */
 .discord-avatar {
   position: relative;
-  width: 64px;
-  height: 64px;
+  width: 70px;
+  height: 70px;
 }
 .discord-avatar img {
   width: 100%;
@@ -117,10 +107,10 @@ body {
 
 .status-dot {
   position: absolute;
-  bottom: 4px;
-  right: 4px;
-  width: 12px;
-  height: 12px;
+  bottom: 2px;
+  right: 2px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   border: 3px solid #141414;
 }
@@ -129,26 +119,16 @@ body {
 .status-dnd { background: #f23f43; }
 .status-offline { background: #747f8d; }
 
-.discord-info {
-  display: flex;
-  flex-direction: column;
-}
-#discordName {
-  font-size: 18px;
-  font-weight: 600;
-}
-#discordActivity {
-  font-size: 14px;
-  color: #bdbdbd;
-  margin-top: 4px;
-}
+.discord-info { display: flex; flex-direction: column; }
+#discordName { font-size: 18px; font-weight: 600; }
+#discordActivity { font-size: 14px; color: #bdbdbd; margin-top: 4px; }
 
 /* Spotify CD */
 .album-art {
   position: absolute;
-  right: 18px;
-  width: 68px;
-  height: 68px;
+  right: 20px;
+  width: 74px;
+  height: 74px;
   border-radius: 50%;
   animation: spin 6s linear infinite;
 }
