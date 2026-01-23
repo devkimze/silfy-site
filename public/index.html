@@ -21,7 +21,7 @@ body {
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 32px 64px; /* 세로 간격 확 줄임 */
+  gap: 32px 64px;
 }
 
 .left-col,
@@ -86,11 +86,39 @@ body {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 18px 22px;
-  height: 96px;
+  padding: 16px 20px;
   border-radius: 18px;
   background: #141414;
   overflow: hidden;
+}
+
+/* 배너 */
+.discord-banner {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.35;
+}
+
+.discord-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(20,20,20,0.95),
+    rgba(20,20,20,0.7),
+    rgba(20,20,20,0.4)
+  );
+}
+
+.discord-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  z-index: 2;
 }
 
 .discord-avatar {
@@ -139,13 +167,14 @@ body {
 /* ===== Spotify CD ===== */
 .album-art {
   position: absolute;
-  right: 12px;
+  left: 160px; /* 아바타 + 텍스트 기준 자연스러운 위치 */
   top: 50%;
   transform: translateY(-50%);
   width: 56px;
   height: 56px;
   border-radius: 50%;
   animation: spin 6s linear infinite;
+  z-index: 2;
 }
 
 .album-art.hidden { display: none; }
@@ -159,6 +188,10 @@ body {
 @media (max-width: 900px) {
   .layout {
     grid-template-columns: 1fr;
+  }
+
+  .album-art {
+    display: none;
   }
 }
 </style>
@@ -180,14 +213,19 @@ body {
     </div>
 
     <div class="social-item discord" id="discordCard">
-      <div class="discord-avatar">
-        <img id="discordAvatar" src="img/dc.jpg">
-        <div id="discordDot" class="status-dot status-offline"></div>
-      </div>
+      <div class="discord-banner" id="discordBanner"></div>
+      <div class="discord-overlay"></div>
 
-      <div class="discord-info">
-        <span id="discordName">@Loading...</span>
-        <div id="discordActivity">활동 없음</div>
+      <div class="discord-content">
+        <div class="discord-avatar">
+          <img id="discordAvatar" src="img/dc.jpg">
+          <div id="discordDot" class="status-dot status-offline"></div>
+        </div>
+
+        <div class="discord-info">
+          <span id="discordName">@Loading...</span>
+          <div id="discordActivity">활동 없음</div>
+        </div>
       </div>
 
       <img id="albumArt" class="album-art hidden">
@@ -216,6 +254,10 @@ async function fetchDiscordPresence(){
   discordAvatar.src = data.avatar_url || discordAvatar.src;
   discordName.textContent = data.username ? `@${data.username}` : "@unknown";
   discordDot.className = `status-dot status-${data.status || "offline"}`;
+
+  if (data.banner_url) {
+    discordBanner.style.backgroundImage = `url(${data.banner_url})`;
+  }
 
   if (data.activity?.name === "Spotify") {
     discordActivity.innerHTML = `${data.activity.details}<br>${data.activity.state}`;
