@@ -24,36 +24,57 @@ body {
   gap: 48px 64px;
 }
 
-/* ===== Profile (작게) ===== */
+/* ===== Profile ===== */
 .header-box {
   background: #141414;
   border-radius: 22px;
-  padding: 36px 48px; /* ↓ */
+  padding: 36px 48px;
   box-shadow: 0 0 30px rgba(0,0,0,0.45);
-}
-.username { font-size: 44px; font-weight: 700; } /* ↓ */
-.bio { font-size: 18px; color: #bbb; margin-top: 8px; }
 
-/* ===== Settings (작게) ===== */
+  height: auto;
+  min-height: unset;
+}
+
+.username {
+  font-size: 44px;
+  font-weight: 700;
+}
+
+.bio {
+  font-size: 18px;
+  color: #bbb;
+  margin-top: 8px;
+  line-height: 1.45;
+  word-break: keep-all;
+}
+
+/* ===== Settings ===== */
 .settings-card {
   background: #0b0b0b;
   border-radius: 22px;
-  padding: 28px 32px; /* ↓ */
+  padding: 28px 32px;
 }
+
 .settings-card h2 {
   margin-bottom: 18px;
   font-size: 22px;
 }
+
 .setting-row {
   display: flex;
   justify-content: space-between;
   padding: 8px 0;
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
-.setting-row span { color: #bdbdbd; }
+
+.setting-row span {
+  color: #bdbdbd;
+}
 
 /* ===== Discord Card ===== */
-.card { background: transparent; }
+.card {
+  background: transparent;
+}
 
 .social-item.discord {
   position: relative;
@@ -69,50 +90,35 @@ body {
   overflow: hidden;
 }
 
+/* 배너 클린 */
 .social-item.discord::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  z-index: 1;
-}
-.social-item.discord > * {
-  position: relative;
-  z-index: 2;
+  display: none;
 }
 
-/* Discord 뱃지 */
-.label-badge {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  padding: 5px 12px;
-  font-size: 12px;
-  border-radius: 9px;
-  background: linear-gradient(180deg,#6f79ff,#5865f2);
-}
-
-/* Avatar + Status (걸치게) */
+/* Avatar */
 .discord-avatar {
   position: relative;
   width: 60px;
   height: 60px;
 }
+
 .discord-avatar img {
   width: 100%;
   height: 100%;
   border-radius: 50%;
 }
 
+/* Status dot */
 .status-dot {
   position: absolute;
-  bottom: -2px;   /* 걸침 */
-  right: -2px;    /* 걸침 */
+  bottom: -2px;
+  right: -2px;
   width: 12px;
   height: 12px;
   border-radius: 50%;
   border: 3px solid #141414;
 }
+
 .status-online { background: #23a55a; }
 .status-idle { background: #f0b232; }
 .status-dnd { background: #f23f43; }
@@ -122,37 +128,48 @@ body {
 .discord-info {
   display: flex;
   flex-direction: column;
-  margin-top: -6px; /* ← 위로 살짝 끌어올림 */
+  margin-top: -6px;
 }
+
 #discordName {
   font-size: 16px;
   font-weight: 600;
-  margin-left: -2px; /* ← 왼쪽으로 살짝 걸침 */
+  margin-left: -2px;
 }
+
 #discordActivity {
   font-size: 13px;
   color: #bdbdbd;
   margin-top: 2px;
 }
 
-/* Spotify CD */
+/* ===== Spotify CD (오른쪽 끝 고정) ===== */
 .album-art {
   position: absolute;
-  right: 16px;
-  width: 60px;
-  height: 60px;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   animation: spin 6s linear infinite;
+  pointer-events: none;
 }
-.album-art.hidden { display: none; }
+
+.album-art.hidden {
+  display: none;
+}
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from { transform: translateY(-50%) rotate(0deg); }
+  to   { transform: translateY(-50%) rotate(360deg); }
 }
 
+/* ===== Mobile ===== */
 @media (max-width: 900px) {
-  .layout { grid-template-columns: 1fr; }
+  .layout {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 </head>
@@ -163,7 +180,11 @@ body {
 
   <div class="header-box">
     <div class="username">Jihoo</div>
-    <div class="bio">C++, HTML, UE5</div>
+    <div class="bio">
+      C++, HTML, UE5<br>
+      FPS / Systems / UI<br>
+      긴 자기소개 써도 카드 높이 자동으로 늘어남
+    </div>
   </div>
 
   <div class="settings-card">
@@ -217,6 +238,7 @@ async function fetchDiscordPresence(){
     albumArt.classList.add("hidden");
   }
 }
+
 fetchDiscordPresence();
 setInterval(fetchDiscordPresence, 30000);
 </script>
