@@ -12,29 +12,29 @@ body {
   background: #0a0a0a;
   font-family: 'Poppins', sans-serif;
   color: #fff;
-  padding: 40px 20px;
+  padding: 60px 20px;
   -webkit-font-smoothing: antialiased;
 }
 
-/* 전체 레이아웃 */
+/* ===== Layout ===== */
 .layout {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 60px 80px;
 }
 
-/* ===== Header (오른쪽 정렬) ===== */
+/* ===== Profile ===== */
 .header-box {
-  align-self: flex-end;
   background: #141414;
-  border-radius: 25px;
-  text-align: right;
-  padding: 40px 60px;
-  width: 700px;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+  border-radius: 26px;
+  padding: 48px 64px;
+  text-align: left;
+  box-shadow: 0 0 40px rgba(0,0,0,0.55);
 }
+
 .username {
   font-size: 56px;
   font-weight: 700;
@@ -46,46 +46,52 @@ body {
   margin-top: 10px;
 }
 
-/* ===== Card (왼쪽 정렬) ===== */
-.card {
-  align-self: flex-start;
+/* ===== Settings ===== */
+.settings-card {
   background: #0b0b0b;
-  border-radius: 25px;
+  border-radius: 26px;
+  padding: 36px 40px;
+  box-shadow: 0 0 35px rgba(0,0,0,0.6);
+}
+
+.settings-card h2 {
+  margin: 0 0 24px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.setting-row p {
+  margin: 0;
+  font-weight: 600;
+}
+.setting-row span {
+  color: #bdbdbd;
+}
+
+/* ===== Discord ===== */
+.card {
+  background: #0b0b0b;
+  border-radius: 26px;
   padding: 30px;
-  width: 700px;
   box-shadow: 0 0 30px rgba(0,0,0,0.6);
 }
 
-/* tabs */
-.tabs {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 25px;
-}
-.tab {
-  flex: 1;
-  background: #1a1a1a;
-  padding: 14px 0;
-  border-radius: 12px;
-  text-align: center;
-  cursor: pointer;
-}
-.tab.active {
-  background: #4f83b9;
-  box-shadow: 0 0 20px rgba(79,131,185,0.6);
-}
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-
-/* Discord 카드 */
 .social-item.discord {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 18px 22px;
+  gap: 18px;
+  padding: 22px 26px;
   border-radius: 18px;
   background: rgba(20,20,20,0.85);
+  background-size: cover;
+  background-position: center;
   box-shadow: 0 0 30px rgba(0,0,0,0.6);
 }
 
@@ -108,6 +114,7 @@ body {
   width: 100%;
   height: 100%;
   border-radius: 50%;
+  border: 3px solid rgba(0,0,0,0.45);
 }
 
 .discord-info {
@@ -118,7 +125,8 @@ body {
   font-size: 18px;
   font-weight: 600;
 }
-#discordActivityWrapper {
+#discordActivity {
+  margin-top: 4px;
   font-size: 14px;
   color: #bdbdbd;
 }
@@ -137,7 +145,7 @@ body {
 
 .album-art {
   position: absolute;
-  right: 22px;
+  right: 20px;
   width: 74px;
   height: 74px;
   border-radius: 50%;
@@ -150,66 +158,59 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* 모바일 */
-@media (max-width: 760px) {
-  .header-box, .card {
-    width: 100%;
-    align-self: center;
-    text-align: center;
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
   }
 }
 </style>
 </head>
 
 <body>
+
 <div class="layout">
 
-  <!-- 오른쪽: 이름 카드 -->
+  <!-- LEFT TOP -->
   <div class="header-box">
     <div class="username">Jihoo</div>
     <div class="bio">C++, HTML, UE5</div>
   </div>
 
-  <!-- 왼쪽: Discord 카드 -->
+  <!-- RIGHT TOP -->
+  <div class="settings-card">
+    <h2>Settings</h2>
+    <div class="setting-row"><p>Mouse</p><span>Razer Viper V3 Pro</span></div>
+    <div class="setting-row"><p>Mouse Skates</p><span>Corepad Pro Max</span></div>
+    <div class="setting-row"><p>Mouse Pad</p><span>Artisan FX Zero Mid</span></div>
+    <div class="setting-row"><p>Keyboard</p><span>Venom 88HE</span></div>
+    <div class="setting-row"><p>Sensitivity</p><span>65~115cm/360</span></div>
+  </div>
+
+  <!-- LEFT BOTTOM -->
   <div class="card">
-    <div class="tabs">
-      <div class="tab active" data-tab="socials">Social</div>
-    </div>
+    <div class="social-item discord" id="discordCard">
+      <div class="label-badge">Discord</div>
 
-    <div id="socials" class="tab-content active">
-      <div class="social-item discord" id="discordCard">
-        <div class="label-badge">Discord</div>
-
-        <div class="discord-avatar">
-          <img id="discordAvatar" src="img/dc.jpg">
-        </div>
-
-        <div class="discord-info">
-          <div>
-            <span id="discordName">@Loading...</span>
-            <span id="discordDot" class="status-dot status-offline"></span>
-          </div>
-          <div id="discordActivityWrapper">
-            <span id="discordActivity">Currently doing nothing...</span>
-          </div>
-        </div>
-
-        <img id="albumArt" class="album-art hidden">
+      <div class="discord-avatar">
+        <img id="discordAvatar" src="img/dc.jpg">
       </div>
+
+      <div class="discord-info">
+        <div>
+          <span id="discordName">@Loading...</span>
+          <span id="discordDot" class="status-dot status-offline"></span>
+        </div>
+        <div id="discordActivity">활동 없음</div>
+      </div>
+
+      <img id="albumArt" class="album-art hidden">
     </div>
   </div>
 
 </div>
 
 <script>
-document.querySelectorAll('.tab').forEach(tab=>{
-  tab.onclick = ()=>{
-    document.querySelectorAll('.tab,.tab-content').forEach(e=>e.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById(tab.dataset.tab).classList.add('active');
-  };
-});
-
 async function fetchDiscordPresence(){
   try{
     const res = await fetch(`/api/discord-status/1256264184996565135?_=${Date.now()}`);
@@ -217,7 +218,7 @@ async function fetchDiscordPresence(){
 
     discordAvatar.src = data.avatar_url || discordAvatar.src;
     discordName.textContent = data.username ? `@${data.username}` : "@unknown";
-    discordDot.className = `status-dot status-${data.status || 'offline'}`;
+    discordDot.className = `status-dot status-${data.status || "offline"}`;
 
     if (data.activity?.name === "Spotify") {
       discordActivity.innerHTML = `${data.activity.details}<br>${data.activity.state}`;
@@ -237,5 +238,6 @@ async function fetchDiscordPresence(){
 fetchDiscordPresence();
 setInterval(fetchDiscordPresence, 30000);
 </script>
+
 </body>
 </html>
