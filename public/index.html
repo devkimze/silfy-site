@@ -41,8 +41,8 @@ body {
     rgba(255,255,255,0.14),
     rgba(255,255,255,0.04)
   );
-  backdrop-filter: blur(22px) saturate(160%);
-  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(145%);
+  -webkit-backdrop-filter: blur(20px) saturate(145%);
   border-radius: 26px;
   border: 1px solid rgba(255,255,255,0.16);
   box-shadow:
@@ -50,11 +50,11 @@ body {
     0 30px 60px rgba(0,0,0,0.55);
   overflow: hidden;
 
-  /* mouse glow vars */
   --mx: 50%;
   --my: 50%;
 }
 
+/* idle shimmer */
 .liquid-glass::before {
   content: "";
   position: absolute;
@@ -64,19 +64,21 @@ body {
     rgba(255,255,255,0.45),
     transparent 45%
   );
-  opacity: 0.35;
+  background-size: 200% 200%;
+  animation: glassShimmer 14s ease-in-out infinite;
+  opacity: 0.25;
   pointer-events: none;
 }
 
-/* === Mouse Glow === */
+/* mouse glow */
 .liquid-glass::after {
   content: "";
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    600px circle at var(--mx) var(--my),
-    rgba(255,255,255,0.22),
-    transparent 45%
+    520px circle at var(--mx) var(--my),
+    rgba(255,255,255,0.12),
+    transparent 55%
   );
   opacity: 0;
   transition: opacity 0.25s ease;
@@ -85,6 +87,12 @@ body {
 
 .liquid-glass:hover::after {
   opacity: 1;
+}
+
+@keyframes glassShimmer {
+  0%   { background-position: 0% 0%; opacity: 0.22; }
+  50%  { background-position: 100% 100%; opacity: 0.27; }
+  100% { background-position: 0% 0%; opacity: 0.22; }
 }
 
 /* ===== Profile ===== */
