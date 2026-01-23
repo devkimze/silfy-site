@@ -13,7 +13,6 @@ body {
   font-family: 'Poppins', sans-serif;
   color: #fff;
   padding: 60px 20px;
-  -webkit-font-smoothing: antialiased;
 }
 
 /* ===== Layout ===== */
@@ -31,55 +30,29 @@ body {
   background: #141414;
   border-radius: 26px;
   padding: 48px 64px;
-  text-align: left;
   box-shadow: 0 0 40px rgba(0,0,0,0.55);
 }
-
-.username {
-  font-size: 56px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-.bio {
-  font-size: 20px;
-  color: #bbb;
-  margin-top: 10px;
-}
+.username { font-size: 56px; font-weight: 700; }
+.bio { font-size: 20px; color: #bbb; margin-top: 10px; }
 
 /* ===== Settings ===== */
 .settings-card {
   background: #0b0b0b;
   border-radius: 26px;
   padding: 36px 40px;
-  box-shadow: 0 0 35px rgba(0,0,0,0.6);
 }
-
-.settings-card h2 {
-  margin: 0 0 24px;
-  font-size: 28px;
-  font-weight: 600;
-}
-
 .setting-row {
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
-.setting-row p {
-  margin: 0;
-  font-weight: 600;
-}
-.setting-row span {
-  color: #bdbdbd;
-}
+.setting-row span { color: #bdbdbd; }
 
-/* ===== Discord ===== */
+/* ===== Discord Card ===== */
 .card {
-  background: #0b0b0b;
-  border-radius: 26px;
-  padding: 30px;
-  box-shadow: 0 0 30px rgba(0,0,0,0.6);
+  background: transparent;
+  box-shadow: none;
 }
 
 .social-item.discord {
@@ -89,10 +62,23 @@ body {
   gap: 18px;
   padding: 22px 26px;
   border-radius: 18px;
-  background: rgba(20,20,20,0.85);
+  background-color: #141414;
   background-size: cover;
   background-position: center;
-  box-shadow: 0 0 30px rgba(0,0,0,0.6);
+  overflow: hidden;
+}
+
+.social-item.discord::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1;
+}
+
+.social-item.discord > * {
+  position: relative;
+  z-index: 2;
 }
 
 .label-badge {
@@ -106,7 +92,9 @@ body {
   background: linear-gradient(180deg,#6f79ff,#5865f2);
 }
 
+/* Avatar + Status */
 .discord-avatar {
+  position: relative;
   width: 70px;
   height: 70px;
 }
@@ -117,32 +105,25 @@ body {
   border: 3px solid rgba(0,0,0,0.45);
 }
 
-.discord-info {
-  display: flex;
-  flex-direction: column;
-}
-#discordName {
-  font-size: 18px;
-  font-weight: 600;
-}
-#discordActivity {
-  margin-top: 4px;
-  font-size: 14px;
-  color: #bdbdbd;
-}
-
 .status-dot {
-  width: 12px;
-  height: 12px;
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  margin-left: 6px;
-  display: inline-block;
+  border: 3px solid #141414;
 }
 .status-online { background: #23a55a; }
 .status-idle { background: #f0b232; }
 .status-dnd { background: #f23f43; }
 .status-offline { background: #747f8d; }
 
+.discord-info { display: flex; flex-direction: column; }
+#discordName { font-size: 18px; font-weight: 600; }
+#discordActivity { font-size: 14px; color: #bdbdbd; margin-top: 4px; }
+
+/* Spotify CD */
 .album-art {
   position: absolute;
   right: 20px;
@@ -158,11 +139,8 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* ===== Responsive ===== */
 @media (max-width: 900px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
+  .layout { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -171,13 +149,11 @@ body {
 
 <div class="layout">
 
-  <!-- LEFT TOP -->
   <div class="header-box">
     <div class="username">Jihoo</div>
     <div class="bio">C++, HTML, UE5</div>
   </div>
 
-  <!-- RIGHT TOP -->
   <div class="settings-card">
     <h2>Settings</h2>
     <div class="setting-row"><p>Mouse</p><span>Razer Viper V3 Pro</span></div>
@@ -187,20 +163,17 @@ body {
     <div class="setting-row"><p>Sensitivity</p><span>65~115cm/360</span></div>
   </div>
 
-  <!-- LEFT BOTTOM -->
   <div class="card">
     <div class="social-item discord" id="discordCard">
       <div class="label-badge">Discord</div>
 
       <div class="discord-avatar">
         <img id="discordAvatar" src="img/dc.jpg">
+        <div id="discordDot" class="status-dot status-offline"></div>
       </div>
 
       <div class="discord-info">
-        <div>
-          <span id="discordName">@Loading...</span>
-          <span id="discordDot" class="status-dot status-offline"></span>
-        </div>
+        <span id="discordName">@Loading...</span>
         <div id="discordActivity">활동 없음</div>
       </div>
 
@@ -220,11 +193,22 @@ async function fetchDiscordPresence(){
     discordName.textContent = data.username ? `@${data.username}` : "@unknown";
     discordDot.className = `status-dot status-${data.status || "offline"}`;
 
-    if (data.activity?.name === "Spotify") {
-      discordActivity.innerHTML = `${data.activity.details}<br>${data.activity.state}`;
-      if (data.activity.album_art_url) {
-        albumArt.src = data.activity.album_art_url;
-        albumArt.classList.remove("hidden");
+    if (data.banner_url) {
+      discordCard.style.backgroundImage = `url("${data.banner_url}")`;
+    } else {
+      discordCard.style.backgroundImage = "none";
+    }
+
+    if (data.activity) {
+      if (data.activity.name === "Spotify") {
+        discordActivity.innerHTML = `${data.activity.details}<br>${data.activity.state}`;
+        if (data.activity.album_art_url) {
+          albumArt.src = data.activity.album_art_url;
+          albumArt.classList.remove("hidden");
+        }
+      } else {
+        discordActivity.textContent = data.activity.name;
+        albumArt.classList.add("hidden");
       }
     } else {
       discordActivity.textContent = "활동 없음";
