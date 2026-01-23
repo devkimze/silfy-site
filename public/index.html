@@ -31,56 +31,95 @@ body {
   gap: 20px;
 }
 
-/* ===== Profile ===== */
+/* =========================================================
+   iOS LIQUID GLASS (NAME + SETTINGS ONLY)
+========================================================= */
+.liquid-glass {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.14),
+    rgba(255,255,255,0.04)
+  );
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border-radius: 26px;
+  border: 1px solid rgba(255,255,255,0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    0 30px 60px rgba(0,0,0,0.55);
+  overflow: hidden;
+}
+
+.liquid-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255,255,255,0.45),
+    transparent 45%
+  );
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+/* ===== Profile (Liquid Glass) ===== */
 .header-box {
-  background: #141414;
-  border-radius: 22px;
-  padding: 22px 24px;
-  box-shadow: 0 0 30px rgba(0,0,0,0.45);
+  padding: 26px 28px;
 }
 
 .username {
-  font-size: 42px;
+  font-size: 44px;
   font-weight: 700;
+  letter-spacing: -0.6px;
 }
 
 .bio {
-  font-size: 17px;
-  color: #bbb;
-  margin-top: 6px;
-  line-height: 1.35;
+  font-size: 16px;
+  color: rgba(255,255,255,0.72);
+  margin-top: 10px;
+  line-height: 1.45;
 }
 
-/* ===== Settings ===== */
+/* ===== Settings (Liquid Glass) ===== */
 .settings-card {
-  background: #0b0b0b;
-  border-radius: 22px;
-  padding: 24px 30px;
+  padding: 26px 28px;
 }
 
 .settings-card h2 {
-  margin-bottom: 10px;
-  font-size: 21px;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  letter-spacing: -0.3px;
 }
 
 .setting-row {
   display: flex;
   justify-content: space-between;
-  padding: 4px 0;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.setting-row:last-child {
+  border-bottom: none;
 }
 
 .setting-row p {
   font-size: 13px;
-  opacity: 0.6;
+  color: rgba(255,255,255,0.55);
 }
 
 .setting-row span {
   font-size: 15px;
   font-weight: 500;
-  color: #bdbdbd;
+  color: rgba(255,255,255,0.88);
 }
 
-/* ===== Discord Card ===== */
+/* =========================================================
+   DISCORD CARD (UNTOUCHED)
+========================================================= */
 .social-item.discord {
   position: relative;
   display: flex;
@@ -99,8 +138,6 @@ body {
   overflow: hidden;
 }
 
-
-/* 배너 */
 .discord-banner {
   position: absolute;
   inset: 0;
@@ -175,7 +212,7 @@ body {
 /* ===== Spotify CD ===== */
 .album-art {
   position: absolute;
-  right: 28px;   /* ← 여기 숫자만 취향대로 조절 */
+  right: 28px;
   top: 50%;
   transform: translateY(-50%);
   width: 56px;
@@ -211,7 +248,7 @@ body {
 
   <!-- LEFT -->
   <div class="left-col">
-    <div class="header-box">
+    <div class="header-box liquid-glass">
       <div class="username">Jihoo</div>
       <div class="bio">
         C++, HTML, UE5<br>
@@ -242,7 +279,7 @@ body {
 
   <!-- RIGHT -->
   <div class="right-col">
-    <div class="settings-card">
+    <div class="settings-card liquid-glass">
       <h2>Settings</h2>
       <div class="setting-row"><p>Mouse</p><span>Razer Viper V3 Pro</span></div>
       <div class="setting-row"><p>Mouse Skates</p><span>Corepad Pro Max</span></div>
