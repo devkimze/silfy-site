@@ -12,56 +12,214 @@ body {
   background: #0a0a0a;
   font-family: 'Poppins', sans-serif;
   color: #fff;
-  padding: 32px 20px;
+  padding: 40px 20px;
 }
 
 /* ===== Layout ===== */
 .layout {
-  max-width: 1050px;
+  max-width: 1100px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 40px 56px;
+  gap: 48px 64px;
 }
 
-/* ===== Profile (내용 기반) ===== */
+/* ===== Profile (작게) ===== */
 .header-box {
   background: #141414;
-  border-radius: 20px;
-  padding: 24px 32px; /* 핵심 */
-  box-shadow: 0 0 24px rgba(0,0,0,0.45);
-  width: fit-content; /* ⭐ */
+  border-radius: 22px;
+  padding: 36px 48px; /* ↓ */
+  box-shadow: 0 0 30px rgba(0,0,0,0.45);
 }
+.username { font-size: 44px; font-weight: 700; } /* ↓ */
+.bio { font-size: 18px; color: #bbb; margin-top: 8px; }
 
-.username {
-  font-size: 38px;
-  font-weight: 700;
-  line-height: 1.1;
-}
-.bio {
-  font-size: 16px;
-  color: #aaa;
-  margin-top: 6px;
-}
-
-/* ===== Settings (압축) ===== */
+/* ===== Settings (작게) ===== */
 .settings-card {
   background: #0b0b0b;
-  border-radius: 20px;
-  padding: 20px 26px; /* ↓ */
+  border-radius: 22px;
+  padding: 28px 32px; /* ↓ */
 }
-
 .settings-card h2 {
-  font-size: 20px;
-  margin-bottom: 12px;
+  margin-bottom: 18px;
+  font-size: 22px;
 }
-
 .setting-row {
   display: flex;
   justify-content: space-between;
-  padding: 6px 0; /* ↓ */
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
-.setting-row p {
-  margin: 0;
-  font-size:
+.setting-row span { color: #bdbdbd; }
+
+/* ===== Discord Card ===== */
+.card { background: transparent; }
+
+.social-item.discord {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  height: 96px;
+  border-radius: 18px;
+  background-color: #141414;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.social-item.discord::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1;
+}
+.social-item.discord > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Discord 뱃지 */
+.label-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 5px 12px;
+  font-size: 12px;
+  border-radius: 9px;
+  background: linear-gradient(180deg,#6f79ff,#5865f2);
+}
+
+/* Avatar + Status (걸치게) */
+.discord-avatar {
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+.discord-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.status-dot {
+  position: absolute;
+  bottom: -2px;   /* 걸침 */
+  right: -2px;    /* 걸침 */
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 3px solid #141414;
+}
+.status-online { background: #23a55a; }
+.status-idle { background: #f0b232; }
+.status-dnd { background: #f23f43; }
+.status-offline { background: #747f8d; }
+
+/* Discord Info */
+.discord-info {
+  display: flex;
+  flex-direction: column;
+  margin-top: -6px; /* ← 위로 살짝 끌어올림 */
+}
+#discordName {
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: -2px; /* ← 왼쪽으로 살짝 걸침 */
+}
+#discordActivity {
+  font-size: 13px;
+  color: #bdbdbd;
+  margin-top: 2px;
+}
+
+/* Spotify CD */
+.album-art {
+  position: absolute;
+  right: 16px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  animation: spin 6s linear infinite;
+}
+.album-art.hidden { display: none; }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+  <div class="header-box">
+    <div class="username">Jihoo</div>
+    <div class="bio">C++, HTML, UE5</div>
+  </div>
+
+  <div class="settings-card">
+    <h2>Settings</h2>
+    <div class="setting-row"><p>Mouse</p><span>Razer Viper V3 Pro</span></div>
+    <div class="setting-row"><p>Mouse Skates</p><span>Corepad Pro Max</span></div>
+    <div class="setting-row"><p>Mouse Pad</p><span>Artisan FX Zero Mid</span></div>
+    <div class="setting-row"><p>Keyboard</p><span>Venom 88HE</span></div>
+    <div class="setting-row"><p>Sensitivity</p><span>65~115cm/360</span></div>
+  </div>
+
+  <div class="card">
+    <div class="social-item discord" id="discordCard">
+      <div class="discord-avatar">
+        <img id="discordAvatar" src="img/dc.jpg">
+        <div id="discordDot" class="status-dot status-offline"></div>
+      </div>
+
+      <div class="discord-info">
+        <span id="discordName">@Loading...</span>
+        <div id="discordActivity">활동 없음</div>
+      </div>
+
+      <img id="albumArt" class="album-art hidden">
+    </div>
+  </div>
+
+</div>
+
+<script>
+async function fetchDiscordPresence(){
+  const res = await fetch(`/api/discord-status/1256264184996565135?_=${Date.now()}`);
+  const data = await res.json();
+
+  discordAvatar.src = data.avatar_url || discordAvatar.src;
+  discordName.textContent = data.username ? `@${data.username}` : "@unknown";
+  discordDot.className = `status-dot status-${data.status || "offline"}`;
+
+  if (data.banner_url) {
+    discordCard.style.backgroundImage = `url("${data.banner_url}")`;
+  }
+
+  if (data.activity?.name === "Spotify") {
+    discordActivity.innerHTML = `${data.activity.details}<br>${data.activity.state}`;
+    if (data.activity.album_art_url) {
+      albumArt.src = data.activity.album_art_url;
+      albumArt.classList.remove("hidden");
+    }
+  } else {
+    discordActivity.textContent = data.activity?.name || "활동 없음";
+    albumArt.classList.add("hidden");
+  }
+}
+fetchDiscordPresence();
+setInterval(fetchDiscordPresence, 30000);
+</script>
+
+</body>
+</html>
