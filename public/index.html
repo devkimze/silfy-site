@@ -28,9 +28,10 @@ body {
 .header-box {
   background: #141414;
   border-radius: 22px;
-  padding: 28px 40px;
+  padding: 22px 34px;   /* 기존 28px 40px → 줄임 */
   box-shadow: 0 0 30px rgba(0,0,0,0.45);
 }
+
 
 .username {
   font-size: 42px;
@@ -60,17 +61,22 @@ body {
 .setting-row {
   display: flex;
   justify-content: space-between;
-  padding: 6px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  align-items: flex-start;
+  padding: 4px 0;          /* 간격 줄임 */
+  border-bottom: none;     /* 구분선 제거 */
 }
 
-.setting-row p,
+.setting-row p {
+  font-size: 13px;
+  opacity: 0.6;
+  line-height: 1.2;
+}
+
 .setting-row span {
   font-size: 15px;
-}
-
-.setting-row span {
+  font-weight: 500;
   color: #bdbdbd;
+  line-height: 1.5;
 }
 
 /* ===== Discord Card ===== */
