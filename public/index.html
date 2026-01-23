@@ -49,6 +49,10 @@ body {
     inset 0 1px 0 rgba(255,255,255,0.25),
     0 30px 60px rgba(0,0,0,0.55);
   overflow: hidden;
+
+  /* mouse glow vars */
+  --mx: 50%;
+  --my: 50%;
 }
 
 .liquid-glass::before {
@@ -64,7 +68,26 @@ body {
   pointer-events: none;
 }
 
-/* ===== Profile (Liquid Glass) ===== */
+/* === Mouse Glow === */
+.liquid-glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    600px circle at var(--mx) var(--my),
+    rgba(255,255,255,0.22),
+    transparent 45%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.liquid-glass:hover::after {
+  opacity: 1;
+}
+
+/* ===== Profile ===== */
 .header-box {
   padding: 26px 28px;
 }
@@ -82,7 +105,7 @@ body {
   line-height: 1.45;
 }
 
-/* ===== Settings (Liquid Glass) ===== */
+/* ===== Settings ===== */
 .settings-card {
   padding: 26px 28px;
 }
@@ -246,7 +269,6 @@ body {
 
 <div class="layout">
 
-  <!-- LEFT -->
   <div class="left-col">
     <div class="header-box liquid-glass">
       <div class="username">Jihoo</div>
@@ -277,7 +299,6 @@ body {
     </div>
   </div>
 
-  <!-- RIGHT -->
   <div class="right-col">
     <div class="settings-card liquid-glass">
       <h2>Settings</h2>
@@ -292,6 +313,16 @@ body {
 </div>
 
 <script>
+/* ===== Mouse-follow glow ===== */
+document.querySelectorAll('.liquid-glass').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+    card.style.setProperty('--my', `${e.clientY - rect.top}px`);
+  });
+});
+
+/* ===== Discord Presence ===== */
 async function fetchDiscordPresence(){
   const res = await fetch(`/api/discord-status/1256264184996565135?_=${Date.now()}`);
   const data = await res.json();
