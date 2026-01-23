@@ -21,17 +21,23 @@ body {
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 48px 64px;
+  gap: 32px 64px; /* 세로 간격 확 줄임 */
+}
+
+.left-col,
+.right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 /* ===== Profile ===== */
 .header-box {
   background: #141414;
   border-radius: 22px;
-  padding: 22px 24px;   /* 기존 28px 40px → 줄임 */
+  padding: 22px 24px;
   box-shadow: 0 0 30px rgba(0,0,0,0.45);
 }
-
 
 .username {
   font-size: 42px;
@@ -43,7 +49,6 @@ body {
   color: #bbb;
   margin-top: 6px;
   line-height: 1.35;
-  word-break: keep-all;
 }
 
 /* ===== Settings ===== */
@@ -54,36 +59,28 @@ body {
 }
 
 .settings-card h2 {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   font-size: 21px;
 }
 
 .setting-row {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  padding: 4px 0;          /* 간격 줄임 */
-  border-bottom: none;     /* 구분선 제거 */
+  padding: 4px 0;
 }
 
 .setting-row p {
   font-size: 13px;
   opacity: 0.6;
-  line-height: 1.2;
 }
 
 .setting-row span {
   font-size: 15px;
   font-weight: 500;
   color: #bdbdbd;
-  line-height: 1.5;
 }
 
 /* ===== Discord Card ===== */
-.card {
-  background: transparent;
-}
-
 .social-item.discord {
   position: relative;
   display: flex;
@@ -92,18 +89,10 @@ body {
   padding: 18px 22px;
   height: 96px;
   border-radius: 18px;
-  background-color: #141414;
-  background-size: cover;
-  background-position: center;
+  background: #141414;
   overflow: hidden;
 }
 
-/* 배너 클린 */
-.social-item.discord::before {
-  display: none;
-}
-
-/* Avatar */
 .discord-avatar {
   position: relative;
   width: 60px;
@@ -116,7 +105,6 @@ body {
   border-radius: 50%;
 }
 
-/* Status dot */
 .status-dot {
   position: absolute;
   bottom: -2px;
@@ -132,17 +120,14 @@ body {
 .status-dnd { background: #f23f43; }
 .status-offline { background: #747f8d; }
 
-/* Discord Info */
 .discord-info {
   display: flex;
   flex-direction: column;
-  margin-top: -6px;
 }
 
 #discordName {
   font-size: 16px;
   font-weight: 600;
-  margin-left: -2px;
 }
 
 #discordActivity {
@@ -151,7 +136,7 @@ body {
   margin-top: 2px;
 }
 
-/* ===== Spotify CD (오른쪽 끝 고정) ===== */
+/* ===== Spotify CD ===== */
 .album-art {
   position: absolute;
   right: 12px;
@@ -161,16 +146,13 @@ body {
   height: 56px;
   border-radius: 50%;
   animation: spin 6s linear infinite;
-  pointer-events: none;
 }
 
-.album-art.hidden {
-  display: none;
-}
+.album-art.hidden { display: none; }
 
 @keyframes spin {
   from { transform: translateY(-50%) rotate(0deg); }
-  to   { transform: translateY(-50%) rotate(360deg); }
+  to { transform: translateY(-50%) rotate(360deg); }
 }
 
 /* ===== Mobile ===== */
@@ -186,25 +168,17 @@ body {
 
 <div class="layout">
 
-  <div class="header-box">
-    <div class="username">Jihoo</div>
-    <div class="bio">
-      C++, HTML, UE5<br>
-      FPS / Systems / UI<br>
-      긴 자기소개 써도 카드 높이 자동으로 늘어남
+  <!-- LEFT -->
+  <div class="left-col">
+    <div class="header-box">
+      <div class="username">Jihoo</div>
+      <div class="bio">
+        C++, HTML, UE5<br>
+        FPS / Systems / UI<br>
+        긴 자기소개 써도 카드 높이 자동으로 늘어남
+      </div>
     </div>
-  </div>
 
-  <div class="settings-card">
-    <h2>Settings</h2>
-    <div class="setting-row"><p>Mouse</p><span>Razer Viper V3 Pro</span></div>
-    <div class="setting-row"><p>Mouse Skates</p><span>Corepad Pro Max</span></div>
-    <div class="setting-row"><p>Mouse Pad</p><span>Artisan FX Zero Mid</span></div>
-    <div class="setting-row"><p>Keyboard</p><span>Venom 88HE</span></div>
-    <div class="setting-row"><p>Sensitivity</p><span>65~115cm/360</span></div>
-  </div>
-
-  <div class="card">
     <div class="social-item discord" id="discordCard">
       <div class="discord-avatar">
         <img id="discordAvatar" src="img/dc.jpg">
@@ -220,6 +194,18 @@ body {
     </div>
   </div>
 
+  <!-- RIGHT -->
+  <div class="right-col">
+    <div class="settings-card">
+      <h2>Settings</h2>
+      <div class="setting-row"><p>Mouse</p><span>Razer Viper V3 Pro</span></div>
+      <div class="setting-row"><p>Mouse Skates</p><span>Corepad Pro Max</span></div>
+      <div class="setting-row"><p>Mouse Pad</p><span>Artisan FX Zero Mid</span></div>
+      <div class="setting-row"><p>Keyboard</p><span>Venom 88HE</span></div>
+      <div class="setting-row"><p>Sensitivity</p><span>65~115cm/360</span></div>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -231,16 +217,10 @@ async function fetchDiscordPresence(){
   discordName.textContent = data.username ? `@${data.username}` : "@unknown";
   discordDot.className = `status-dot status-${data.status || "offline"}`;
 
-  if (data.banner_url) {
-    discordCard.style.backgroundImage = `url("${data.banner_url}")`;
-  }
-
   if (data.activity?.name === "Spotify") {
     discordActivity.innerHTML = `${data.activity.details}<br>${data.activity.state}`;
-    if (data.activity.album_art_url) {
-      albumArt.src = data.activity.album_art_url;
-      albumArt.classList.remove("hidden");
-    }
+    albumArt.src = data.activity.album_art_url;
+    albumArt.classList.remove("hidden");
   } else {
     discordActivity.textContent = data.activity?.name || "활동 없음";
     albumArt.classList.add("hidden");
