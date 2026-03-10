@@ -51,7 +51,7 @@ async function fetchDiscordPresence() {
       }
     } else {
       // 활동 없을 때
-      activity.innerHTML = `<div class="song-title">활동 없음</div>`;
+      activity.innerHTML = `<div class="song-title"> </div>`;
       albumArt.classList.add("hidden");
     }
 
