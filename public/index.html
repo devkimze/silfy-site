@@ -254,6 +254,41 @@ body {
   to { transform: translateY(-50%) rotate(360deg); }
 }
 
+/* ===== Social Links ===== */
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  padding: 18px 20px;
+}
+
+.social-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+
+  transition: all 0.2s ease;
+}
+
+.social-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.1);
+}
+
+.social-btn img {
+  width: 20px;
+  height: 20px;
+  filter: invert(1);
+  opacity: 0.9;
+}
+  
 /* ===== Mobile ===== */
 @media (max-width: 900px) {
   .layout {
@@ -279,6 +314,24 @@ body {
       </div>
       <div class="contact">Contact - 1740xd@gmail.com</div>
     </div>
+
+    <div class="social-links liquid-glass">
+  <a href="https://youtube.com/@top5hcf" target="_blank" class="social-btn">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg">
+  </a>
+
+  <a href="https://tiktok.com/@silfyxd" target="_blank" class="social-btn">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tiktok.svg">
+  </a>
+
+  <a href="https://github.com/devkimze" target="_blank" class="social-btn">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg">
+  </a>
+
+  <a href="https://twitter.com/silfyxd" target="_blank" class="social-btn">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg">
+  </a>
+</div>
 
     <div class="social-item discord" id="discordCard">
       <div class="discord-banner" id="discordBanner"></div>
