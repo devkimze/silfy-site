@@ -48,7 +48,7 @@ client.on("presenceUpdate", async (oldPresence, newPresence) => {
     if (activity.name === "Spotify") {
       const title = activity.details || "";
       const artistRaw = activity.state || "";
-      let artistFormatted = artistRaw.split(";").map(a => a.trim()).join(", ");
+      let artistFormatted = artistRaw.split(",").map(a => a.trim()).join(", ");
 
       let albumArt = null;
       if (activity.assets?.largeImage) {
@@ -108,7 +108,7 @@ app.get("*", (req, res) => {
 
 // === 서버 실행 ===
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 // === Discord 로그인 ===
 client.login(process.env.DISCORD_TOKEN);
