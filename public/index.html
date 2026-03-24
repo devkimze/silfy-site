@@ -298,23 +298,27 @@ document.querySelectorAll('.liquid-glass').forEach(card => {
   });
 });
 
-const mailBtn = document.getElementById("mailBtn");
-const toast = document.getElementById("toast");
-
-mailBtn.onclick = async () => {
-  await navigator.clipboard.writeText("me@silfy.dev");
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 2000);
-};
-
+/* ===== Discord Presence ===== */
 async function fetchDiscordPresence(){
-  const res = await fetch(`/api/discord-status/1256264184996565135`);
+  const res = await fetch(`/api/discord-status/1256264184996565135?_=${Date.now()}`);
   const data = await res.json();
 
   discordAvatar.src = data.avatar_url || discordAvatar.src;
   discordName.textContent = data.username ? `@${data.username}` : "@unknown";
   discordDot.className = `status-dot status-${data.status || "offline"}`;
-  discordActivity.textContent = data.activity?.name || "";
+
+  if (data.banner_url) {
+    discordBanner.style.backgroundImage = `url(${data.banner_url})`;
+  }
+
+  if (data.activity?.name === "Spotify") {
+    discordActivity.innerHTML = `${data.activity.details}<br>${data.activity.state}`;
+    albumArt.src = data.activity.album_art_url;
+    albumArt.classList.remove("hidden");
+  } else {
+    discordActivity.textContent = data.activity?.name || " ";
+    albumArt.classList.add("hidden");
+  }
 }
 
 fetchDiscordPresence();
