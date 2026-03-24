@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>G who</title>
+<title>Jihoo</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
@@ -311,7 +311,7 @@ body {
       <div class="bio">
         2.3k+ Discord Server founder<br>
         5K on TT<br>
-        C++, UE5, HTML(Frontend, Backend) 
+        Edit & Code for fun. 
       </div>
       <div class="contact">Contact - j@silfy.dev</div>
     </div>
@@ -352,9 +352,8 @@ body {
   <div class="right-col">
     <div class="settings-card liquid-glass">
       <h2>Settings</h2>
-      <div class="setting-row"><p>Mouse</p><span>Razer Viper V3 Pro (Black)</span></div>
-      <div class="setting-row"><p>Mouse Skates</p><span>MIZUGUMO FUTAE P8 (4 dots)</span></div>
-      <div class="setting-row"><p>Mouse Pad</p><span>Artisan FX Zero Mid (Orange)</span></div>
+      <div class="setting-row"><p>Mouse</p><span>Razer Viper V3 Pro</span></div>
+      <div class="setting-row"><p>Mouse Pad</p><span>Artisan FX Zero Mid</span></div>
       <div class="setting-row"><p>Keyboard</p><span>Venom 88HE</span></div>
       <div class="setting-row"><p>Sensitivity</p><span>90~135cm/360 @ 800 dpi</span></div>
     </div>
@@ -390,7 +389,7 @@ async function fetchDiscordPresence(){
     albumArt.src = data.activity.album_art_url;
     albumArt.classList.remove("hidden");
   } else {
-    discordActivity.textContent = data.activity?.name || "활동 없음";
+    discordActivity.textContent = data.activity?.name || " ";
     albumArt.classList.add("hidden");
   }
 }
