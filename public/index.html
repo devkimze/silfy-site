@@ -5,17 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Jihoo</title>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
+<style>
 body {
   background: #0a0a0a;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   color: #fff;
-
   margin: 0;
   min-height: 100vh;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -24,49 +22,35 @@ body {
 .layout {
   transform: scale(0.9);
   transform-origin: center;
-
   width: 1100px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 32px 64px;
 }
 
-.left-col,
-.right-col {
+.left-col, .right-col {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-/* =========================================================
-   iOS LIQUID GLASS (NAME + SETTINGS)
-========================================================= */
+/* glass */
 .liquid-glass {
   position: relative;
   background: rgba(20, 20, 20, 0.35);
   backdrop-filter: blur(22px) saturate(140%);
-  -webkit-backdrop-filter: blur(22px) saturate(140%);
   border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-
+  border: 1px solid rgba(255,255,255,0.14);
   overflow: hidden;
-  isolation: isolate;
 }
 
-/* mouse glow */
 .liquid-glass::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    520px circle at var(--mx) var(--my),
-    rgba(255,255,255,0.12),
-    transparent 55%
-  );
+  background: radial-gradient(520px circle at var(--mx) var(--my), rgba(255,255,255,0.12), transparent 55%);
   opacity: 0;
-  transition: opacity 0.25s ease;
-  pointer-events: none;
-  border-radius: inherit;
+  transition: 0.25s;
 }
 
 .liquid-glass:hover::after {
@@ -78,119 +62,80 @@ body {
 }
 
 .username {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
-  letter-spacing: -0.6px;
 }
 
 .bio {
-  font-size: 16px;
-  color: rgba(255,255,255,0.72);
-  margin-top: 10px;
-  line-height: 1.45;
-}
-
-.contact {
-  font-size: 12px;
-  color: rgba(255,255,255,0.5);
-  margin-top: 10px;
-  line-height: 1.45;
-}
-
-.settings-card {
-  padding: 26px 28px;
-}
-
-.settings-card h2 {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 14px;
-  margin: 0 0 14px 0; 
-}
-
-.setting-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-
-.setting-row:last-child {
-  border-bottom: none;
-}
-
-.setting-row p {
-  font-size: 13px;
-  color: rgba(255,255,255,0.55);
-}
-
-.setting-row span {
   font-size: 15px;
-  font-weight: 500;
-  color: rgba(255,255,255,0.88);
+  color: rgba(255,255,255,0.7);
+  margin-top: 10px;
 }
 
-/* =========================================================
-   DISCORD CARD
-========================================================= */
+.social-inline {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.icon-btn {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.icon-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.1);
+}
+
+.icon-btn img {
+  width: 18px;
+  filter: invert(1);
+}
+
+.mail-tooltip {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #111;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #aaa;
+  opacity: 0;
+  transition: 0.2s;
+}
+
+.mail-btn:hover .mail-tooltip {
+  opacity: 1;
+}
+
+/* Discord */
 .social-item.discord {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 14px;
   padding: 18px 22px;
   height: 96px;
   border-radius: 18px;
-
-  background: linear-gradient(
-    135deg,
-    #1d1d1d 0%,
-    #171717 55%,
-    #121212 100%
-  );
-
-  box-shadow: 0 8px 28px rgba(0,0,0,0.55);
-  overflow: hidden;
-
-  border: 1px solid rgba(255,255,255,0.12);
-  backdrop-filter: blur(14px) saturate(120%);
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
-}
-
-.social-item.discord::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background: linear-gradient(
-    to bottom right,
-    rgba(255,255,255,0.25),
-    transparent 45%
-  );
-  opacity: 0.12;
-}
-
-.discord-banner {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  opacity: 0.45;
-}
-
-.discord-overlay {
-  display: none;
+  background: #141414;
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
 .discord-content {
-  position: relative;
   display: flex;
   align-items: center;
   gap: 14px;
-  width: 100%;
-  z-index: 2;
 }
 
 .discord-avatar {
@@ -201,7 +146,6 @@ body {
 
 .discord-avatar img {
   width: 100%;
-  height: 100%;
   border-radius: 50%;
 }
 
@@ -220,88 +164,46 @@ body {
 .status-dnd { background: #f23f43; }
 .status-offline { background: #747f8d; }
 
-.discord-info {
+/* Settings */
+.settings-card {
+  padding: 26px;
+}
+
+.setting-row {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
-#discordName {
-  font-size: 16px;
-  font-weight: 600;
-}
-
-#discordActivity {
-  font-size: 13px;
-  color: #bdbdbd;
-  margin-top: 2px;
-}
-
-.album-art {
-  position: absolute;
-  right: 28px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  animation: spin 6s linear infinite;
-  z-index: 2;
-}
-
-.album-art.hidden { display: none; }
-
-@keyframes spin {
-  from { transform: translateY(-50%) rotate(0deg); }
-  to { transform: translateY(-50%) rotate(360deg); }
-}
-
-.social-links {
-  display: flex;
-  justify-content: center;
-  gap: 18px;
-  padding: 18px 20px;
-}
-
-.social-btn {
-  width: 38px;
-  height: 38px;
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20,20,20,0.9);
+  padding: 10px 16px;
   border-radius: 10px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
-
-  transition: all 0.2s ease;
+  font-size: 13px;
+  border: 1px solid rgba(255,255,255,0.1);
+  opacity: 0;
+  transition: 0.3s;
 }
 
-.social-btn:hover {
-  transform: translateY(-2px);
-  background: rgba(255,255,255,0.1);
+.toast.show {
+  opacity: 1;
 }
 
-.social-btn img {
-  width: 20px;
-  height: 20px;
-  filter: invert(1);
-  opacity: 0.9;
-}
-  
-/* ===== Mobile ===== */
+/* mobile */
 @media (max-width: 900px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
-  .album-art {
-    display: none;
-  }
+  .layout { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 
 <body>
+
+<div id="toast" class="toast">메일이 복사됨</div>
 
 <div class="layout">
 
@@ -311,45 +213,44 @@ body {
       <div class="bio">
         2.3k+ Discord Server founder<br>
         5K on TT<br>
-        Edit & Code for fun. 
+        Edit & Code for fun.
       </div>
-      <div class="contact">Contact - me@silfy.dev</div>
-    </div>
-    
-    <div class="social-item discord" id="discordCard">
-      <div class="discord-banner" id="discordBanner"></div>
 
+      <div class="social-inline">
+        <a href="https://youtube.com/@silfyxd" target="_blank" class="icon-btn">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg">
+        </a>
+
+        <a href="https://tiktok.com/@silfyxd" target="_blank" class="icon-btn">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tiktok.svg">
+        </a>
+
+        <a href="https://github.com/devkimze" target="_blank" class="icon-btn">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg">
+        </a>
+
+        <div class="icon-btn mail-btn" id="mailBtn">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/gmail.svg">
+          <span class="mail-tooltip">me@silfy.dev</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="social-item discord">
       <div class="discord-content">
         <div class="discord-avatar">
           <img id="discordAvatar" src="img/dc.jpg">
           <div id="discordDot" class="status-dot status-offline"></div>
         </div>
-
-        <div class="discord-info">
-          <span id="discordName">@Loading...</span>
-          <div id="discordActivity"> </div>
+        <div>
+          <div id="discordName">@Loading...</div>
+          <div id="discordActivity"></div>
         </div>
       </div>
-
-      <img id="albumArt" class="album-art hidden">
     </div>
   </div>
 
   <div class="right-col">
-        <div class="social-links liquid-glass">
-  <a href="https://youtube.com/@silfyxd" target="_blank" class="social-btn">
-    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg">
-  </a>
-
-  <a href="https://tiktok.com/@silfyxd" target="_blank" class="social-btn">
-    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tiktok.svg">
-  </a>
-
-  <a href="https://github.com/devkimze" target="_blank" class="social-btn">
-    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg">
-  </a>
-</div>
-
     <div class="settings-card liquid-glass">
       <h2>Settings</h2>
       <div class="setting-row"><p>Mouse</p><span>Razer Viper V3 Pro</span></div>
@@ -362,7 +263,7 @@ body {
 </div>
 
 <script>
-/* ===== Mouse-follow glow ===== */
+/* glow */
 document.querySelectorAll('.liquid-glass').forEach(card => {
   card.addEventListener('mousemove', e => {
     const rect = card.getBoundingClientRect();
@@ -371,32 +272,31 @@ document.querySelectorAll('.liquid-glass').forEach(card => {
   });
 });
 
-/* ===== Discord Presence ===== */
+/* mail copy */
+const mailBtn = document.getElementById("mailBtn");
+const toast = document.getElementById("toast");
+
+mailBtn.onclick = async () => {
+  await navigator.clipboard.writeText("me@silfy.dev");
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 2000);
+};
+
+/* discord */
 async function fetchDiscordPresence(){
-  const res = await fetch(`/api/discord-status/1256264184996565135?_=${Date.now()}`);
+  const res = await fetch(`/api/discord-status/1256264184996565135`);
   const data = await res.json();
 
   discordAvatar.src = data.avatar_url || discordAvatar.src;
   discordName.textContent = data.username ? `@${data.username}` : "@unknown";
   discordDot.className = `status-dot status-${data.status || "offline"}`;
-
-  if (data.banner_url) {
-    discordBanner.style.backgroundImage = `url(${data.banner_url})`;
-  }
-
-  if (data.activity?.name === "Spotify") {
-    discordActivity.innerHTML = `${data.activity.details}<br>${data.activity.state}`;
-    albumArt.src = data.activity.album_art_url;
-    albumArt.classList.remove("hidden");
-  } else {
-    discordActivity.textContent = data.activity?.name || " ";
-    albumArt.classList.add("hidden");
-  }
+  discordActivity.textContent = data.activity?.name || "";
 }
 
 fetchDiscordPresence();
 setInterval(fetchDiscordPresence, 30000);
 
+/* title animation */
 const text = "Jihoo";
 let index = 1;
 let forward = true;
