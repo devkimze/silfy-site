@@ -165,18 +165,44 @@ body {
 .status-dnd { background: #f23f43; }
 .status-offline { background: #747f8d; }
 
-/* Settings */
+/* 🔥 SETTINGS (완전히 수정됨) */
 .settings-card {
-  padding: 26px;
+  padding: 18px 24px 20px;
 }
 
+.settings-card h2 {
+  margin-bottom: 12px;
+}
+
+/* 핵심: grid로 정렬 */
 .setting-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 1px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
+/* 왼쪽 라벨 */
+.setting-row p {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255,255,255,0.6);
+}
+
+/* 오른쪽 값 */
+.setting-row span {
+  text-align: right;
+  font-size: 14px;
+  color: rgba(255,255,255,0.9);
+}
+
+/* 마지막 줄 border 제거 */
+.setting-row:last-child {
+  border-bottom: none;
+}
+
+/* toast */
 .toast {
   position: fixed;
   top: 20px;
@@ -264,7 +290,6 @@ body {
 </div>
 
 <script>
-/* glow */
 document.querySelectorAll('.liquid-glass').forEach(card => {
   card.addEventListener('mousemove', e => {
     const rect = card.getBoundingClientRect();
@@ -273,7 +298,6 @@ document.querySelectorAll('.liquid-glass').forEach(card => {
   });
 });
 
-/* mail copy */
 const mailBtn = document.getElementById("mailBtn");
 const toast = document.getElementById("toast");
 
@@ -283,7 +307,6 @@ mailBtn.onclick = async () => {
   setTimeout(() => toast.classList.remove("show"), 2000);
 };
 
-/* discord */
 async function fetchDiscordPresence(){
   const res = await fetch(`/api/discord-status/1256264184996565135`);
   const data = await res.json();
@@ -297,7 +320,6 @@ async function fetchDiscordPresence(){
 fetchDiscordPresence();
 setInterval(fetchDiscordPresence, 30000);
 
-/* title animation */
 const text = "Jihoo";
 let index = 1;
 let forward = true;
