@@ -398,7 +398,7 @@ fetchDiscordPresence();
 setInterval(fetchDiscordPresence, 30000);
 
 const text = "Jihoo";
-let index = 0;
+let index = 1;
 let forward = true;
 
 setInterval(() => {
@@ -406,10 +406,10 @@ setInterval(() => {
 
   if (forward) {
     index++;
-    if (index > text.length) forward = false;
+    if (index > text.length + 2) forward = false; // 🔥 끝에서 잠깐 멈춤
   } else {
     index--;
-    if (index === 0) forward = true;
+    if (index < 1) forward = true;
   }
 }, 200);
 </script>
