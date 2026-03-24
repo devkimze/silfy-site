@@ -402,11 +402,11 @@ let index = 1;
 let forward = true;
 
 setInterval(() => {
-  document.title = text.slice(0, index);
+  document.title = text.slice(0, Math.max(1, Math.min(index, text.length)));
 
   if (forward) {
     index++;
-    if (index > text.length + 2) forward = false; // 🔥 끝에서 잠깐 멈춤
+    if (index > text.length + 2) forward = false;
   } else {
     index--;
     if (index < 1) forward = true;
