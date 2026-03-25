@@ -131,6 +131,7 @@ body {
   border-radius: 18px;
   background: #141414;
   border: 1px solid rgba(255,255,255,0.1);
+  overflow: hidden;
 }
 
 .discord-content {
@@ -227,6 +228,7 @@ body {
   background-size: cover;
   background-position: center;
   opacity: 0.45;
+  border-radius: inherit;
 }
 
 .discord-info {
@@ -254,6 +256,13 @@ body {
 
 .album-art.hidden {
   display: none;
+}
+
+.glow {
+  color: #fff;
+  text-shadow:
+    0 0 6px rgba(255,255,255,0.6),
+    0 0 12px rgba(255,255,255,0.4);
 }
 
 @keyframes spin {
