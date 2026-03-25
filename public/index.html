@@ -367,27 +367,24 @@ async function fetchDiscordPresence(){
     discordBanner.style.backgroundImage = `url(${data.banner_url})`;
   }
 
- if (data.activity?.name === "Spotify") {
-  discordActivity.innerHTML = `
-    <span class="glow">Listening</span> to ${data.activity.details}<br>
-    <span class="glow">by</span> ${data.activity.state}
-  `;
-  albumArt.src = data.activity.album_art_url;
-  albumArt.classList.remove("hidden");
+  if (data.activity?.name === "Spotify") {
+    discordActivity.innerHTML = `
+      <span class="glow">Listening</span> to ${data.activity.details}<br>
+      <span class="glow">by</span> ${data.activity.state}
+    `;
+    albumArt.src = data.activity.album_art_url;
+    albumArt.classList.remove("hidden");
 
-} else if (data.activity?.name) {
-  discordActivity.innerHTML = `
-    <span class="glow">Playing</span> ${data.activity.name}
-  `;
-  albumArt.classList.add("hidden");
+  } else if (data.activity?.name) {
+    discordActivity.innerHTML = `
+      <span class="glow">Playing</span> ${data.activity.name}
+    `;
+    albumArt.classList.add("hidden");
 
-} else {
-  discordActivity.textContent = "";
-  albumArt.classList.add("hidden");
-}
-} else {
-  discordActivity.textContent = "";
-  albumArt.classList.add("hidden");
+  } else {
+    discordActivity.textContent = "";
+    albumArt.classList.add("hidden");
+  }
 }
 
 fetchDiscordPresence();
