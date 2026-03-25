@@ -48,7 +48,7 @@ client.on("presenceUpdate", async (oldPresence, newPresence) => {
     if (activity.name === "Spotify") {
       const title = activity.details || "";
       const artistRaw = activity.state || "";
-      let artistFormatted = artistRaw.split(";").map(a => a.trim()).join(", ");
+      let artistFormatted = artistRaw.split(",").map(a => a.trim()).join(", ");
 
       let albumArt = null;
       if (activity.assets?.largeImage) {
