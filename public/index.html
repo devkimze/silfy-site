@@ -48,7 +48,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(520px circle at var(--mx) var(--my), rgba(255,255,255,0.12), transparent 55%);
+  background: radial-gradient(80px circle at var(--mx) var(--my), rgba(255,255,255,0.12), transparent 55%);
   opacity: 0;
   transition: 0.25s;
   pointer-events: none;
@@ -242,6 +242,11 @@ body {
   margin-top: 2px;
 }
 
+#discordName {
+  font-size: 20px;
+  font-weight: 700;
+}
+
 .album-art {
   position: absolute;
   right: 28px;
@@ -368,17 +373,23 @@ async function fetchDiscordPresence(){
   }
 
   if (data.activity?.name === "Spotify") {
+
+    const artist = (data.activity.state || "").replace(/;/g, ",");
+
     discordActivity.innerHTML = `
       <span class="glow">Listening</span> to ${data.activity.details}<br>
-      <span class="glow">by</span> ${data.activity.state}
+      <span class="glow">by</span> ${artist}
     `;
+
     albumArt.src = data.activity.album_art_url;
     albumArt.classList.remove("hidden");
 
   } else if (data.activity?.name) {
+
     discordActivity.innerHTML = `
       <span class="glow">Playing</span> ${data.activity.name}
     `;
+
     albumArt.classList.add("hidden");
 
   } else {
