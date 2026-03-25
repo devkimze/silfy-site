@@ -17,6 +17,25 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: none;
+}
+
+#cursorGlow {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+
+  background: rgba(255,255,255,0.9);
+
+  box-shadow:
+    0 0 8px rgba(255,255,255,0.9),
+    0 0 16px rgba(255,255,255,0.6),
+    0 0 24px rgba(255,255,255,0.4);
+
+  transform: translate(-50%, -50%);
 }
 
 .layout {
@@ -273,6 +292,7 @@ body {
 
 .particle {
   position: fixed;
+  display: none;
   width: 6px;
   height: 6px;
   background: rgba(255,255,255,0.8);
@@ -307,6 +327,8 @@ body {
 </head>
 
 <body>
+
+<div id="cursorGlow"></div>
 
 <div id="toast" class="toast">Email copied to clipboard.</div>
 
@@ -381,6 +403,13 @@ document.querySelectorAll('.liquid-glass').forEach(card => {
     card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
     card.style.setProperty('--my', `${e.clientY - rect.top}px`);
   });
+});
+
+const cursor = document.getElementById("cursorGlow");
+
+document.addEventListener("mousemove", (e) => {
+  cursor.style.left = e.clientX + "px";
+  cursor.style.top = e.clientY + "px";
 });
 
 document.addEventListener("mousemove", (e) => {
