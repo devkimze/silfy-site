@@ -221,6 +221,46 @@ body {
   opacity: 1;
 }
 
+.discord-banner {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.45;
+}
+
+.discord-info {
+  display: flex;
+  flex-direction: column;
+}
+
+#discordActivity {
+  font-size: 13px;
+  color: #bdbdbd;
+  margin-top: 2px;
+}
+
+.album-art {
+  position: absolute;
+  right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  animation: spin 6s linear infinite;
+  z-index: 2;
+}
+
+.album-art.hidden {
+  display: none;
+}
+
+@keyframes spin {
+  from { transform: translateY(-50%) rotate(0deg); }
+  to { transform: translateY(-50%) rotate(360deg); }
+}
+
 /* mobile */
 @media (max-width: 900px) {
   .layout { grid-template-columns: 1fr; }
@@ -263,19 +303,23 @@ body {
       </div>
     </div>
 
-    <div class="social-item discord">
-      <div class="discord-content">
-        <div class="discord-avatar">
-          <img id="discordAvatar" src="img/dc.jpg">
-          <div id="discordDot" class="status-dot status-offline"></div>
-        </div>
-        <div>
-          <div id="discordName">@Loading...</div>
-          <div id="discordActivity"></div>
-        </div>
-      </div>
+<div class="social-item discord">
+  <div class="discord-banner" id="discordBanner"></div>
+
+  <div class="discord-content">
+    <div class="discord-avatar">
+      <img id="discordAvatar" src="img/dc.jpg">
+      <div id="discordDot" class="status-dot status-offline"></div>
+    </div>
+
+    <div class="discord-info">
+      <div id="discordName">@Loading...</div>
+      <div id="discordActivity"></div>
     </div>
   </div>
+
+  <img id="albumArt" class="album-art hidden">
+</div>
 
   <div class="right-col">
     <div class="settings-card liquid-glass">
