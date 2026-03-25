@@ -85,6 +85,36 @@ body {
 .username {
   font-size: 24px;
   font-weight: 700;
+  position: relative;
+}
+
+/* fuzzy glow */
+.sparkle {
+  color: #fff;
+  text-shadow:
+    0 0 6px rgba(255,255,255,0.6),
+    0 0 12px rgba(255,255,255,0.4),
+    0 0 20px rgba(255,255,255,0.25);
+}
+
+/* 반짝이는 노이즈 느낌 */
+.sparkle::after {
+  content: "Jihoo";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: white;
+  opacity: 0.15;
+  filter: blur(2px);
+
+  animation: sparkleFlicker 2s infinite alternate;
+}
+
+/* 깜빡임 */
+@keyframes sparkleFlicker {
+  0% { opacity: 0.1; transform: translate(0px, 0px); }
+  50% { opacity: 0.2; transform: translate(0.5px, -0.5px); }
+  100% { opacity: 0.12; transform: translate(-0.5px, 0.5px); }
 }
 
 .bio {
@@ -242,6 +272,25 @@ body {
   opacity: 1;
 }
 
+.snowflake {
+  position: fixed;
+  top: -10px;
+  color: white;
+  font-size: 10px;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 0;
+
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh);
+    opacity: 0;
+  }
+}
+
 .discord-banner {
   position: absolute;
   inset: 0;
@@ -307,6 +356,17 @@ body {
   animation: particleFade 0.6s linear forwards;
 }
 
+#bgVideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.25; /* 🔥 감성 조절 */
+  z-index: -1;
+}
+
 @keyframes particleFade {
   to {
     transform: translateY(-10px) scale(0.5);
@@ -327,6 +387,9 @@ body {
 </head>
 
 <body>
+<video autoplay muted loop playsinline id="bgVideo">
+  <source src="bg.mp4" type="video/mp4">
+</video>
 
 <div id="cursorGlow"></div>
 
@@ -337,7 +400,7 @@ body {
   <div class="left-col">
 
     <div class="header-box liquid-glass">
-      <div class="username">Jihoo</div>
+      <div class="username sparkle">Jihoo</div>
       <div class="bio">
         2.3k+ Discord Server founder<br>
         5K on TT<br>
@@ -403,6 +466,14 @@ document.querySelectorAll('.liquid-glass').forEach(card => {
     card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
     card.style.setProperty('--my', `${e.clientY - rect.top}px`);
   });
+});
+
+document.addEventListener("mouseleave", () => {
+  cursor.style.opacity = "0";
+});
+
+document.addEventListener("mouseenter", () => {
+  cursor.style.opacity = "1";
 });
 
 const cursor = document.getElementById("cursorGlow");
@@ -471,6 +542,19 @@ setInterval(fetchDiscordPresence, 30000);
 const text = "Jihoo";
 let index = 1;
 let forward = true;
+
+setInterval(() => {
+  const snow = document.createElement("div");
+  snow.className = "snowflake";
+  snow.innerHTML = "•";
+
+  snow.style.left = Math.random() * window.innerWidth + "px";
+  snow.style.animationDuration = (2 + Math.random() * 3) + "s";
+
+  document.body.appendChild(snow);
+
+  setTimeout(() => snow.remove(), 5000);
+}, 120);
 
 setInterval(() => {
   document.title = text.slice(0, Math.max(1, Math.min(index, text.length)));
