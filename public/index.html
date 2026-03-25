@@ -253,9 +253,16 @@ body {
   animation: spin 6s linear infinite;
   z-index: 2;
 }
-
+  
 .album-art.hidden {
   display: none;
+}
+
+.glow {
+  color: #fff;
+  text-shadow:
+    0 0 6px rgba(255,255,255,0.6),
+    0 0 12px rgba(255,255,255,0.4);
 }
 
 @keyframes spin {
@@ -275,8 +282,9 @@ body {
 <div id="toast" class="toast">Email copied to clipboard.</div>
 
 <div class="layout">
-
+  
   <div class="left-col">
+
     <div class="header-box liquid-glass">
       <div class="username">Jihoo</div>
       <div class="bio">
@@ -305,23 +313,25 @@ body {
       </div>
     </div>
 
-<div class="social-item discord">
-  <div class="discord-banner" id="discordBanner"></div>
+    <div class="social-item discord">
+      <div class="discord-banner" id="discordBanner"></div>
 
-  <div class="discord-content">
-    <div class="discord-avatar">
-      <img id="discordAvatar" src="img/dc.jpg">
-      <div id="discordDot" class="status-dot status-offline"></div>
+      <div class="discord-content">
+        <div class="discord-avatar">
+          <img id="discordAvatar" src="img/dc.jpg">
+          <div id="discordDot" class="status-dot status-offline"></div>
+        </div>
+
+        <div class="discord-info">
+          <div id="discordName">@Loading...</div>
+          <div id="discordActivity"></div>
+        </div>
+      </div>
+
+      <img id="albumArt" class="album-art hidden">
     </div>
 
-    <div class="discord-info">
-      <div id="discordName">@Loading...</div>
-      <div id="discordActivity"></div>
-    </div>
   </div>
-
-  <img id="albumArt" class="album-art hidden">
-</div>
 
   <div class="right-col">
     <div class="settings-card liquid-glass">
