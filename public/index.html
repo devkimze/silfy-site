@@ -87,7 +87,6 @@ body {
   font-weight: 700;
   position: relative;
   display: inline-block;
-  animation: shake 0.12s infinite;
 }
 
 .name-particle {
@@ -115,34 +114,6 @@ body {
   color: #fff;
 }
 
-/* glitch layer */
-.sparkle::before,
-.sparkle::after {
-  content: attr(data-text);
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  overflow: hidden;
-  color: white;
-  width: auto;
-  white-space: nowrap;
-}
-
-/* 빨강 offset */
-.sparkle::before {
-  text-shadow: -1px 0 red;
-  animation: glitch1 1.2s infinite linear alternate;
-  opacity: 0.7;
-}
-
-/* 파랑 offset */
-.sparkle::after {
-  text-shadow: 1px 0 cyan;
-  animation: glitch2 1.2s infinite linear alternate;
-  opacity: 0.7;
-}
-
 @keyframes shake {
   0% { transform: translate(0, 0); }
   20% { transform: translate(-1px, 1px); }
@@ -152,23 +123,7 @@ body {
   100% { transform: translate(0, 0); }
 }
 
-@keyframes glitch1 {
-  0% { transform: translate(0); }
-  20% { transform: translate(-1px, 1px); }
-  40% { transform: translate(-1px, -1px); }
-  60% { transform: translate(1px, 1px); }
-  80% { transform: translate(1px, -1px); }
-  100% { transform: translate(0); }
-}
 
-@keyframes glitch2 {
-  0% { transform: translate(0); }
-  20% { transform: translate(1px, -1px); }
-  40% { transform: translate(1px, 1px); }
-  60% { transform: translate(-1px, -1px); }
-  80% { transform: translate(-1px, 1px); }
-  100% { transform: translate(0); }
-}
 .bio {
   font-size: 15px;
   color: rgba(255,255,255,0.7);
@@ -452,7 +407,7 @@ body {
   <div class="left-col">
 
     <div class="header-box liquid-glass">
-      <div class="username sparkle" id="name" data-text="Jihoo">Jihoo</div>
+      <div class="username" id="name">Jihoo</div>
       <div class="bio">
         2.3k+ Discord Server founder<br>
         5K on TT<br>
