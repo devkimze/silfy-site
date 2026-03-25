@@ -1,4 +1,3 @@
-// server.js
 import express from "express";
 import fetch from "node-fetch";
 import cors from "cors";
@@ -23,32 +22,37 @@ const client = new Client({
 // === Presence 캐시 ===
 let cachedUserData = {};
 
-// === Discord Presence ===
+// === Discord Ready ===
 client.once("ready", () => {
   console.log(`🤖 Discord Logged in as ${client.user.tag}`);
 });
 
+// === Presence Update ===
 client.on("presenceUpdate", async (oldPresence, newPresence) => {
   if (!newPresence?.userId) return;
+
   const user = await newPresence.user.fetch();
   const status = newPresence.status || "offline";
-  const activity = newPresence.activities?.[0] || null;
+
+  // 🔥 Spotify 우선 탐지 (중요)
+  const activity =
+    newPresence.activities.find(a => a.name === "Spotify") ||
+    newPresence.activities[0] ||
+    null;
 
   let activityData = null;
+
   if (activity) {
     activityData = {
       type: activity.type,
       name: activity.name,
-      details: activity.details,
-      state: activity.state,
-      assets: activity.assets || null,
     };
 
-    // === Spotify 처리 ===
+    // === 🎵 Spotify ===
     if (activity.name === "Spotify") {
       const title = activity.details || "";
       const artistRaw = activity.state || "";
-      let artistFormatted = artistRaw.split(",").map(a => a.trim()).join(", ");
+      const artist = artistRaw.split(",").map(a => a.trim()).join(", ");
 
       let albumArt = null;
       if (activity.assets?.largeImage) {
@@ -59,8 +63,20 @@ client.on("presenceUpdate", async (oldPresence, newPresence) => {
         }
       }
 
-      activityData.formatted = `${title} - ${artistFormatted}`;
-      activityData.album_art_url = albumArt;
+      activityData = {
+        typeFormatted: "listening",
+        title,
+        artist,
+        album_art_url: albumArt,
+      };
+    }
+
+    // === 🎮 Game / Other ===
+    else {
+      activityData = {
+        typeFormatted: "playing",
+        name: activity.name,
+      };
     }
   }
 
@@ -73,16 +89,20 @@ client.on("presenceUpdate", async (oldPresence, newPresence) => {
     activity: activityData,
   };
 
-  console.log(`[PRESENCE] Updated for ${user.username}: ${status}`);
+  console.log(`[PRESENCE] ${user.username} → ${status}`);
 });
 
-// === Discord Presence API ===
+// === API ===
 app.get("/api/discord-status/:userId", async (req, res) => {
   const userId = req.params.userId;
-  if (cachedUserData[userId]) return res.json(cachedUserData[userId]);
+
+  if (cachedUserData[userId]) {
+    return res.json(cachedUserData[userId]);
+  }
 
   try {
     const user = await client.users.fetch(userId);
+
     return res.json({
       id: user.id,
       username: user.username,
@@ -97,18 +117,18 @@ app.get("/api/discord-status/:userId", async (req, res) => {
   }
 });
 
-// === 상태 확인용 핑 ===
+// === Ping ===
 app.get("/ping", (req, res) => res.send("pong"));
 
-// === 정적 파일 제공 ===
+// === Static ===
 app.use(express.static("public"));
 app.get("*", (req, res) => {
   res.sendFile("index.html", { root: "public" });
 });
 
-// === 서버 실행 ===
+// === Server Start ===
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🌐 Server running on ${PORT}`));
 
-// === Discord 로그인 ===
+// === Login ===
 client.login(process.env.DISCORD_TOKEN);
