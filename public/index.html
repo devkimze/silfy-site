@@ -91,13 +91,18 @@ body {
 
 .name-particle {
   position: fixed;
-  width: 1px;
-  height: 2px;
-  background: rgba(255,255,255,0.7);
+
+  width: 2px;
+  height: 4px;
+
+  background: rgba(255,255,255,0.9);
+
+  box-shadow:
+    0 0 6px rgba(255,255,255,0.9),
+    0 0 12px rgba(255,255,255,0.6);
+
   pointer-events: none;
   z-index: 5;
-
-  box-shadow: 0 0 4px rgba(255,255,255,0.6);
 
   animation: nameParticleFade 0.6s linear forwards;
 }
@@ -581,7 +586,7 @@ setInterval(() => {
   document.body.appendChild(p);
 
   setTimeout(() => p.remove(), 600);
-}, 80);
+}, 30);
   
 setInterval(() => {
   document.title = text.slice(0, Math.max(1, Math.min(index, text.length)));
