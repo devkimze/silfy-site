@@ -45,7 +45,8 @@ body {
 }
   
 .cursor {
-  display: none;
+  opacity: 0;
+  transition: opacity 0.2s;
 }
   
 .layout {
@@ -497,13 +498,16 @@ document.querySelectorAll('.liquid-glass').forEach(card => {
   });
 });
 
-document.addEventListener("mousemove", (e) => {
-  if (cursor.style.display === "none") {
-    cursor.style.display = "block";
-  }
+let cursorVisible = false;
 
+document.addEventListener("mousemove", (e) => {
   cursor.style.left = e.clientX + "px";
   cursor.style.top = e.clientY + "px";
+
+  if (!cursorVisible) {
+    cursor.style.opacity = "1";
+    cursorVisible = true;
+  }
 });
 
 document.addEventListener("mouseleave", () => {
