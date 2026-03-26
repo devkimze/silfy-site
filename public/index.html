@@ -17,7 +17,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: none;
+  cursor: none !important;
 }
 
 #cursorGlow {
@@ -494,6 +494,16 @@ const cursor = document.getElementById("cursorGlow");
 document.addEventListener("mousemove", (e) => {
   cursor.style.left = e.clientX + "px";
   cursor.style.top = e.clientY + "px";
+});
+
+document.querySelectorAll('a, .icon-btn').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.transform = "translate(-50%, -50%) scale(1.8)";
+  });
+
+  el.addEventListener('mouseleave', () => {
+    cursor.style.transform = "translate(-50%, -50%) scale(1)";
+  });
 });
 
 document.addEventListener("mousemove", (e) => {
