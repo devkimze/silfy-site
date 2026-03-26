@@ -497,6 +497,15 @@ document.querySelectorAll('.liquid-glass').forEach(card => {
   });
 });
 
+document.addEventListener("mousemove", (e) => {
+  if (cursor.style.display === "none") {
+    cursor.style.display = "block";
+  }
+
+  cursor.style.left = e.clientX + "px";
+  cursor.style.top = e.clientY + "px";
+});
+
 document.addEventListener("mouseleave", () => {
   cursor.style.opacity = "0";
 });
