@@ -23,19 +23,32 @@ client.once("ready", () => {
 // =========================
 // 📁 USER DB (JSON)
 // =========================
-const USER_DB_PATH = "./data/users.json";
+const USER_DB_PATH = path.resolve("./data/users.json");
 
-if (!fs.existsSync("./data")) fs.mkdirSync("./data");
-if (!fs.existsSync(USER_DB_PATH)) fs.writeFileSync(USER_DB_PATH, "{}");
+console.log("📁 USER_DB_PATH:", USER_DB_PATH);
 
-function loadUsers() {
-  return JSON.parse(fs.readFileSync(USER_DB_PATH));
+// 폴더 생성
+const dataDir = path.dirname(USER_DB_PATH);
+if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+
+// 파일 생성
+if (!fs.existsSync(USER_DB_PATH)) {
+  fs.writeFileSync(USER_DB_PATH, "{}");
+  console.log("📦 users.json 생성됨");
 }
 
+// 로드 함수 (로그 추가)
+function loadUsers() {
+  const raw = fs.readFileSync(USER_DB_PATH, "utf-8");
+  console.log("📖 DB READ:", raw);
+  return JSON.parse(raw);
+}
+
+// 저장 함수 (로그 추가)
 function saveUsers(data) {
+  console.log("💾 DB WRITE:", data);
   fs.writeFileSync(USER_DB_PATH, JSON.stringify(data, null, 2));
 }
-
 // =========================
 // 📦 INI 저장 함수
 // =========================
