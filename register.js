@@ -62,6 +62,10 @@ const commands = [
       .addStringOption(o =>
         o.setName("name").setDescription("닉네임").setRequired(true))
   )
+  .addSubcommand(sub =>
+  sub.setName("list")
+    .setDescription("목록")
+)
 ].map(cmd => cmd.toJSON());
 
 const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
