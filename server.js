@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { Client, GatewayIntentBits } from "discord.js";
-import multer from "multer";
 import fs from "fs";
 import path from "path";
 import fetch from "node-fetch";
@@ -13,13 +12,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// =========================
-// Discord
-// =========================
 const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-  ],
+  intents: [GatewayIntentBits.Guilds],
 });
 
 client.once("ready", () => {
@@ -27,21 +21,21 @@ client.once("ready", () => {
 });
 
 // =========================
-// 🔥 업로드 처리 함수
+// 공통 저장 함수
 // =========================
-async function saveIniFromDiscord(url, configName) {
+async function saveIni(url, configName) {
   const res = await fetch(url);
   const buffer = await res.arrayBuffer();
 
   const dir = `./uploads/${configName}`;
-
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
 
   const filePath = `${dir}/RiotUserSettings.ini`;
-
   fs.writeFileSync(filePath, Buffer.from(buffer));
+
+  return filePath;
 }
 
 // =========================
@@ -51,25 +45,25 @@ client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
   // =====================
-  // upload
+  // upload (신규만)
   // =====================
   if (interaction.commandName === "upload") {
     await interaction.deferReply({ ephemeral: true });
 
     try {
       const attachment = interaction.options.getAttachment("file");
-      const configName = interaction.options.getString("name");
+      const name = interaction.options.getString("name");
 
-      if (!attachment || !configName) {
-        return interaction.editReply("값 없음");
+      const safeName = name.replace(/[^a-zA-Z0-9_-]/g, "");
+      const filePath = `./uploads/${safeName}/RiotUserSettings.ini`;
+
+      if (fs.existsSync(filePath)) {
+        return interaction.editReply("❌ 이미 존재함 → /update 써라");
       }
 
-      // 🔥 이름 sanitize (보안)
-      const safeName = configName.replace(/[^a-zA-Z0-9_-]/g, "");
+      await saveIni(attachment.url, safeName);
 
-      await saveIniFromDiscord(attachment.url, safeName);
-
-      await interaction.editReply(`✅ 업로드 완료: ${safeName}`);
+      await interaction.editReply(`✅ 생성 완료: ${safeName}`);
     } catch (err) {
       console.error(err);
       await interaction.editReply("❌ 업로드 실패");
@@ -77,7 +71,33 @@ client.on("interactionCreate", async (interaction) => {
   }
 
   // =====================
-  // download exe
+  // update (덮어쓰기)
+  // =====================
+  if (interaction.commandName === "update") {
+    await interaction.deferReply({ ephemeral: true });
+
+    try {
+      const attachment = interaction.options.getAttachment("file");
+      const name = interaction.options.getString("name");
+
+      const safeName = name.replace(/[^a-zA-Z0-9_-]/g, "");
+      const filePath = `./uploads/${safeName}/RiotUserSettings.ini`;
+
+      if (!fs.existsSync(filePath)) {
+        return interaction.editReply("❌ 없음 → 먼저 /upload");
+      }
+
+      await saveIni(attachment.url, safeName);
+
+      await interaction.editReply(`🔄 업데이트 완료: ${safeName}`);
+    } catch (err) {
+      console.error(err);
+      await interaction.editReply("❌ 업데이트 실패");
+    }
+  }
+
+  // =====================
+  // exe 다운로드
   // =====================
   if (interaction.commandName === "download" || interaction.commandName === "dl") {
     await interaction.reply({
@@ -89,11 +109,10 @@ client.on("interactionCreate", async (interaction) => {
 });
 
 // =========================
-// 🔥 다운로드 API (핵심)
+// 다운로드 API
 // =========================
 app.get("/files/format/download/:name", (req, res) => {
-  const configName = req.params.name;
-  const safeName = configName.replace(/[^a-zA-Z0-9_-]/g, "");
+  const safeName = req.params.name.replace(/[^a-zA-Z0-9_-]/g, "");
 
   const filePath = `./uploads/${safeName}/RiotUserSettings.ini`;
 
@@ -101,12 +120,9 @@ app.get("/files/format/download/:name", (req, res) => {
     return res.status(404).send("파일 없음");
   }
 
-  // 👉 항상 동일 이름으로 다운로드
   res.download(filePath, "RiotUserSettings.ini");
 });
 
-// =========================
-// 기타
 // =========================
 app.get("/ping", (req, res) => res.send("pong"));
 
