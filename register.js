@@ -8,6 +8,11 @@ const commands = [
   new SlashCommandBuilder()
   .setName("upload")
   .setDescription("ini 업로드")
+  .addStringOption(option =>
+    option.setName("name")
+      .setDescription("config 이름")
+      .setRequired(true)
+  )
   .addAttachmentOption(option =>
     option.setName("file")
       .setDescription("ini 파일")
