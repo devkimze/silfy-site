@@ -79,7 +79,8 @@ client.on("interactionCreate", async (interaction) => {
 
   if (interaction.commandName === "download" || interaction.commandName === "dl") {
     await interaction.reply({
-      content: `📦 다운로드 링크:\n${DOWNLOAD_URL}`,
+      content: "pcp file",
+      files: ["./public/pcp.exe"],
       ephemeral: true,
     });
   }
