@@ -13,66 +13,72 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildPresences,
-    GatewayIntentBits.GuildMembers,
-  ],
-});
-
-let cachedUserData = {};
-const DOWNLOAD_URL = "https://pcpg.netlify.app/pcp.exe";
-
-// =========================
-// 🔥 multer 설정 (유저별 폴더)
-// =========================
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const username = req.params.name;
-
-    if (!username) {
-      return cb(new Error("이름 없음"), null);
-    }
-
-    const dir = `uploads/${username}`;
-
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-
-    cb(null, dir);
-  },
-
-  filename: (req, file, cb) => {
-    cb(null, file.originalname); // 항상 같은 이름
-  },
-});
-
-const fileFilter = (req, file, cb) => {
-  if (path.extname(file.originalname) === ".ini") {
-    cb(null, true);
-  } else {
-    cb(new Error("ini만 가능"), false);
-  }
-};
-
-const upload = multer({
-  storage,
-  fileFilter,
-  limits: { fileSize: 1024 * 50 },
-});
-
 // =========================
 // Discord
 // =========================
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+  ],
+});
+
 client.once("ready", () => {
   console.log(`Discord Logged in as ${client.user.tag}`);
 });
 
+// =========================
+// 🔥 업로드 처리 함수
+// =========================
+async function saveIniFromDiscord(url, configName) {
+  const res = await fetch(url);
+  const buffer = await res.arrayBuffer();
+
+  const dir = `./uploads/${configName}`;
+
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+
+  const filePath = `${dir}/RiotUserSettings.ini`;
+
+  fs.writeFileSync(filePath, Buffer.from(buffer));
+}
+
+// =========================
+// Discord 명령어
+// =========================
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
+  // =====================
+  // upload
+  // =====================
+  if (interaction.commandName === "upload") {
+    await interaction.deferReply({ ephemeral: true });
+
+    try {
+      const attachment = interaction.options.getAttachment("file");
+      const configName = interaction.options.getString("name");
+
+      if (!attachment || !configName) {
+        return interaction.editReply("값 없음");
+      }
+
+      // 🔥 이름 sanitize (보안)
+      const safeName = configName.replace(/[^a-zA-Z0-9_-]/g, "");
+
+      await saveIniFromDiscord(attachment.url, safeName);
+
+      await interaction.editReply(`✅ 업로드 완료: ${safeName}`);
+    } catch (err) {
+      console.error(err);
+      await interaction.editReply("❌ 업로드 실패");
+    }
+  }
+
+  // =====================
+  // download exe
+  // =====================
   if (interaction.commandName === "download" || interaction.commandName === "dl") {
     await interaction.reply({
       content: "pcp file",
@@ -83,39 +89,24 @@ client.on("interactionCreate", async (interaction) => {
 });
 
 // =========================
-// 🔥 업로드 API
-// =========================
-app.post("/upload/:name", upload.single("file"), (req, res) => {
-  try {
-    res.json({
-      success: true,
-      name: req.params.name,
-      file: req.file.originalname,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "업로드 실패" });
-  }
-});
-
-// =========================
 // 🔥 다운로드 API (핵심)
 // =========================
 app.get("/files/format/download/:name", (req, res) => {
-  const username = req.params.name;
+  const configName = req.params.name;
+  const safeName = configName.replace(/[^a-zA-Z0-9_-]/g, "");
 
-  const filePath = `uploads/${username}/RiotUserSettings.ini`;
+  const filePath = `./uploads/${safeName}/RiotUserSettings.ini`;
 
   if (!fs.existsSync(filePath)) {
     return res.status(404).send("파일 없음");
   }
 
-  // 🔥 다운로드 이름 강제 설정
+  // 👉 항상 동일 이름으로 다운로드
   res.download(filePath, "RiotUserSettings.ini");
 });
 
 // =========================
-// 기타 API
+// 기타
 // =========================
 app.get("/ping", (req, res) => res.send("pong"));
 
@@ -125,7 +116,6 @@ app.get("*", (req, res) => {
   res.sendFile("index.html", { root: "public" });
 });
 
-// =========================
 const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, () => {
