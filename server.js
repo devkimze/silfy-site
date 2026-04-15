@@ -25,6 +25,35 @@ client.once("ready", () => {
   console.log(`Discord Logged in as ${client.user.tag}`);
 });
 
+import multer from "multer";
+import path from "path";
+
+// 저장 위치 설정
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    const unique = Date.now() + "-" + file.originalname;
+    cb(null, unique);
+  }
+});
+
+// 파일 필터 (.ini만 허용)
+const fileFilter = (req, file, cb) => {
+  if (path.extname(file.originalname) === ".ini") {
+    cb(null, true);
+  } else {
+    cb(new Error("ini 파일만 업로드 가능"), false);
+  }
+};
+
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 1024 * 50 } // 50KB 제한 (ini니까 작게)
+});
+
 client.on("presenceUpdate", async (oldPresence, newPresence) => {
   if (!newPresence?.userId) return;
 
