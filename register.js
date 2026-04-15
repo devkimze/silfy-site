@@ -4,7 +4,7 @@ dotenv.config();
 
 const commands = [
   new SlashCommandBuilder().setName("download").setDescription("다운로드"),
-  new SlashCommandBuilder().setName("dl").setDescription("다운로드")
+  new SlashCommandBuilder().setName("dl").setDescription("다운로드"),
   new SlashCommandBuilder()
   .setName("upload")
   .setDescription("ini 업로드")
