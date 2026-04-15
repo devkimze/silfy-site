@@ -21,7 +21,23 @@ client.once("ready", () => {
 });
 
 // =========================
-// 공통 저장 함수
+// 📁 USER DB (JSON)
+// =========================
+const USER_DB_PATH = "./data/users.json";
+
+if (!fs.existsSync("./data")) fs.mkdirSync("./data");
+if (!fs.existsSync(USER_DB_PATH)) fs.writeFileSync(USER_DB_PATH, "{}");
+
+function loadUsers() {
+  return JSON.parse(fs.readFileSync(USER_DB_PATH));
+}
+
+function saveUsers(data) {
+  fs.writeFileSync(USER_DB_PATH, JSON.stringify(data, null, 2));
+}
+
+// =========================
+// 📦 INI 저장 함수
 // =========================
 async function saveIni(url, configName) {
   const res = await fetch(url);
@@ -39,13 +55,13 @@ async function saveIni(url, configName) {
 }
 
 // =========================
-// Discord 명령어
+// 🤖 Discord 명령어
 // =========================
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
   // =====================
-  // upload (신규만)
+  // upload
   // =====================
   if (interaction.commandName === "upload") {
     await interaction.deferReply({ ephemeral: true });
@@ -71,7 +87,7 @@ client.on("interactionCreate", async (interaction) => {
   }
 
   // =====================
-  // update (덮어쓰기)
+  // update
   // =====================
   if (interaction.commandName === "update") {
     await interaction.deferReply({ ephemeral: true });
@@ -97,6 +113,65 @@ client.on("interactionCreate", async (interaction) => {
   }
 
   // =====================
+  // suser (핵심)
+  // =====================
+  if (interaction.commandName === "suser") {
+    await interaction.deferReply({ ephemeral: true });
+
+    const sub = interaction.options.getSubcommand();
+    const name = interaction.options.getString("name");
+    const id = interaction.options.getString("id");
+
+    let db = loadUsers();
+
+    // add
+    if (sub === "add") {
+      if (db[name]) {
+        return interaction.editReply("❌ 이미 존재함");
+      }
+
+      db[name] = id;
+      saveUsers(db);
+
+      return interaction.editReply(`✅ 등록됨: ${name}`);
+    }
+
+    // get
+    if (sub === "get") {
+      if (!db[name]) {
+        return interaction.editReply("❌ 없음");
+      }
+
+      return interaction.editReply(`🔎 ${name} → ${db[name]}`);
+    }
+
+    // delete
+    if (sub === "delete") {
+      if (!db[name]) {
+        return interaction.editReply("❌ 없음");
+      }
+
+      delete db[name];
+      saveUsers(db);
+
+      return interaction.editReply(`🗑 삭제됨: ${name}`);
+    }
+
+    // list
+    if (sub === "list") {
+      const keys = Object.keys(db);
+
+      if (keys.length === 0) {
+        return interaction.editReply("📭 비어있음");
+      }
+
+      return interaction.editReply(
+        "📜 목록:\n" + keys.map(k => `- ${k}`).join("\n")
+      );
+    }
+  }
+
+  // =====================
   // exe 다운로드
   // =====================
   if (interaction.commandName === "download" || interaction.commandName === "dl") {
@@ -109,11 +184,12 @@ client.on("interactionCreate", async (interaction) => {
 });
 
 // =========================
-// 다운로드 API
+// 🌐 API
 // =========================
+
+// ini 다운로드
 app.get("/files/format/download/:name", (req, res) => {
   const safeName = req.params.name.replace(/[^a-zA-Z0-9_-]/g, "");
-
   const filePath = `./uploads/${safeName}/RiotUserSettings.ini`;
 
   if (!fs.existsSync(filePath)) {
@@ -121,6 +197,18 @@ app.get("/files/format/download/:name", (req, res) => {
   }
 
   res.download(filePath, "RiotUserSettings.ini");
+});
+
+// 🔥 suser API
+app.get("/api/user/:name", (req, res) => {
+  const db = loadUsers();
+  const name = req.params.name;
+
+  if (!db[name]) {
+    return res.status(404).json({ error: "없음" });
+  }
+
+  res.json({ name, id: db[name] });
 });
 
 // =========================
