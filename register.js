@@ -16,12 +16,12 @@ const commands = [
     .setDescription("ini 업로드")
     .addStringOption(o =>
       o.setName("name")
-        .setDescription("config 이름") // 🔥 필수
+        .setDescription("config 이름") 
         .setRequired(true)
     )
     .addAttachmentOption(o =>
       o.setName("file")
-        .setDescription("ini 파일") // 🔥 필수
+        .setDescription("ini 파일") 
         .setRequired(true)
     ),
 
@@ -38,6 +38,30 @@ const commands = [
         .setDescription("ini 파일")
         .setRequired(true)
     ),
+  
+  new SlashCommandBuilder()
+  .setName("suser")
+  .setDescription("유저 관리")
+  .addSubcommand(sub =>
+    sub.setName("add")
+      .setDescription("등록")
+      .addStringOption(o =>
+        o.setName("name").setDescription("닉네임").setRequired(true))
+      .addStringOption(o =>
+        o.setName("id").setDescription("발로 ID").setRequired(true))
+  )
+  .addSubcommand(sub =>
+    sub.setName("get")
+      .setDescription("조회")
+      .addStringOption(o =>
+        o.setName("name").setDescription("닉네임").setRequired(true))
+  )
+  .addSubcommand(sub =>
+    sub.setName("delete")
+      .setDescription("삭제")
+      .addStringOption(o =>
+        o.setName("name").setDescription("닉네임").setRequired(true))
+  )
 ].map(cmd => cmd.toJSON());
 
 const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
