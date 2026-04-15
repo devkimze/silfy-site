@@ -3,6 +3,7 @@ import fetch from "node-fetch";
 import cors from "cors";
 import dotenv from "dotenv";
 import { Client, GatewayIntentBits } from "discord.js";
+import fs from "fs";
 
 dotenv.config();
 
@@ -25,35 +26,57 @@ client.once("ready", () => {
   console.log(`Discord Logged in as ${client.user.tag}`);
 });
 
-import multer from "multer";
-import path from "path";
 
-// 저장 위치 설정
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    const unique = Date.now() + "-" + file.originalname;
-    cb(null, unique);
+// 🔥 디코 슬래시 명령 처리
+client.on("interactionCreate", async (interaction) => {
+  if (!interaction.isChatInputCommand()) return;
+
+  // 📦 다운로드
+  if (interaction.commandName === "download" || interaction.commandName === "dl") {
+    await interaction.reply({
+      content: "pcp file",
+      files: ["./public/pcp.exe"],
+      ephemeral: true,
+    });
+  }
+
+  // 🔥 ini 업로드
+  if (interaction.commandName === "upload") {
+    const file = interaction.options.getAttachment("file");
+
+    if (!file) {
+      return interaction.reply({ content: "파일 없음", ephemeral: true });
+    }
+
+    // ini 검사
+    if (!file.name.endsWith(".ini")) {
+      return interaction.reply({ content: "ini 파일만 가능", ephemeral: true });
+    }
+
+    try {
+      const res = await fetch(file.url);
+      const buffer = await res.arrayBuffer();
+
+      const filePath = `./uploads/${Date.now()}-${file.name}`;
+      fs.writeFileSync(filePath, Buffer.from(buffer));
+
+      await interaction.reply({
+        content: "업로드 완료 ✅",
+        ephemeral: true,
+      });
+
+    } catch (err) {
+      console.error(err);
+      await interaction.reply({
+        content: "업로드 실패 ❌",
+        ephemeral: true,
+      });
+    }
   }
 });
 
-// 파일 필터 (.ini만 허용)
-const fileFilter = (req, file, cb) => {
-  if (path.extname(file.originalname) === ".ini") {
-    cb(null, true);
-  } else {
-    cb(new Error("ini 파일만 업로드 가능"), false);
-  }
-};
 
-const upload = multer({
-  storage,
-  fileFilter,
-  limits: { fileSize: 1024 * 50 } // 50KB 제한 (ini니까 작게)
-});
-
+// 🔥 presence 캐싱
 client.on("presenceUpdate", async (oldPresence, newPresence) => {
   if (!newPresence?.userId) return;
 
@@ -103,18 +126,8 @@ client.on("presenceUpdate", async (oldPresence, newPresence) => {
   console.log(`[PRESENCE] Updated for ${user.username}: ${status}`);
 });
 
-client.on("interactionCreate", async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
 
-  if (interaction.commandName === "download" || interaction.commandName === "dl") {
-    await interaction.reply({
-      content: "pcp file",
-      files: ["./public/pcp.exe"],
-      ephemeral: true,
-    });
-  }
-});
-
+// 🔥 API
 app.get("/api/discord-status/:userId", async (req, res) => {
   const userId = req.params.userId;
 
@@ -155,6 +168,8 @@ app.get("*", (req, res) => {
   res.sendFile("index.html", { root: "public" });
 });
 
+
+// 🔥 서버 실행
 const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, () => {
