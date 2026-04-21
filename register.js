@@ -38,6 +38,20 @@ const commands = [
         .setDescription("ini 파일")
         .setRequired(true)
     ),
+
+  new SlashCommandBuilder()
+  .setName("nip")
+  .setDescription("nip 업로드")
+  .addStringOption(o =>
+    o.setName("name")
+      .setDescription("파일 이름")
+      .setRequired(true)
+  )
+  .addAttachmentOption(o =>
+    o.setName("file")
+      .setDescription("nip 파일")
+      .setRequired(true)
+  ),
   
   new SlashCommandBuilder()
   .setName("suser")
