@@ -44,7 +44,9 @@ await rest.put(
     process.env.CLIENT_ID,
     process.env.GUILD_ID
   ),
-  { body: commands }
+  { body: [] } // 💣 전체 삭제
 );
+
+console.log("모든 명령어 삭제됨");
 
 console.log("등록 완료 (download / dl / nip만)");
