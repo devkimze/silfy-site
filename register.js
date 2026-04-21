@@ -2,25 +2,19 @@ import { REST, Routes, SlashCommandBuilder } from "discord.js";
 import dotenv from "dotenv";
 dotenv.config();
 
+// =====================
+// 명령어 정의
+// =====================
 const commands = [
 
-  // =====================
-  // download
-  // =====================
   new SlashCommandBuilder()
     .setName("download")
     .setDescription("다운로드"),
 
-  // =====================
-  // dl (별칭)
-  // =====================
   new SlashCommandBuilder()
     .setName("dl")
     .setDescription("다운로드"),
 
-  // =====================
-  // nip 업로드
-  // =====================
   new SlashCommandBuilder()
     .setName("nip")
     .setDescription("nip 업로드")
@@ -37,16 +31,42 @@ const commands = [
 
 ].map(cmd => cmd.toJSON());
 
+// =====================
+// REST
+// =====================
 const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
 
-await rest.put(
-  Routes.applicationGuildCommands(
-    process.env.CLIENT_ID,
-    process.env.GUILD_ID
-  ),
-  { body: [] } // 💣 전체 삭제
-);
+// =====================
+// 실행
+// =====================
+(async () => {
+  try {
+    console.log("🧹 글로벌 명령어 삭제 중...");
+    await rest.put(
+      Routes.applicationCommands(process.env.CLIENT_ID),
+      { body: [] } // 글로벌 삭제
+    );
 
-console.log("모든 명령어 삭제됨");
+    console.log("🧹 길드 명령어 초기화 중...");
+    await rest.put(
+      Routes.applicationGuildCommands(
+        process.env.CLIENT_ID,
+        process.env.GUILD_ID
+      ),
+      { body: [] } // 길드 삭제
+    );
 
-console.log("등록 완료 (download / dl / nip만)");
+    console.log("🚀 명령어 등록 중...");
+    await rest.put(
+      Routes.applicationGuildCommands(
+        process.env.CLIENT_ID,
+        process.env.GUILD_ID
+      ),
+      { body: commands } // 🔥 최종 등록
+    );
+
+    console.log("✅ 완료 (download / dl / nip만 남음)");
+  } catch (err) {
+    console.error(err);
+  }
+})();
