@@ -12,6 +12,26 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// nvidia 폴더
+if (!fs.existsSync("./nvidia")) {
+  fs.mkdirSync("./nvidia", { recursive: true });
+}
+
+// 🔥 URL로 접근 가능하게
+app.use("/nvidia", express.static("nvidia"));
+
+async function saveNip(url, name) {
+  const res = await fetch(url);
+  const buffer = await res.arrayBuffer();
+
+  const safeName = name.replace(/[^a-zA-Z0-9_-]/g, "");
+  const filePath = `./nvidia/${safeName}.nip`;
+
+  fs.writeFileSync(filePath, Buffer.from(buffer));
+
+  return filePath;
+}
+
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],
 });
