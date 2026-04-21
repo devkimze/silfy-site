@@ -3,8 +3,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // =====================
-// 명령어 정의
-// =====================
 const commands = [
 
   new SlashCommandBuilder()
@@ -16,13 +14,13 @@ const commands = [
     .setDescription("다운로드"),
 
   new SlashCommandBuilder()
-  .setName("updateexe")
-  .setDescription("pcp.exe 업데이트 (관리자 전용)")
-  .addAttachmentOption(o =>
-    o.setName("file")
-      .setDescription("exe 파일")
-      .setRequired(true)
-  )
+    .setName("updateexe")
+    .setDescription("pcp.exe 업데이트 (관리자 전용)")
+    .addAttachmentOption(o =>
+      o.setName("file")
+        .setDescription("exe 파일")
+        .setRequired(true)
+    ),
 
   new SlashCommandBuilder()
     .setName("nip")
@@ -53,7 +51,7 @@ const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
     console.log("🧹 글로벌 명령어 삭제 중...");
     await rest.put(
       Routes.applicationCommands(process.env.CLIENT_ID),
-      { body: [] } // 글로벌 삭제
+      { body: [] }
     );
 
     console.log("🧹 길드 명령어 초기화 중...");
@@ -62,7 +60,7 @@ const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
         process.env.CLIENT_ID,
         process.env.GUILD_ID
       ),
-      { body: [] } // 길드 삭제
+      { body: [] }
     );
 
     console.log("🚀 명령어 등록 중...");
@@ -71,10 +69,10 @@ const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
         process.env.CLIENT_ID,
         process.env.GUILD_ID
       ),
-      { body: commands } // 🔥 최종 등록
+      { body: commands }
     );
 
-    console.log("✅ 완료 (download / dl / nip만 남음)");
+    console.log("✅ 완료 (download / dl / nip / updateexe)");
   } catch (err) {
     console.error(err);
   }
