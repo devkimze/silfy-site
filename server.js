@@ -32,6 +32,31 @@ async function saveNip(url, name) {
   return filePath;
 }
 
+if (interaction.commandName === "nip") {
+  await interaction.deferReply({ ephemeral: true });
+
+  try {
+    const attachment = interaction.options.getAttachment("file");
+    const name = interaction.options.getString("name");
+
+    const safeName = name.replace(/[^a-zA-Z0-9_-]/g, "");
+    const filePath = `./nvidia/${safeName}.nip`;
+
+    if (fs.existsSync(filePath)) {
+      return interaction.editReply("❌ 이미 존재함");
+    }
+
+    await saveNip(attachment.url, safeName);
+
+    const url = `https://silfy.dev/nvidia/${safeName}.nip`;
+
+    await interaction.editReply(`✅ 업로드 완료\n🌐 ${url}`);
+  } catch (err) {
+    console.error(err);
+    await interaction.editReply("❌ 업로드 실패");
+  }
+}
+
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],
 });
