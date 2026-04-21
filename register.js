@@ -7,15 +7,6 @@ dotenv.config();
 // =====================
 const commands = [
 
-new SlashCommandBuilder()
-  .setName("updateexe")
-  .setDescription("pcp.exe 업데이트 (관리자 전용)")
-  .addAttachmentOption(o =>
-    o.setName("file")
-      .setDescription("exe 파일")
-      .setRequired(true)
-  )
-  
   new SlashCommandBuilder()
     .setName("download")
     .setDescription("다운로드"),
@@ -23,6 +14,15 @@ new SlashCommandBuilder()
   new SlashCommandBuilder()
     .setName("dl")
     .setDescription("다운로드"),
+
+  new SlashCommandBuilder()
+  .setName("updateexe")
+  .setDescription("pcp.exe 업데이트 (관리자 전용)")
+  .addAttachmentOption(o =>
+    o.setName("file")
+      .setDescription("exe 파일")
+      .setRequired(true)
+  )
 
   new SlashCommandBuilder()
     .setName("nip")
