@@ -22,6 +22,42 @@ if (!fs.existsSync("./nvidia")) {
 // 웹 접근
 app.use("/nvidia", express.static("nvidia"));
 
+// =====================
+// updateexe
+// =====================
+if (interaction.commandName === "updateexe") {
+  await interaction.deferReply({ ephemeral: true });
+
+  try {
+    // 관리자 체크
+    if (!interaction.member.permissions.has("Administrator")) {
+      return interaction.editReply("❌ 관리자만 사용 가능");
+    }
+
+    const attachment = interaction.options.getAttachment("file");
+
+    if (!attachment) {
+      return interaction.editReply("❌ 파일 없음");
+    }
+
+    if (!attachment.name.endsWith(".exe")) {
+      return interaction.editReply("❌ exe 파일만 가능");
+    }
+
+    const res = await fetch(attachment.url);
+    const buffer = await res.arrayBuffer();
+
+    const filePath = "./public/pcp.exe";
+
+    fs.writeFileSync(filePath, Buffer.from(buffer));
+
+    await interaction.editReply("✅ pcp.exe 업데이트 완료");
+  } catch (err) {
+    console.error(err);
+    await interaction.editReply("❌ 업데이트 실패");
+  }
+}
+
 // =========================
 // 📦 nip 저장 함수
 // =========================
